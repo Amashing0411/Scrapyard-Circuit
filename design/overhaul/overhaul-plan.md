@@ -27,6 +27,11 @@ the game.
 
 ### Pillars (every feature must serve at least one)
 
+> **Superseded (2026-10-31).** The locked pillars are in
+> `design/gdd/game-concept.md`: Read the fight · Earned, not given · Damage is
+> information · Honest fights. That doc records how each original pillar below
+> maps to them.
+
 1. **Every part matters.** Damage lands on a specific plate, joint or system,
    and you can see it and feel its effect. No abstract HP bar decides a fight on
    its own.
@@ -44,7 +49,7 @@ the game.
 
 The prototype already proved several things. Keep them:
 - **The deterministic sim with a fixed 60 Hz tick and seeded RNG**, separate from rendering. This is the foundation of balance testing, replays *and* Shorts.
-- **The headless test bench** (hundreds of fights in under a second) and the balance-sweep method (every legal build × every style × the whole card).
+- **The headless test bench** (hundreds of fights in under a second). v2's bench tests one build against the card and issues no corner commands. The full balance sweep (every legal build × every style × the whole card, plus scripted-coach command runs) is **new tooling** for the overhaul, not something v2 had; see `design/reference/prototype-v2.md` §12.
 - **Manager-style play**: the bot fights on its own, and the player calls corner commands, welds between rounds and chooses Destroy or Spare.
 - **The parts economy**: makers, set bonuses, load limit, buy or hire with scrap.
 - **Lessons from the v2 balance pass**:
@@ -105,6 +110,12 @@ Full detail lives in [world-and-roster.md](world-and-roster.md). In short:
 - The sim never reads the presentation. Presentation smooths between sim ticks, but it can never change an outcome.
 - A fight log = bot specs + seed + timestamped player commands. Replaying a log reproduces the fight exactly, so you can re-render it, cut highlights or run a regression test.
 - Debris physics, ragdoll flops and spark spray can differ between renders, and that's fine. **Where a plate ends up is cosmetic; the fact that it came off is sim truth.**
+
+> **MVP scope (2026-10-31, `design/gdd/game-concept.md`):** the two-layer split
+> stands. The MVP presentation layer is smaller than the box above: rigid
+> segmented parts on the shared rig, ~12 authored clips, procedural hit
+> reactions, **no IK and no active ragdoll**, and one broadcast camera plus a 9:16
+> framing (no camera director or replays). The rest is the long-term target.
 
 ---
 
@@ -469,6 +480,12 @@ The prototype's stiff, 2D-limb look is the biggest visual gap. The target:
 
 ### 8.2 Layered animation stack (presentation)
 
+> **MVP scope (2026-10-31, `design/gdd/game-concept.md`):** the MVP builds
+> layers 1, 2, 4 and 6 only, on rigid segmented parts (no skinned meshes). Layer 3
+> (IK) is the first add-on after the MVP; layer 5 (active ragdoll) is deferred —
+> hit reactions are procedural, and knockdowns play an authored fall. Every tell
+> also gets a non-animation cue, so readability never depends on animation polish.
+
 1. **Authored key poses and clips** per move: windup, strike, recover, at proficiency 50. Made in Blender on the shared rig, using real boxing reference footage (record your own, or use licensed motion capture — check licenses for monetized video).
 2. **Timing warp:** each clip is stretched to the sim's actual phase durations (proficiency, heat, damage).
 3. **IK layer** (Godot `SkeletonModifier3D` stack):
@@ -490,6 +507,10 @@ The prototype's stiff, 2D-limb look is the biggest visual gap. The target:
    - Junkline is jittery and rattly.
 
 ### 8.3 Animation budget (MVP)
+
+> **Superseded for the MVP (2026-10-31):** the MVP budget is **~12 clips on the
+> shared rig, no IK** (`design/gdd/game-concept.md`, MVP Definition). The ~40-clip
+> budget below is the post-MVP target.
 
 - ~40 clips per rig: 12 offense, 10 defense, 8 movement, 6 reactions, 4 knockdown/rise.
 - Style differences come from timing, procedural offsets and AI choice, not separate animation sets.
@@ -736,6 +757,12 @@ This makes viewers part of the story, and the sim keeps the outcome honest.
 
 Milestones, not dates. Each ends with something you can see.
 
+> **Scope note (2026-10-31).** The MVP in `design/gdd/game-concept.md` is smaller
+> than M6 below (player + 3 opponents, 4 body regions, no 8-slot build, no
+> salvage), and the order changes: prove calls and tells with `/prototype` on the
+> ported sim, then run a presentation go/no-go spike, before M4-style art work.
+> The milestones below remain the long-term roadmap.
+
 | # | Milestone | Done when | Main skills and agents |
 |---|---|---|---|
 | **M0** | Setup | Git repo, Godot 4.7 installed, `/start` done, engine pinned, the v2 prototype documented as reference | `/start`, `/setup-engine godot 4.7`, `/reverse-document`, `/adopt` |
@@ -786,7 +813,24 @@ Ordered **Foundation → Core → Feature → Presentation → Polish**.
 
 ## 15. Scope control
 
-**MVP (through M6) includes**
+> **Superseded (2026-10-31).** After `/brainstorm` and the PR-SCOPE and
+> TD-FEASIBILITY reviews (solo, first game, ~6 months at 20–30 h/week), the MVP
+> and its scope tiers live in **`design/gdd/game-concept.md` → MVP Definition**,
+> which is now the scope contract. The list below was the original M6 vertical
+> slice; keep it as a post-MVP target, not the MVP.
+
+**MVP (as of 2026-10-31, from `game-concept.md`)**
+- 1 arena (Pit 4), 1 broadcast camera + one 9:16 framing
+- player bot + 3 opponents, from 2 makers' kits, rigid segmented parts on one rig
+- 3 styles
+- 4 corner calls (1 feint read) and 4 tell types
+- training with 2 drills
+- 3 plate states on 4 body regions, plus arm loss; welds
+- ~12 parts, purse, repair bill, Destroy/Spare
+- ~12 animation clips, no IK, no active ragdoll
+- text barks; Movie Maker render of logged fights
+
+**Original M6 target (post-MVP)**
 - 1 arena (Pit 4)
 - 6 bots + the player bot
 - 3 makers' parts
@@ -818,7 +862,7 @@ Ordered **Foundation → Core → Feature → Presentation → Polish**.
 | Animation quality (the #1 risk) | Prove it in M4 before anything else. Layered approach (authored clips + IK + procedural + active ragdoll). Use real boxing reference. Keep a "motion quality bar" clip in the art bible. |
 | Determinism drift | Sim isolated from physics. Golden-replay tests in CI. Seeded RNG only inside the sim. |
 | Asset volume (24 bots × parts) | Modular kit on one rig: bots are combinations plus livery, not unique models. Blender scripting for variants. |
-| Scope creep | `/scope-check` each milestone; this doc's §15 is the contract. |
+| Scope creep | `/scope-check` each milestone; `design/gdd/game-concept.md` (MVP Definition and Scope Tiers) is the contract. |
 | Balance in a high-dimension system | Data-driven tuning knobs; headless sweeps with the §11 targets as gates. |
 | Copying Real Steel by accident | The original-IP rule in the world bible; a review pass before any public episode. |
 | Platform policy changes | Re-check monetization and disclosure rules at M5 and every season. |
