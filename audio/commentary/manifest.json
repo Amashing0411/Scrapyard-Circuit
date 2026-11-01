@@ -1,0 +1,1235 @@
+{
+  "schemaVersion": 1,
+  "assets": {
+    "voicepack.hank_open_01": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_open_01.mp3",
+      "speaker": "pbp",
+      "text": "Good evening from Scrapyard Lot. Homework and Wreckless, 3 rounds, and this crowd is already on its feet.",
+      "clipId": "hank_open_01"
+    },
+    "voicepack.hank_open_02": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_open_02.mp3",
+      "speaker": "pbp",
+      "text": "We are live at The Drain, where 900, standing came out to watch Monsoon take on Grudge.",
+      "clipId": "hank_open_02"
+    },
+    "voicepack.hank_open_03": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_open_03.mp3",
+      "speaker": "pbp",
+      "text": "Welcome to Harbor Pit. Tonight's main event is Gaff Hook against Tin Deacon.",
+      "clipId": "hank_open_03"
+    },
+    "voicepack.sparkplug_openColor_01": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/Sparkplug_openColor_01.mp3",
+      "speaker": "color",
+      "text": "The noise is already up, Hank. That first clean exchange is going to tell us a lot.",
+      "clipId": "sparkplug_openColor_01"
+    },
+    "voicepack.sparkplug_openColor_02": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/Sparkplug_openColor_02.mp3",
+      "speaker": "color",
+      "text": "Look at the posture in both corners. Nobody wants to give away the center of the ring.",
+      "clipId": "sparkplug_openColor_02"
+    },
+    "voicepack.sparkplug_openColor_03": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/Sparkplug_openColor_03.mp3",
+      "speaker": "color",
+      "text": "The lights are hot, the crowd is ready, and both machines look settled. Now we find out who can execute.",
+      "clipId": "sparkplug_openColor_03"
+    },
+    "voicepack.hank_underdog_01": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_underdog_01.mp3",
+      "speaker": "pbp",
+      "text": "This is the story of the circuit, Sparkplug. A garage build against Tidewater factory steel.",
+      "clipId": "hank_underdog_01"
+    },
+    "voicepack.hank_underdog_02": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_underdog_02.mp3",
+      "speaker": "pbp",
+      "text": "Homework was welded together in a garage. Nightjar rolled off a Meridian assembly line.",
+      "clipId": "hank_underdog_02"
+    },
+    "voicepack.hank_underdog_03": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_underdog_03.mp3",
+      "speaker": "pbp",
+      "text": "Money against grit tonight. Jackpot cost more than this whole neighborhood.",
+      "clipId": "hank_underdog_03"
+    },
+    "voicepack.sparkplug_underdogColor_01": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/Sparkplug_underdogColor_01.mp3",
+      "speaker": "color",
+      "text": "Factory bots have never been hungry, Hank. Garage bots are always hungry.",
+      "clipId": "sparkplug_underdogColor_01"
+    },
+    "voicepack.sparkplug_underdogColor_02": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/Sparkplug_underdogColor_02.mp3",
+      "speaker": "color",
+      "text": "I was a garage bot. You learn to take a punch when you can't afford armor.",
+      "clipId": "sparkplug_underdogColor_02"
+    },
+    "voicepack.sparkplug_underdogColor_03": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/Sparkplug_underdogColor_03.mp3",
+      "speaker": "color",
+      "text": "Price tag doesn't block punches. Trust me, I checked.",
+      "clipId": "sparkplug_underdogColor_03"
+    },
+    "voicepack.hank_rematch_01": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_rematch_01.mp3",
+      "speaker": "pbp",
+      "text": "These two have met before. Wildfire edged Rustbucket Rex on points in their last meeting.",
+      "clipId": "hank_rematch_01"
+    },
+    "voicepack.hank_rematch_02": {
+      "src": "audio/commentary/voicepack/individual/01_Walkout_and_matchup/HankRuiz_rematch_02.mp3",
+      "speaker": "pbp",
+      "text": "There is history here. Rivet Queen edged Glacier on points in their last meeting.",
+      "clipId": "hank_rematch_02"
+    },
+    "voicepack.hank_round_01": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_round_01.mp3",
+      "speaker": "pbp",
+      "text": "Round 1. Fresh welds, same grudge.",
+      "clipId": "hank_round_01"
+    },
+    "voicepack.hank_round_02": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_round_02.mp3",
+      "speaker": "pbp",
+      "text": "Here we go, round 1.",
+      "clipId": "hank_round_02"
+    },
+    "voicepack.hank_round_03": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_round_03.mp3",
+      "speaker": "pbp",
+      "text": "Round 1 is under way.",
+      "clipId": "hank_round_03"
+    },
+    "voicepack.hank_final_01": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_final_01.mp3",
+      "speaker": "pbp",
+      "text": "Final round! Everything they have left goes into these 45 seconds.",
+      "clipId": "hank_final_01"
+    },
+    "voicepack.hank_final_02": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_final_02.mp3",
+      "speaker": "pbp",
+      "text": "This is it, the last round. Somebody has to empty the tank.",
+      "clipId": "hank_final_02"
+    },
+    "voicepack.hank_bigHead_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigHead_01.mp3",
+      "speaker": "pbp",
+      "text": "Big shot to the head by Graveyard Shift!",
+      "clipId": "hank_bigHead_01"
+    },
+    "voicepack.hank_bigHead_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigHead_02.mp3",
+      "speaker": "pbp",
+      "text": "Dumpster Diva snaps Duchess's head back!",
+      "clipId": "hank_bigHead_02"
+    },
+    "voicepack.hank_bigHead_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigHead_03.mp3",
+      "speaker": "pbp",
+      "text": "Clean! Mama Fixit lands right on the sensor array.",
+      "clipId": "hank_bigHead_03"
+    },
+    "voicepack.hank_bigHead_04": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigHead_04.mp3",
+      "speaker": "pbp",
+      "text": "Harbormaster eats that one flush!",
+      "clipId": "hank_bigHead_04"
+    },
+    "voicepack.hank_bigHead_05": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigHead_05.mp3",
+      "speaker": "pbp",
+      "text": "Oh, that rattled Teakettle's optics!",
+      "clipId": "hank_bigHead_05"
+    },
+    "voicepack.hank_bigBody_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigBody_01.mp3",
+      "speaker": "pbp",
+      "text": "Beacon digs to the body!",
+      "clipId": "hank_bigBody_01"
+    },
+    "voicepack.hank_bigBody_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigBody_02.mp3",
+      "speaker": "pbp",
+      "text": "Right in the battery housing from Rustbucket Rex!",
+      "clipId": "hank_bigBody_02"
+    },
+    "voicepack.hank_bigBody_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigBody_03.mp3",
+      "speaker": "pbp",
+      "text": "Steam Hammer goes downstairs and Tollbooth feels it.",
+      "clipId": "hank_bigBody_03"
+    },
+    "voicepack.hank_bigBody_04": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_bigBody_04.mp3",
+      "speaker": "pbp",
+      "text": "That body shot echoed through the whole building.",
+      "clipId": "hank_bigBody_04"
+    },
+    "voicepack.hank_hay_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_hay_01.mp3",
+      "speaker": "pbp",
+      "text": "HAYMAKER! Old Faithful lands the big one!",
+      "clipId": "hank_hay_01"
+    },
+    "voicepack.hank_hay_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_hay_02.mp3",
+      "speaker": "pbp",
+      "text": "Needle unloads the haymaker and it connects!",
+      "clipId": "hank_hay_02"
+    },
+    "voicepack.hank_hay_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_hay_03.mp3",
+      "speaker": "pbp",
+      "text": "Oh! That haymaker could have knocked the paint off a bridge!",
+      "clipId": "hank_hay_03"
+    },
+    "voicepack.sparkplug_hayColor_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_hayColor_01.mp3",
+      "speaker": "color",
+      "text": "That was power through the target, Hank. The question now is whether Paperweight can answer before the pressure builds.",
+      "clipId": "sparkplug_hayColor_01"
+    },
+    "voicepack.sparkplug_hayColor_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_hayColor_02.mp3",
+      "speaker": "color",
+      "text": "A clean haymaker changes the whole exchange. Mismatch has to get the guard back in place.",
+      "clipId": "sparkplug_hayColor_02"
+    },
+    "voicepack.sparkplug_hayColor_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_hayColor_03.mp3",
+      "speaker": "color",
+      "text": "That shot landed with the kind of force that makes a corner rethink its plan.",
+      "clipId": "sparkplug_hayColor_03"
+    },
+    "voicepack.hank_crit_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_crit_01.mp3",
+      "speaker": "pbp",
+      "text": "Critical hit! Haybale found the gap in the armor!",
+      "clipId": "hank_crit_01"
+    },
+    "voicepack.hank_crit_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_crit_02.mp3",
+      "speaker": "pbp",
+      "text": "Right through the seam! Critical from Little Brine!",
+      "clipId": "hank_crit_02"
+    },
+    "voicepack.hank_crit_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_crit_03.mp3",
+      "speaker": "pbp",
+      "text": "That one found the opening. Cinderblock took a clean shot to the head.",
+      "clipId": "hank_crit_03"
+    },
+    "voicepack.sparkplug_critColor_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_critColor_01.mp3",
+      "speaker": "color",
+      "text": "That is the detail to watch now: Needle's head assembly is badly damaged",
+      "clipId": "sparkplug_critColor_01"
+    },
+    "voicepack.sparkplug_critColor_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_critColor_02.mp3",
+      "speaker": "color",
+      "text": "A clean opening like that can swing momentum. Pinball's head assembly is badly damaged",
+      "clipId": "sparkplug_critColor_02"
+    },
+    "voicepack.sparkplug_critColor_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_critColor_03.mp3",
+      "speaker": "color",
+      "text": "The damage is real, but Channel Nine is still in this. Watch the next exchange.",
+      "clipId": "sparkplug_critColor_03"
+    },
+    "voicepack.hank_sig_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_sig_01.mp3",
+      "speaker": "pbp",
+      "text": "There it is, Lance Jab! Socket Jo lands the signature!",
+      "clipId": "hank_sig_01"
+    },
+    "voicepack.hank_sig_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_sig_02.mp3",
+      "speaker": "pbp",
+      "text": "Avalanche! That is what Glacier is known for!",
+      "clipId": "hank_sig_02"
+    },
+    "voicepack.hank_sig_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_sig_03.mp3",
+      "speaker": "pbp",
+      "text": "The signature connects! Pinball timed that perfectly.",
+      "clipId": "hank_sig_03"
+    },
+    "voicepack.sparkplug_sigColor_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_sigColor_01.mp3",
+      "speaker": "color",
+      "text": "That timing was sharp, Hank. Night Shift's head assembly is badly damaged",
+      "clipId": "sparkplug_sigColor_01"
+    },
+    "voicepack.sparkplug_sigColor_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_sigColor_02.mp3",
+      "speaker": "color",
+      "text": "You could see Kettle Drum wait for the opening, and then the signature landed.",
+      "clipId": "sparkplug_sigColor_02"
+    },
+    "voicepack.hank_sigMiss_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_sigMiss_01.mp3",
+      "speaker": "pbp",
+      "text": "Fridge Magnet read the Bell Tower and slipped it!",
+      "clipId": "hank_sigMiss_01"
+    },
+    "voicepack.hank_sigMiss_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_sigMiss_02.mp3",
+      "speaker": "pbp",
+      "text": "Coil Flash misses! Undertow saw it coming a mile away.",
+      "clipId": "hank_sigMiss_02"
+    },
+    "voicepack.hank_sigMiss_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_sigMiss_03.mp3",
+      "speaker": "pbp",
+      "text": "Nothing but air on the Talon Draw!",
+      "clipId": "hank_sigMiss_03"
+    },
+    "voicepack.sparkplug_slipColor_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_slipColor_01.mp3",
+      "speaker": "color",
+      "text": "Good eyes. Read the shoulder, not the fist.",
+      "clipId": "sparkplug_slipColor_01"
+    },
+    "voicepack.sparkplug_slipColor_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_slipColor_02.mp3",
+      "speaker": "color",
+      "text": "That is homework paying off.",
+      "clipId": "sparkplug_slipColor_02"
+    },
+    "voicepack.sparkplug_slipColor_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_slipColor_03.mp3",
+      "speaker": "color",
+      "text": "Defense is just offense that waits.",
+      "clipId": "sparkplug_slipColor_03"
+    },
+    "voicepack.hank_feint_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_feint_01.mp3",
+      "speaker": "pbp",
+      "text": "Feint from Wreckless, testing Lamplighter's nerve.",
+      "clipId": "hank_feint_01"
+    },
+    "voicepack.hank_feint_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_feint_02.mp3",
+      "speaker": "pbp",
+      "text": "Grudge shows it and pulls it back.",
+      "clipId": "hank_feint_02"
+    },
+    "voicepack.hank_dodge_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_dodge_01.mp3",
+      "speaker": "pbp",
+      "text": "Nightjar slips it!",
+      "clipId": "hank_dodge_01"
+    },
+    "voicepack.hank_dodge_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_dodge_02.mp3",
+      "speaker": "pbp",
+      "text": "Made Tin Deacon miss!",
+      "clipId": "hank_dodge_02"
+    },
+    "voicepack.hank_dodge_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_dodge_03.mp3",
+      "speaker": "pbp",
+      "text": "Beautiful head movement from Jackpot.",
+      "clipId": "hank_dodge_03"
+    },
+    "voicepack.sparkplug_blockColor_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_blockColor_01.mp3",
+      "speaker": "color",
+      "text": "Tight guard. You could hide a toaster behind that guard.",
+      "clipId": "sparkplug_blockColor_01"
+    },
+    "voicepack.sparkplug_blockColor_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_blockColor_02.mp3",
+      "speaker": "color",
+      "text": "Arms up, chin down. Textbook.",
+      "clipId": "sparkplug_blockColor_02"
+    },
+    "voicepack.sparkplug_blockColor_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_blockColor_03.mp3",
+      "speaker": "color",
+      "text": "Blocking all night is fine until your arms fall off. Literally.",
+      "clipId": "sparkplug_blockColor_03"
+    },
+    "voicepack.hank_combo_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_combo_01.mp3",
+      "speaker": "pbp",
+      "text": "Duchess puts three together in that exchange!",
+      "clipId": "hank_combo_01"
+    },
+    "voicepack.hank_combo_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_combo_02.mp3",
+      "speaker": "pbp",
+      "text": "Combination from Harbormaster, and Cathedral is covering up!",
+      "clipId": "hank_combo_02"
+    },
+    "voicepack.hank_combo_03": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/HankRuiz_combo_03.mp3",
+      "speaker": "pbp",
+      "text": "Three clean connections in the sequence from Teakettle!",
+      "clipId": "hank_combo_03"
+    },
+    "voicepack.sparkplug_comboColor_01": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_comboColor_01.mp3",
+      "speaker": "color",
+      "text": "That sequence opened up because Wildfire's head assembly is badly damaged",
+      "clipId": "sparkplug_comboColor_01"
+    },
+    "voicepack.sparkplug_comboColor_02": {
+      "src": "audio/commentary/voicepack/individual/03_Clean_shots_and_combinations/Sparkplug_comboColor_02.mp3",
+      "speaker": "color",
+      "text": "The important part is the follow-through. Tollbooth kept the pressure on without giving Bus Stop a reset.",
+      "clipId": "sparkplug_comboColor_02"
+    },
+    "voicepack.hank_heat_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_heat_01.mp3",
+      "speaker": "pbp",
+      "text": "Paperweight is running hot. You can see the vents glowing.",
+      "clipId": "hank_heat_01"
+    },
+    "voicepack.hank_heat_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_heat_02.mp3",
+      "speaker": "pbp",
+      "text": "Watch the heat gauge on Mismatch. That is overheating territory.",
+      "clipId": "hank_heat_02"
+    },
+    "voicepack.hank_malf_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_malf_01.mp3",
+      "speaker": "pbp",
+      "text": "Cinderblock has a malfunction! a lead arm servo is jammed!",
+      "clipId": "hank_malf_01"
+    },
+    "voicepack.hank_malf_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_malf_02.mp3",
+      "speaker": "pbp",
+      "text": "Trouble for Channel Nine. The lead arm servo is jammed!",
+      "clipId": "hank_malf_02"
+    },
+    "voicepack.hank_malf_03": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_malf_03.mp3",
+      "speaker": "pbp",
+      "text": "Systems are glitching on Fridge Magnet!",
+      "clipId": "hank_malf_03"
+    },
+    "voicepack.sparkplug_malfColor_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_malfColor_01.mp3",
+      "speaker": "color",
+      "text": "That is a real problem now. Cinderblock's head assembly is badly damaged",
+      "clipId": "sparkplug_malfColor_01"
+    },
+    "voicepack.sparkplug_malfColor_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_malfColor_02.mp3",
+      "speaker": "color",
+      "text": "The corner will have to adjust quickly; that system is not operating normally.",
+      "clipId": "sparkplug_malfColor_02"
+    },
+    "voicepack.sparkplug_malfColor_03": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_malfColor_03.mp3",
+      "speaker": "color",
+      "text": "That changes the tactical picture. Sickle's head assembly is badly damaged",
+      "clipId": "sparkplug_malfColor_03"
+    },
+    "voicepack.hank_detach_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_detach_01.mp3",
+      "speaker": "pbp",
+      "text": "The arm is OFF! Thresher has torn Undertow's arm clean away!",
+      "clipId": "hank_detach_01"
+    },
+    "voicepack.hank_detach_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_detach_02.mp3",
+      "speaker": "pbp",
+      "text": "Oh my! Lamplighter is down an arm! Sparks everywhere!",
+      "clipId": "hank_detach_02"
+    },
+    "voicepack.sparkplug_detachColor_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_detachColor_01.mp3",
+      "speaker": "color",
+      "text": "Is that legal? Apparently that is legal.",
+      "clipId": "sparkplug_detachColor_01"
+    },
+    "voicepack.sparkplug_detachColor_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_detachColor_02.mp3",
+      "speaker": "color",
+      "text": "One arm. I have seen bots win with one arm. Not many.",
+      "clipId": "sparkplug_detachColor_02"
+    },
+    "voicepack.sparkplug_detachColor_03": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_detachColor_03.mp3",
+      "speaker": "color",
+      "text": "Somebody grab that arm, they will want it back.",
+      "clipId": "sparkplug_detachColor_03"
+    },
+    "voicepack.hank_offline_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_offline_01.mp3",
+      "speaker": "pbp",
+      "text": "Nightjar's lead arm servo is offline!",
+      "clipId": "hank_offline_01"
+    },
+    "voicepack.hank_offline_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_offline_02.mp3",
+      "speaker": "pbp",
+      "text": "The lead arm servo is jammed damage on Jackpot. That changes everything.",
+      "clipId": "hank_offline_02"
+    },
+    "voicepack.sparkplug_offlineColor_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_offlineColor_01.mp3",
+      "speaker": "color",
+      "text": "That loss is visible in the way Cathedral has to move now. Fridge Magnet's head assembly is badly damaged",
+      "clipId": "sparkplug_offlineColor_01"
+    },
+    "voicepack.sparkplug_offlineColor_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/Sparkplug_offlineColor_02.mp3",
+      "speaker": "color",
+      "text": "The remaining systems will have to carry the load. This is a very different fight.",
+      "clipId": "sparkplug_offlineColor_02"
+    },
+    "voicepack.hank_down_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_down_01.mp3",
+      "speaker": "pbp",
+      "text": "Down goes Sickle!",
+      "clipId": "hank_down_01"
+    },
+    "voicepack.hank_down_02": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_down_02.mp3",
+      "speaker": "pbp",
+      "text": "Velvet is down!",
+      "clipId": "hank_down_02"
+    },
+    "voicepack.hank_down_03": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_down_03.mp3",
+      "speaker": "pbp",
+      "text": "Oh! Sparky Malou hits the canvas!",
+      "clipId": "hank_down_03"
+    },
+    "voicepack.hank_downYou_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_downYou_01.mp3",
+      "speaker": "pbp",
+      "text": "Wildfire is down!",
+      "clipId": "hank_downYou_01"
+    },
+    "voicepack.hank_downYou_02": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_downYou_02.mp3",
+      "speaker": "pbp",
+      "text": "Down goes Night Shift!",
+      "clipId": "hank_downYou_02"
+    },
+    "voicepack.hank_kneel_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_kneel_01.mp3",
+      "speaker": "pbp",
+      "text": "Kiln is up to a knee, systems flickering.",
+      "clipId": "hank_kneel_01"
+    },
+    "voicepack.hank_kneel_02": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_kneel_02.mp3",
+      "speaker": "pbp",
+      "text": "Last Call props itself up on one arm. The lights are coming back on.",
+      "clipId": "hank_kneel_02"
+    },
+    "voicepack.hank_kneel_03": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_kneel_03.mp3",
+      "speaker": "pbp",
+      "text": "There is movement from Saint Sprocket!",
+      "clipId": "hank_kneel_03"
+    },
+    "voicepack.hank_rise_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_rise_01.mp3",
+      "speaker": "pbp",
+      "text": "Demo Day beats the count at 8!",
+      "clipId": "hank_rise_01"
+    },
+    "voicepack.hank_rise_02": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_rise_02.mp3",
+      "speaker": "pbp",
+      "text": "Tow Truck Tess is UP! This crowd cannot believe it!",
+      "clipId": "hank_rise_02"
+    },
+    "voicepack.hank_rise_03": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_rise_03.mp3",
+      "speaker": "pbp",
+      "text": "Back on its feet at 8! Rivet Queen is not done yet!",
+      "clipId": "hank_rise_03"
+    },
+    "voicepack.sparkplug_riseColor_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/Sparkplug_riseColor_01.mp3",
+      "speaker": "color",
+      "text": "Reboot at 8. Respect the firmware.",
+      "clipId": "sparkplug_riseColor_01"
+    },
+    "voicepack.sparkplug_riseColor_02": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/Sparkplug_riseColor_02.mp3",
+      "speaker": "color",
+      "text": "I always said, the ten count is just a suggestion.",
+      "clipId": "sparkplug_riseColor_02"
+    },
+    "voicepack.sparkplug_riseColor_03": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/Sparkplug_riseColor_03.mp3",
+      "speaker": "color",
+      "text": "That bot has a heart. Well, a capacitor. Same thing.",
+      "clipId": "sparkplug_riseColor_03"
+    },
+    "voicepack.hank_secondwind_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_secondwind_01.mp3",
+      "speaker": "pbp",
+      "text": "Second wind for Bus Stop! The backup cells kick in!",
+      "clipId": "hank_secondwind_01"
+    },
+    "voicepack.sparkplug_secondwindColor_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/Sparkplug_secondwindColor_01.mp3",
+      "speaker": "color",
+      "text": "That is a confirmed surge of power. Now Thresher has to turn it into a clean exchange.",
+      "clipId": "sparkplug_secondwindColor_01"
+    },
+    "voicepack.sparkplug_secondwindColor_02": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/Sparkplug_secondwindColor_02.mp3",
+      "speaker": "color",
+      "text": "The reserve cells are working, but stamina will still matter in the closing rounds.",
+      "clipId": "sparkplug_secondwindColor_02"
+    },
+    "voicepack.hank_late_01": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_late_01.mp3",
+      "speaker": "pbp",
+      "text": "Ten seconds left in the round!",
+      "clipId": "hank_late_01"
+    },
+    "voicepack.hank_late_02": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_late_02.mp3",
+      "speaker": "pbp",
+      "text": "Ten seconds! Big finish from either corner?",
+      "clipId": "hank_late_02"
+    },
+    "voicepack.hank_bell_01": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_bell_01.mp3",
+      "speaker": "pbp",
+      "text": "That is the end of round 2.",
+      "clipId": "hank_bell_01"
+    },
+    "voicepack.hank_bell_02": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_bell_02.mp3",
+      "speaker": "pbp",
+      "text": "There's the bell. End of round 2.",
+      "clipId": "hank_bell_02"
+    },
+    "voicepack.hank_bellWin_01": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_bellWin_01.mp3",
+      "speaker": "pbp",
+      "text": "I'd give that round to Sickle.",
+      "clipId": "hank_bellWin_01"
+    },
+    "voicepack.hank_bellWin_02": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_bellWin_02.mp3",
+      "speaker": "pbp",
+      "text": "Velvet took that round on my card.",
+      "clipId": "hank_bellWin_02"
+    },
+    "voicepack.hank_bellWin_03": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_bellWin_03.mp3",
+      "speaker": "pbp",
+      "text": "Clear round for Sparky Malou, I think.",
+      "clipId": "hank_bellWin_03"
+    },
+    "voicepack.hank_bellEven_01": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_bellEven_01.mp3",
+      "speaker": "pbp",
+      "text": "Close round. Could go either way.",
+      "clipId": "hank_bellEven_01"
+    },
+    "voicepack.hank_bellEven_02": {
+      "src": "audio/commentary/voicepack/individual/02_Round_starts_and_clock/HankRuiz_bellEven_02.mp3",
+      "speaker": "pbp",
+      "text": "Hard round to score. Judges earn their money on that one.",
+      "clipId": "hank_bellEven_02"
+    },
+    "voicepack.hank_comeback_01": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_comeback_01.mp3",
+      "speaker": "pbp",
+      "text": "And now the tide is turning! Wildfire is taking over!",
+      "clipId": "hank_comeback_01"
+    },
+    "voicepack.hank_comeback_02": {
+      "src": "audio/commentary/voicepack/individual/05_Knockdown_count_and_comeback/HankRuiz_comeback_02.mp3",
+      "speaker": "pbp",
+      "text": "Night Shift has come all the way back in this fight!",
+      "clipId": "hank_comeback_02"
+    },
+    "voicepack.hank_danger_01": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_danger_01.mp3",
+      "speaker": "pbp",
+      "text": "The Foreman is in serious trouble here!",
+      "clipId": "hank_danger_01"
+    },
+    "voicepack.hank_danger_02": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_danger_02.mp3",
+      "speaker": "pbp",
+      "text": "Homework is hurt, smoke pouring out!",
+      "clipId": "hank_danger_02"
+    },
+    "voicepack.hank_danger_03": {
+      "src": "audio/commentary/voicepack/individual/04_Damage_and_tactical_trouble/HankRuiz_danger_03.mp3",
+      "speaker": "pbp",
+      "text": "One more clean shot could finish Monsoon.",
+      "clipId": "hank_danger_03"
+    },
+    "voicepack.hank_ko_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_ko_01.mp3",
+      "speaker": "pbp",
+      "text": "IT IS ALL OVER! Kiln WINS IT!",
+      "clipId": "hank_ko_01"
+    },
+    "voicepack.hank_ko_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_ko_02.mp3",
+      "speaker": "pbp",
+      "text": "That's it! Last Call has done it!",
+      "clipId": "hank_ko_02"
+    },
+    "voicepack.hank_ko_03": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_ko_03.mp3",
+      "speaker": "pbp",
+      "text": "Stop the fight! Saint Sprocket wins!",
+      "clipId": "hank_ko_03"
+    },
+    "voicepack.hank_counted_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_counted_01.mp3",
+      "speaker": "pbp",
+      "text": "Nine... TEN! Gaff Hook could not beat the count! Demo Day wins by knockout!",
+      "clipId": "hank_counted_01"
+    },
+    "voicepack.hank_tko_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_tko_01.mp3",
+      "speaker": "pbp",
+      "text": "The referee steps in! Technical knockout for Tow Truck Tess!",
+      "clipId": "hank_tko_01"
+    },
+    "voicepack.hank_tko_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_tko_02.mp3",
+      "speaker": "pbp",
+      "text": "That is a TKO! Rivet Queen wins!",
+      "clipId": "hank_tko_02"
+    },
+    "voicepack.hank_decision_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_decision_01.mp3",
+      "speaker": "pbp",
+      "text": "We go to the scorecards. The Foreman wins by decision, 29–28, 28–29, and 29–28.",
+      "clipId": "hank_decision_01"
+    },
+    "voicepack.hank_decision_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_decision_02.mp3",
+      "speaker": "pbp",
+      "text": "The judges have it 29–28, 28–29, and 29–28 for Homework!",
+      "clipId": "hank_decision_02"
+    },
+    "voicepack.hank_choose_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_choose_01.mp3",
+      "speaker": "pbp",
+      "text": "The crowd wants it. Will Monsoon finish the job?",
+      "clipId": "hank_choose_01"
+    },
+    "voicepack.hank_choose_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_choose_02.mp3",
+      "speaker": "pbp",
+      "text": "Here's the moment. Destroy or spare?",
+      "clipId": "hank_choose_02"
+    },
+    "voicepack.hank_destroy_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_destroy_01.mp3",
+      "speaker": "pbp",
+      "text": "Gaff Hook rips the head right off! Graveyard Shift is scrap metal!",
+      "clipId": "hank_destroy_01"
+    },
+    "voicepack.hank_destroy_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_destroy_02.mp3",
+      "speaker": "pbp",
+      "text": "Oh! That is a full decapitation! The crowd goes crazy!",
+      "clipId": "hank_destroy_02"
+    },
+    "voicepack.sparkplug_destroyColor_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/Sparkplug_destroyColor_01.mp3",
+      "speaker": "color",
+      "text": "Rest in pieces, Dumpster Diva.",
+      "clipId": "sparkplug_destroyColor_01"
+    },
+    "voicepack.sparkplug_destroyColor_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/Sparkplug_destroyColor_02.mp3",
+      "speaker": "color",
+      "text": "And that is why I retired, Hank.",
+      "clipId": "sparkplug_destroyColor_02"
+    },
+    "voicepack.sparkplug_destroyColor_03": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/Sparkplug_destroyColor_03.mp3",
+      "speaker": "color",
+      "text": "I'll be taking that head home for the shelf. Kidding. Mostly.",
+      "clipId": "sparkplug_destroyColor_03"
+    },
+    "voicepack.hank_spare_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_spare_01.mp3",
+      "speaker": "pbp",
+      "text": "Graveyard Shift walks away. Sportsmanship at Harbor Pit.",
+      "clipId": "hank_spare_01"
+    },
+    "voicepack.hank_spare_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/HankRuiz_spare_02.mp3",
+      "speaker": "pbp",
+      "text": "Dumpster Diva spares Mama Fixit. The crowd respects it.",
+      "clipId": "hank_spare_02"
+    },
+    "voicepack.sparkplug_spareColor_01": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/Sparkplug_spareColor_01.mp3",
+      "speaker": "color",
+      "text": "Class act. Somebody owes somebody a drink of oil.",
+      "clipId": "sparkplug_spareColor_01"
+    },
+    "voicepack.sparkplug_spareColor_02": {
+      "src": "audio/commentary/voicepack/individual/06_Result_and_aftermath/Sparkplug_spareColor_02.mp3",
+      "speaker": "color",
+      "text": "That is a fighter with a code.",
+      "clipId": "sparkplug_spareColor_02"
+    },
+    "voicepack.hank_idle_01": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_idle_01.mp3",
+      "speaker": "pbp",
+      "text": "Mama Fixit came in 7 and 4. Beacon brings a 8 and 3 record.",
+      "clipId": "hank_idle_01"
+    },
+    "voicepack.hank_idle_02": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_idle_02.mp3",
+      "speaker": "pbp",
+      "text": "Rustbucket Rex is a brawler. Expect heavy hooks and haymakers.",
+      "clipId": "hank_idle_02"
+    },
+    "voicepack.hank_idle_03": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_idle_03.mp3",
+      "speaker": "pbp",
+      "text": "Reach advantage Kiln by 11 centimeters.",
+      "clipId": "hank_idle_03"
+    },
+    "voicepack.hank_idle_04": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_idle_04.mp3",
+      "speaker": "pbp",
+      "text": "Weight check: Beacon at 126 kilos, Steam Hammer at 128.",
+      "clipId": "hank_idle_04"
+    },
+    "voicepack.hank_idle_05": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_idle_05.mp3",
+      "speaker": "pbp",
+      "text": "Rustbucket Rex runs a Stock firmware chip. Interesting choice.",
+      "clipId": "hank_idle_05"
+    },
+    "voicepack.hank_idle_06": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_idle_06.mp3",
+      "speaker": "pbp",
+      "text": "The The Ruiz Twins crew in Steam Hammer's corner have their welders ready.",
+      "clipId": "hank_idle_06"
+    },
+    "voicepack.hank_idle_07": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_idle_07.mp3",
+      "speaker": "pbp",
+      "text": "Watch for the Aria Snap. Lamplighter telegraphs it: the shoulder draws back. Slip or step clear when the shoulder draws back, then punish the recovery.",
+      "clipId": "hank_idle_07"
+    },
+    "voicepack.sparkplug_idleColor_01": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/Sparkplug_idleColor_01.mp3",
+      "speaker": "color",
+      "text": "Keep your guard up, kids. That's free advice.",
+      "clipId": "sparkplug_idleColor_01"
+    },
+    "voicepack.sparkplug_idleColor_02": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/Sparkplug_idleColor_02.mp3",
+      "speaker": "color",
+      "text": "Back in my day we had one punch and it was called the punch.",
+      "clipId": "sparkplug_idleColor_02"
+    },
+    "voicepack.sparkplug_idleColor_03": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/Sparkplug_idleColor_03.mp3",
+      "speaker": "color",
+      "text": "I'm watching the battery meters. Somebody is going to fade.",
+      "clipId": "sparkplug_idleColor_03"
+    },
+    "voicepack.sparkplug_idleColor_04": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/Sparkplug_idleColor_04.mp3",
+      "speaker": "color",
+      "text": "That footwork is cleaner than my oil filter.",
+      "clipId": "sparkplug_idleColor_04"
+    },
+    "voicepack.sparkplug_idleColor_05": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/Sparkplug_idleColor_05.mp3",
+      "speaker": "color",
+      "text": "Ninety percent of this sport is not falling over.",
+      "clipId": "sparkplug_idleColor_05"
+    },
+    "voicepack.sparkplug_idleColor_06": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/Sparkplug_idleColor_06.mp3",
+      "speaker": "color",
+      "text": "Hank, how many arms have you lost? Zero? Must be nice.",
+      "clipId": "sparkplug_idleColor_06"
+    },
+    "voicepack.hank_story_01": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_story_01.mp3",
+      "speaker": "pbp",
+      "text": "Rustbucket Rex comes out of the Rust Belt. Patched together from three wrecks behind a tire shop. Swings like it owes somebody money.",
+      "clipId": "hank_story_01"
+    },
+    "voicepack.hank_story_02": {
+      "src": "audio/commentary/voicepack/individual/07_Between_exchanges_and_scouting/HankRuiz_story_02.mp3",
+      "speaker": "pbp",
+      "text": "A little about Grudge: Lost its first twelve fights, then won twenty-seven. It remembers every one of the losses.",
+      "clipId": "hank_story_02"
+    },
+    "ring.open": {
+      "src": "audio/commentary/ring-open.mp3",
+      "speaker": "ring",
+      "text": "Ladies and gentlemen... welcome to the Scrapyard Circuit!",
+      "clipId": "ring_open"
+    },
+    "ring.name.homework": {
+      "src": "audio/commentary/voicepack/ring-names/bot-homework.mp3",
+      "speaker": "ring",
+      "text": "Homework",
+      "clipId": "ring_name_homework"
+    },
+    "ring.name.monsoon": {
+      "src": "audio/commentary/voicepack/ring-names/bot-monsoon.mp3",
+      "speaker": "ring",
+      "text": "Monsoon",
+      "clipId": "ring_name_monsoon"
+    },
+    "ring.name.gaff-hook": {
+      "src": "audio/commentary/voicepack/ring-names/bot-gaff-hook.mp3",
+      "speaker": "ring",
+      "text": "Gaff Hook",
+      "clipId": "ring_name_gaff-hook"
+    },
+    "ring.name.graveyard-shift": {
+      "src": "audio/commentary/voicepack/ring-names/bot-graveyard-shift.mp3",
+      "speaker": "ring",
+      "text": "Graveyard Shift",
+      "clipId": "ring_name_graveyard-shift"
+    },
+    "ring.name.dumpster-diva": {
+      "src": "audio/commentary/voicepack/ring-names/bot-dumpster-diva.mp3",
+      "speaker": "ring",
+      "text": "Dumpster Diva",
+      "clipId": "ring_name_dumpster-diva"
+    },
+    "ring.name.mama-fixit": {
+      "src": "audio/commentary/voicepack/ring-names/bot-mama-fixit.mp3",
+      "speaker": "ring",
+      "text": "Mama Fixit",
+      "clipId": "ring_name_mama-fixit"
+    },
+    "ring.name.beacon": {
+      "src": "audio/commentary/voicepack/ring-names/bot-beacon.mp3",
+      "speaker": "ring",
+      "text": "Beacon",
+      "clipId": "ring_name_beacon"
+    },
+    "ring.name.rustbucket-rex": {
+      "src": "audio/commentary/voicepack/ring-names/bot-rustbucket-rex.mp3",
+      "speaker": "ring",
+      "text": "Rustbucket Rex",
+      "clipId": "ring_name_rustbucket-rex"
+    },
+    "ring.name.steam-hammer": {
+      "src": "audio/commentary/voicepack/ring-names/bot-steam-hammer.mp3",
+      "speaker": "ring",
+      "text": "Steam Hammer",
+      "clipId": "ring_name_steam-hammer"
+    },
+    "ring.name.old-faithful": {
+      "src": "audio/commentary/voicepack/ring-names/bot-old-faithful.mp3",
+      "speaker": "ring",
+      "text": "Old Faithful",
+      "clipId": "ring_name_old-faithful"
+    },
+    "ring.name.needle": {
+      "src": "audio/commentary/voicepack/ring-names/bot-needle.mp3",
+      "speaker": "ring",
+      "text": "Needle",
+      "clipId": "ring_name_needle"
+    },
+    "ring.name.haybale": {
+      "src": "audio/commentary/voicepack/ring-names/bot-haybale.mp3",
+      "speaker": "ring",
+      "text": "Haybale",
+      "clipId": "ring_name_haybale"
+    },
+    "ring.name.little-brine": {
+      "src": "audio/commentary/voicepack/ring-names/bot-little-brine.mp3",
+      "speaker": "ring",
+      "text": "Little Brine",
+      "clipId": "ring_name_little-brine"
+    },
+    "ring.name.socket-jo": {
+      "src": "audio/commentary/voicepack/ring-names/bot-socket-jo.mp3",
+      "speaker": "ring",
+      "text": "Socket Jo",
+      "clipId": "ring_name_socket-jo"
+    },
+    "ring.name.glacier": {
+      "src": "audio/commentary/voicepack/ring-names/bot-glacier.mp3",
+      "speaker": "ring",
+      "text": "Glacier",
+      "clipId": "ring_name_glacier"
+    },
+    "ring.name.pinball": {
+      "src": "audio/commentary/voicepack/ring-names/bot-pinball.mp3",
+      "speaker": "ring",
+      "text": "Pinball",
+      "clipId": "ring_name_pinball"
+    },
+    "ring.name.kettle-drum": {
+      "src": "audio/commentary/voicepack/ring-names/bot-kettle-drum.mp3",
+      "speaker": "ring",
+      "text": "Kettle Drum",
+      "clipId": "ring_name_kettle-drum"
+    },
+    "ring.name.wreckless": {
+      "src": "audio/commentary/voicepack/ring-names/bot-wreckless.mp3",
+      "speaker": "ring",
+      "text": "Wreckless",
+      "clipId": "ring_name_wreckless"
+    },
+    "ring.name.grudge": {
+      "src": "audio/commentary/voicepack/ring-names/bot-grudge.mp3",
+      "speaker": "ring",
+      "text": "Grudge",
+      "clipId": "ring_name_grudge"
+    },
+    "ring.name.tin-deacon": {
+      "src": "audio/commentary/voicepack/ring-names/bot-tin-deacon.mp3",
+      "speaker": "ring",
+      "text": "Tin Deacon",
+      "clipId": "ring_name_tin-deacon"
+    },
+    "ring.name.duchess": {
+      "src": "audio/commentary/voicepack/ring-names/bot-duchess.mp3",
+      "speaker": "ring",
+      "text": "Duchess",
+      "clipId": "ring_name_duchess"
+    },
+    "ring.name.harbormaster": {
+      "src": "audio/commentary/voicepack/ring-names/bot-harbormaster.mp3",
+      "speaker": "ring",
+      "text": "Harbormaster",
+      "clipId": "ring_name_harbormaster"
+    },
+    "ring.name.teakettle": {
+      "src": "audio/commentary/voicepack/ring-names/bot-teakettle.mp3",
+      "speaker": "ring",
+      "text": "Teakettle",
+      "clipId": "ring_name_teakettle"
+    },
+    "ring.name.tollbooth": {
+      "src": "audio/commentary/voicepack/ring-names/bot-tollbooth.mp3",
+      "speaker": "ring",
+      "text": "Tollbooth",
+      "clipId": "ring_name_tollbooth"
+    },
+    "ring.name.paperweight": {
+      "src": "audio/commentary/voicepack/ring-names/bot-paperweight.mp3",
+      "speaker": "ring",
+      "text": "Paperweight",
+      "clipId": "ring_name_paperweight"
+    },
+    "ring.name.mismatch": {
+      "src": "audio/commentary/voicepack/ring-names/bot-mismatch.mp3",
+      "speaker": "ring",
+      "text": "Mismatch",
+      "clipId": "ring_name_mismatch"
+    },
+    "ring.name.cinderblock": {
+      "src": "audio/commentary/voicepack/ring-names/bot-cinderblock.mp3",
+      "speaker": "ring",
+      "text": "Cinderblock",
+      "clipId": "ring_name_cinderblock"
+    },
+    "ring.name.channel-nine": {
+      "src": "audio/commentary/voicepack/ring-names/bot-channel-nine.mp3",
+      "speaker": "ring",
+      "text": "Channel Nine",
+      "clipId": "ring_name_channel-nine"
+    },
+    "ring.name.fridge-magnet": {
+      "src": "audio/commentary/voicepack/ring-names/bot-fridge-magnet.mp3",
+      "speaker": "ring",
+      "text": "Fridge Magnet",
+      "clipId": "ring_name_fridge-magnet"
+    },
+    "ring.name.undertow": {
+      "src": "audio/commentary/voicepack/ring-names/bot-undertow.mp3",
+      "speaker": "ring",
+      "text": "Undertow",
+      "clipId": "ring_name_undertow"
+    },
+    "ring.name.lamplighter": {
+      "src": "audio/commentary/voicepack/ring-names/bot-lamplighter.mp3",
+      "speaker": "ring",
+      "text": "Lamplighter",
+      "clipId": "ring_name_lamplighter"
+    },
+    "ring.name.nightjar": {
+      "src": "audio/commentary/voicepack/ring-names/bot-nightjar.mp3",
+      "speaker": "ring",
+      "text": "Nightjar",
+      "clipId": "ring_name_nightjar"
+    },
+    "ring.name.jackpot": {
+      "src": "audio/commentary/voicepack/ring-names/bot-jackpot.mp3",
+      "speaker": "ring",
+      "text": "Jackpot",
+      "clipId": "ring_name_jackpot"
+    },
+    "ring.name.cathedral": {
+      "src": "audio/commentary/voicepack/ring-names/bot-cathedral.mp3",
+      "speaker": "ring",
+      "text": "Cathedral",
+      "clipId": "ring_name_cathedral"
+    },
+    "ring.name.bus-stop": {
+      "src": "audio/commentary/voicepack/ring-names/bot-bus-stop.mp3",
+      "speaker": "ring",
+      "text": "Bus Stop",
+      "clipId": "ring_name_bus-stop"
+    },
+    "ring.name.thresher": {
+      "src": "audio/commentary/voicepack/ring-names/bot-thresher.mp3",
+      "speaker": "ring",
+      "text": "Thresher",
+      "clipId": "ring_name_thresher"
+    },
+    "ring.name.sickle": {
+      "src": "audio/commentary/voicepack/ring-names/bot-sickle.mp3",
+      "speaker": "ring",
+      "text": "Sickle",
+      "clipId": "ring_name_sickle"
+    },
+    "ring.name.velvet": {
+      "src": "audio/commentary/voicepack/ring-names/bot-velvet.mp3",
+      "speaker": "ring",
+      "text": "Velvet",
+      "clipId": "ring_name_velvet"
+    },
+    "ring.name.sparky-malou": {
+      "src": "audio/commentary/voicepack/ring-names/bot-sparky-malou.mp3",
+      "speaker": "ring",
+      "text": "Sparky Malou",
+      "clipId": "ring_name_sparky-malou"
+    },
+    "ring.name.wildfire": {
+      "src": "audio/commentary/voicepack/ring-names/bot-wildfire.mp3",
+      "speaker": "ring",
+      "text": "Wildfire",
+      "clipId": "ring_name_wildfire"
+    },
+    "ring.name.night-shift": {
+      "src": "audio/commentary/voicepack/ring-names/bot-night-shift.mp3",
+      "speaker": "ring",
+      "text": "Night Shift",
+      "clipId": "ring_name_night-shift"
+    },
+    "ring.name.kiln": {
+      "src": "audio/commentary/voicepack/ring-names/bot-kiln.mp3",
+      "speaker": "ring",
+      "text": "Kiln",
+      "clipId": "ring_name_kiln"
+    },
+    "ring.name.last-call": {
+      "src": "audio/commentary/voicepack/ring-names/bot-last-call.mp3",
+      "speaker": "ring",
+      "text": "Last Call",
+      "clipId": "ring_name_last-call"
+    },
+    "ring.name.saint-sprocket": {
+      "src": "audio/commentary/voicepack/ring-names/bot-saint-sprocket.mp3",
+      "speaker": "ring",
+      "text": "Saint Sprocket",
+      "clipId": "ring_name_saint-sprocket"
+    },
+    "ring.name.demo-day": {
+      "src": "audio/commentary/voicepack/ring-names/bot-demo-day.mp3",
+      "speaker": "ring",
+      "text": "Demo Day",
+      "clipId": "ring_name_demo-day"
+    },
+    "ring.name.tow-truck-tess": {
+      "src": "audio/commentary/voicepack/ring-names/bot-tow-truck-tess.mp3",
+      "speaker": "ring",
+      "text": "Tow Truck Tess",
+      "clipId": "ring_name_tow-truck-tess"
+    },
+    "ring.name.rivet-queen": {
+      "src": "audio/commentary/voicepack/ring-names/bot-rivet-queen.mp3",
+      "speaker": "ring",
+      "text": "Rivet Queen",
+      "clipId": "ring_name_rivet-queen"
+    },
+    "ring.name.the-foreman": {
+      "src": "audio/commentary/voicepack/ring-names/bot-the-foreman.mp3",
+      "speaker": "ring",
+      "text": "The Foreman",
+      "clipId": "ring_name_the-foreman"
+    },
+    "ref.count.1": {
+      "src": "audio/commentary/voicepack/referee/count-01.mp3",
+      "speaker": "ref",
+      "text": "One",
+      "clipId": "ref_count_1"
+    },
+    "ref.count.2": {
+      "src": "audio/commentary/voicepack/referee/count-02.mp3",
+      "speaker": "ref",
+      "text": "Two",
+      "clipId": "ref_count_2"
+    },
+    "ref.count.3": {
+      "src": "audio/commentary/voicepack/referee/count-03.mp3",
+      "speaker": "ref",
+      "text": "Three",
+      "clipId": "ref_count_3"
+    },
+    "ref.count.4": {
+      "src": "audio/commentary/voicepack/referee/count-04.mp3",
+      "speaker": "ref",
+      "text": "Four",
+      "clipId": "ref_count_4"
+    },
+    "ref.count.5": {
+      "src": "audio/commentary/voicepack/referee/count-05.mp3",
+      "speaker": "ref",
+      "text": "Five",
+      "clipId": "ref_count_5"
+    },
+    "ref.count.6": {
+      "src": "audio/commentary/voicepack/referee/count-06.mp3",
+      "speaker": "ref",
+      "text": "Six",
+      "clipId": "ref_count_6"
+    },
+    "ref.count.7": {
+      "src": "audio/commentary/voicepack/referee/count-07.mp3",
+      "speaker": "ref",
+      "text": "Seven",
+      "clipId": "ref_count_7"
+    },
+    "ref.count.8": {
+      "src": "audio/commentary/voicepack/referee/count-08.mp3",
+      "speaker": "ref",
+      "text": "Eight",
+      "clipId": "ref_count_8"
+    },
+    "ref.count.9": {
+      "src": "audio/commentary/voicepack/referee/count-09.mp3",
+      "speaker": "ref",
+      "text": "Nine",
+      "clipId": "ref_count_9"
+    },
+    "ref.count.10": {
+      "src": "audio/commentary/voicepack/referee/count-10.mp3",
+      "speaker": "ref",
+      "text": "Ten",
+      "clipId": "ref_count_10"
+    }
+  }
+}
