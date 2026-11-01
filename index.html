@@ -3644,9 +3644,9 @@ let crowdShoutLastSrc = '';
 let crowdShoutLastAnyAt = 0;
 const CROWD_SHOUT_SOURCE_COOLDOWN_MS = 32000;
 const SCREEN_MUSIC_TRACKS = {
-  loading: [],
-  menu: [],
-  interior: [],
+  loading: ['audio/loading/01. Loading.mp3', 'audio/loading/02. Loading.mp3'],
+  menu: ['audio/menu/69. ibgm.mp3', 'audio/menu/70. ibgm.mp3', 'audio/menu/73. ibgm.mp3', 'audio/menu/88. ibgm.mp3'],
+  interior: ['audio/index,garage etc/69. ibgm.mp3', 'audio/index,garage etc/70. ibgm.mp3', 'audio/index,garage etc/73. ibgm.mp3', 'audio/index,garage etc/88. ibgm.mp3'],
 };
 let screenMusicPlayers = [], screenMusicSlot = -1, screenMusicScene = '', screenMusicLastFile = '', screenMusicSequence = 0;
 function fadeCrowdAudio(audio, target, duration = 650) {
