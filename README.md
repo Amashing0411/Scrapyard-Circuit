@@ -1,41 +1,90 @@
-# Scrapyard Circuit
+<div align="center">
 
-Robot boxing in your browser. Build it, fight it, scrap it.
+# SCRAPYARD CIRCUIT
 
-Build a bot from parts, or weld your own head and chassis. Then coach it from the corner or take the controls yourself, and climb from the scrapyard to the title. Beat 3 bots in a league to open the next one. The Foreman waits at the top.
+### Robot boxing. Build it, fight it, scrap it.
 
-No install, account or build step. The whole game is static HTML, CSS and JavaScript.
+**Weld a fighter out of junk, coach it from the corner, and climb from the scrapyard to the title.**
 
-## What's in the game
+![Runs in the browser](https://img.shields.io/badge/runs_in-the_browser-f0b20a?style=for-the-badge&labelColor=1a1d21)
+![48 fighters](https://img.shields.io/badge/fighters-48-e2483d?style=for-the-badge&labelColor=1a1d21)
+![Keyboard or controller](https://img.shields.io/badge/keyboard-or_controller-4fb3c9?style=for-the-badge&labelColor=1a1d21)
 
-- **Career:** win purses to buy better parts, crews, chips and signature moves.
-- **Fight now and Exhibition:** quick fights with no stakes, or pick two bots and a venue and watch.
-- **Local versus:** two players on one keyboard or two controllers.
-- **Create bot and Workshop:** parts, paint, story, fight plan and crew, across 48 registered fighters in 4 leagues.
-- **Damage you can see:** parts crack, tear off and develop conditions such as oil spills, jammed gears and sensor glitches.
-- **Tells and feints:** a red banner shows a signature move coming. A grey banner is a feint, so don't bite.
-- **Destroy or Spare:** after a stoppage, the winner decides. Destroy pays a crowd bonus and salvage; Spare pays for sportsmanship.
-- **Fight-night sound:** recorded commentary, ring names, a referee count and crowds that change by venue.
+<img src="docs/screenshots/fight.png" alt="Ironside and The Foreman square up at the start of round 1, with the commentary caption and the four corner calls on screen" width="100%">
+
+</div>
+
+## Your bot fights. You win it from the corner.
+
+Your bot throws its own punches. Your job is to read the fight: watch for the tell, spot the feint, and make the right call before the opening closes. When you'd rather do it yourself, press `C` mid-fight and take the controls.
+
+Every fight leaves marks. Parts crack and tear off, damage turns into oil spills, jammed gears and sensor glitches, and your crew only gets so many welds between rounds. When a fight ends early, the winner makes one last choice: **destroy** the loser for the crowd and the salvage, or **spare** it.
+
+## What's inside
+
+| | |
+|---|---|
+| 🏆 **Career** | Win purses, buy better parts, crews, chips and signature moves. Beat 3 bots in a league to open the next one. The Foreman waits at the top. |
+| 🔧 **Build anything** | Choose parts, paint, story, fight plan and crew, or weld your own head and chassis in the Workshop. There are about 232 quadrillion possible bots. |
+| 🥊 **Coach or Pilot** | Time four corner calls, or throw every punch yourself. Switch whenever you like. |
+| 👀 **Tells and feints** | A red banner means a signature move is coming. A grey banner is a feint, so don't bite. |
+| 💥 **Damage that matters** | Each part is tracked on its own, and what breaks changes how your bot fights. |
+| 🎙️ **Fight-night sound** | Recorded commentary, ring names, a referee count and crowds that change by venue. |
+| 🎮 **Local versus** | Two players on one keyboard or two controllers. |
+
+## A look around
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/menu.png" alt="Main menu with two bots sparring live behind the options"></td>
+    <td width="50%"><img src="docs/screenshots/garage.png" alt="Garage screen showing Ironside's stats beside a rack of head parts"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Main menu</b><br>Real fights play out behind the menu</td>
+    <td align="center"><b>Garage</b><br>Every part changes your stats</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/screenshots/bot-index.png" alt="Bot Index showing fighter cards with parts, signature moves and stats"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><b>Bot Index</b><br>48 registered fighters across 4 leagues, each with its own story and signature move</td>
+  </tr>
+</table>
+
+## Play it
+
+The game is one static site, with no install, account or build step.
+
+**Run it locally** from a copy of this repository. It needs a web server because it loads its audio list over HTTP:
+
+```bash
+python -m http.server 8000
+```
+
+Then open <http://localhost:8000>.
+
+**Or put it online** with Vercel: import this repository at [vercel.com/new](https://vercel.com/new), set **Framework Preset** to **Other**, and leave the build settings empty. Each push to `main` redeploys the site.
 
 ## Controls
 
-### Keyboard
+**Keyboard**
 
-| Action | Coach mode | Pilot mode |
+| | Coach | Pilot |
 |---|---|---|
-| Fight | `1` Head hunt, `2` Body work, `3` Cover up, `4` Haymaker | `J` jab, `K` cross, `L` hook, `I` uppercut |
-| Move | Your bot moves on its own | `A` `D` or arrows move, `W` `S` change lanes |
-| Defend | Use Cover up | `Q` `E` slip, hold `Shift` to guard, `X` clinch |
-| Signature move | Your bot chooses when | `F` |
+| **Fight** | `1` Head hunt · `2` Body work · `3` Cover up · `4` Haymaker | `J` jab · `K` cross · `L` hook · `I` uppercut |
+| **Move** | Your bot moves on its own | `A` `D` or arrows · `W` `S` change lanes |
+| **Defend** | Cover up | `Q` `E` slip · hold `Shift` to guard · `X` clinch |
+| **Signature move** | — | `F` |
 
-| In any fight | Key |
+| In any fight | |
 |---|---|
-| Switch between Coach and Pilot | `C` |
-| Get up after a knockdown (when the needle is in the green) | `Space` or tap |
-| Destroy or Spare | `D` or `S` |
+| Switch Coach / Pilot | `C` |
+| Reboot after a knockdown (needle in the green) | `Space` or tap |
+| Destroy / Spare | `D` / `S` |
 | Pause | `Esc` |
 
-### Controller
+<details>
+<summary><b>Controller</b></summary>
 
 | Input | Action |
 |---|---|
@@ -44,39 +93,32 @@ No install, account or build step. The whole game is static HTML, CSS and JavaSc
 | `LB` `RB` | Slip |
 | `LT` | Guard |
 | `RT` | Signature move |
-| `Back` | Switch between Coach and Pilot |
+| `Back` | Switch Coach / Pilot |
 | `Start` | Pause |
 
-In menus, `A` selects and `B` goes back. The in-game **How to play** screen covers the rest.
+In menus, `A` selects and `B` goes back.
 
-## Run it locally
+</details>
 
-Use a local web server, because the game loads its audio list over HTTP:
-
-```bash
-python -m http.server 8000
-```
-
-Then open <http://localhost:8000>.
-
-## Deploy on Vercel
-
-1. Import this repository at [vercel.com/new](https://vercel.com/new).
-2. Set **Framework Preset** to **Other**, and leave the build command and output directory empty.
-3. Click **Deploy**.
-
-Each push to `main` redeploys the site. Once it's served over HTTPS, the game can also be installed as an app, and audio it has played is cached for offline use.
-
-## What's in this repository
-
-| Path | Contents |
-|---|---|
-| `index.html` | The whole game |
-| `manifest.webmanifest`, `sw.js`, `icon-*.png` | App install and offline cache |
-| `audio/commentary/` | Commentary, ring names, referee count and crowd audio ([details](audio/commentary/README.md)) |
+The in-game **How to play** screen covers the rest.
 
 ## Good to know
 
-- **No menu or loading music:** this build ships without screen music. To add your own, put tracks you have the rights to in the repository and list them in `SCREEN_MUSIC_TRACKS` in `index.html`.
-- **Saves stay in your browser:** progress is kept in local storage, so clearing site data removes it.
-- **Voices:** the booth commentary was generated with ElevenLabs and prerecorded. Lines without a matching recording, such as ones with names or scores, use your browser's built-in voice, so they sound different by device.
+- **Menu and loading music is off in this build.** The track lists in `SCREEN_MUSIC_TRACKS` in `index.html` are empty, so those screens play without music.
+- **Saves stay in your browser.** Clearing site data removes your progress.
+- **Some voice lines vary by device.** Booth commentary is prerecorded with ElevenLabs voices. Lines with no matching recording, such as ones with names or scores, use your browser's built-in voice.
+- **It can run like an app.** Served over HTTPS, the game can be installed, and audio it has already played is cached for offline use.
+
+## Project layout
+
+```text
+index.html             the whole game: HTML, CSS and JavaScript
+manifest.webmanifest   app install details
+sw.js                  offline cache
+icon-192.png           app icons
+icon-512.png
+audio/commentary/      commentary, ring names, referee and crowd audio
+docs/screenshots/      images used in this README
+```
+
+More on the audio is in [`audio/commentary/README.md`](audio/commentary/README.md).
