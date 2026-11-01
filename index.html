@@ -3236,10 +3236,10 @@ function newMenuBout() {
 function menuSfx(M, F, e) {
   if (curScreen !== 'menu' || !AC) return; const now = performance.now(), txt = (s, col) => M.texts.push({ s, col, t: 1.2 });
   switch (e.type) {
-    case 'hit': { if (e.dmg <= 0) break; if (now - (M.sfxT || 0) < 70) break; M.sfxT = now; const vd = e.dmg / DMG; thud(vd * .75, e.blocked, e.kind, e.target, e.crit); if (!e.blocked && (e.crit || vd > 9)) cheer(.45); else if (!e.blocked && Math.random() < .12) cheer(.2); break; }
-    case 'knockdown': thud(18, false, 'hay', 'head', true); ooh(); roar(.75); txt('DOWN!', '#ff5a4a'); break;
+    case 'hit': { if (e.dmg <= 0) break; if (now - (M.sfxT || 0) < 70) break; M.sfxT = now; const vd = e.dmg / DMG; thud(vd * .75, e.blocked, e.kind, e.target, e.crit, { gain: .5, dip: false }); if (!e.blocked && (e.crit || vd > 9)) cheer(.45); else if (!e.blocked && Math.random() < .12) cheer(.2); break; }
+    case 'knockdown': thud(18, false, 'hay', 'head', true, { gain: .5, dip: false }); ooh(); roar(.75); txt('DOWN!', '#ff5a4a'); break;
     case 'clinch': clank(.35); txt('CLINCH', '#ebe7de'); break;
-    case 'clinchShot': thud(3, false, 'jab', 'body'); break;
+    case 'clinchShot': thud(3, false, 'jab', 'body', false, { gain: .5, dip: false }); break;
     case 'clinchBreak': whoosh(.3); txt('BREAK!', '#f0b20a'); break;
     case 'hazard': if (e.what === 'scrap') clank(.7); else if (e.what === 'puddle') whoosh(.5); else { whoosh(.8); ooh(); } if (e.what === 'heat') M.heatT = 3; txt({ scrap: 'SCRAP ON THE CANVAS', puddle: 'WATER ON THE CANVAS', fog: 'SEA FOG', heat: 'FURNACE FLARE' }[e.what], '#ffb36a'); break;
     case 'slick': whoosh(.4); ooh(); break;
@@ -3825,21 +3825,55 @@ function env(node, t, peak, dur, att = .006) { node.gain.setValueAtTime(.0001, t
 function noiseHit(t, dur, freq, q, peak, type = 'bandpass', dest, att) { const n = AC.createBufferSource(); n.buffer = noiseBuf; n.playbackRate.value = .8 + Math.random() * .4; const f = AC.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q; const g = AC.createGain(); env(g, t, peak, dur, att); n.connect(f).connect(g).connect(dest || sfxBus); n.start(t, Math.random() * 1.5); n.stop(t + dur + .05); return f; }
 function tone(t, freq, dur, peak, type = 'sine', dest, endFreq, att) { const o = AC.createOscillator(), g = AC.createGain(); o.type = type; o.frequency.setValueAtTime(freq, t); if (endFreq) o.frequency.exponentialRampToValueAtTime(endFreq, t + dur); env(g, t, peak, dur, att); o.connect(g).connect(dest || sfxBus); o.start(t); o.stop(t + dur + .05); return o; }
 const ok = () => !!AC;
-/* ---- impacts: thump + inharmonic metal + crack ---- */
-function thud(p, blocked, kind, target, crit) {
-  if (!ok()) return; const t = AC.currentTime, v = Math.min(1, .25 + p * .045), head = target === 'head';
-  // Soft-body impact first, then a short inharmonic chassis ring. Avoid the old pitched arcade chirp.
-  tone(t, blocked ? 118 : head ? 92 : 68, .22, (blocked ? .24 : .48) * v, 'sine', null, blocked ? 42 : 32, .003);
-  noiseHit(t, blocked ? .085 : .12, blocked ? 520 : head ? 1150 : 420, .55, (blocked ? .25 : .42) * v, 'lowpass', null, .002);
-  noiseHit(t + .008, .065, blocked ? 1050 : head ? 1750 : 760, .9, (blocked ? .12 : .19) * v, 'bandpass', null, .003);
-  const modes = head ? [310, 690, 1320] : [175, 390, 810];
-  modes.forEach((f, i) => tone(t + .006 + Math.random() * .009, f * (.94 + Math.random() * .12), .17 / (1 + i * .45), (.045 / (1 + i)) * v, 'triangle', null, f * (.88 + Math.random() * .08), .003));
-  if (kind === 'hay' || kind === 'upper' || crit) { tone(t, 54, .38, .36 * v, 'sine', null, 27, .004); noiseHit(t + .012, .22, 260, .5, .19 * v, 'lowpass', null, .005); }
-  if (crit) noiseHit(t + .008, .045, 2400, .75, .12 * v, 'highpass', null, .002);
+/* ---- impacts: contact crack + driven thump (audible on small speakers) + inharmonic metal per maker ---- */
+const HIT_METAL = {
+  JL: { modes: [215, 470, 1040, 1690], ring: .13, level: .85, rattle: .5 }, // loose salvaged scrap
+  KS: { modes: [640, 1480, 2850], ring: .09, level: .7, rattle: 0 }, // thin composite: short and dry
+  HL: { modes: [130, 305, 720, 1180], ring: .24, level: 1, rattle: .15 }, // thick slab: low and long
+  VT: { modes: [520, 1290, 2380, 3410], ring: .2, level: .8, rattle: 0 }, // ceramic and coil: glassy
+  SB: { modes: [410, 980, 2160, 3720], ring: .3, level: .9, rattle: 0 }, // premium alloy: clean ring
+  def: { modes: [300, 690, 1320, 2240], ring: .16, level: .85, rattle: .25 },
+};
+const HIT_WEIGHT = { jab: .72, cross: .92, hook: 1, upper: 1.05, counter: 1.08, hay: 1.25 };
+let hitDrive = null;
+function hitBus() {
+  if (hitDrive && hitDrive.context === AC) return hitDrive;
+  const curve = new Float32Array(1024), k = 2.4, norm = Math.tanh(k); for (let i = 0; i < 1024; i++) curve[i] = Math.tanh(k * (i / 511.5 - 1)) / norm;
+  hitDrive = AC.createWaveShaper(); hitDrive.curve = curve; hitDrive.oversample = '2x'; hitDrive.connect(sfxBus); return hitDrive;
 }
-function whoosh(k = 1) { if (!ok()) return; const t = AC.currentTime, f = noiseHit(t, .2, 700, 1.2, .13 * k); f.frequency.exponentialRampToValueAtTime(2600, t + .18); }
-function servo(kind) { if (!ok()) return; const t = AC.currentTime, f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 3; const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(kind === 'hay' ? 90 : 160, t); o.frequency.exponentialRampToValueAtTime(kind === 'hay' ? 260 : 420, t + (kind === 'hay' ? .5 : .14)); env(g, t, .05, kind === 'hay' ? .55 : .16); o.connect(f).connect(g).connect(sfxBus); o.start(t); o.stop(t + .7); if (kind === 'hay') noiseHit(t, .6, 4200, .7, .07, 'highpass', null, .3); }
-function clank(v = 1) { if (!ok()) return; const t = AC.currentTime; noiseHit(t, .055, 1450, .6, .16 * v, 'bandpass', null, .002); [420, 760, 1280, 2130].forEach((f, i) => tone(t + Math.random() * .006, f * (.94 + Math.random() * .12), .28 / (1 + i * .65), .075 * v / (i + 1), 'triangle', null, f * (.88 + Math.random() * .1), .002)); noiseHit(t + .018, .09, 4100, .75, .08 * v, 'highpass', null, .003); }
+const hitMaker = (spec, target) => { const b = spec && spec.build, q = !b ? null : target === 'head' ? part('head', b.head) : target === 'arm' ? part('arms', b.lead) : part('torso', b.torso); return q ? q.b : ''; };
+function crowdDip(amount, recover = 420) {
+  if (!crowdAudio) return;
+  for (const a of [crowdAudio, crowdAltAudio]) {
+    if (!a || a.paused) continue; const st = crowdFadeStates.get(a), target = st ? st.target : a.volume; if (target < .02) continue;
+    if (st && st.raf) cancelAnimationFrame(st.raf); crowdFadeStates.delete(a);
+    a.volume = clamp(Math.min(a.volume, target * (1 - amount)), 0, .9); fadeCrowdAudio(a, target, recover);
+  }
+}
+function thud(p, blocked, kind, target, crit, opt = {}) {
+  if (!ok()) return; const t = AC.currentTime, head = target === 'head', heavy = kind === 'hay' || kind === 'upper' || crit, bus = hitBus(), vary = () => .93 + Math.random() * .14;
+  const gain = opt.gain == null ? 1 : opt.gain, v = Math.min(1, .46 + p * .04) * (HIT_WEIGHT[kind] || .9) * gain, m = HIT_METAL[opt.maker] || HIT_METAL.def, soft = blocked ? .55 : 1;
+  if (blocked) {
+    tone(t, 165 * vary(), .1, .4 * v, 'sine', bus, 70, .002);
+    noiseHit(t, .07, 700, .6, .32 * v, 'lowpass', bus, .001);
+    noiseHit(t, .018, 2300, .8, .22 * v, 'bandpass', null, .001);
+  } else {
+    noiseHit(t, .022, (head ? 3400 : 2400) * vary(), .7, .5 * v, 'bandpass', null, .001);
+    tone(t, (head ? 235 : 170) * vary(), .15, .9 * v, 'sine', bus, head ? 88 : 58, .002);
+    noiseHit(t, .09, head ? 1300 : 800, .6, .6 * v, 'lowpass', bus, .001);
+  }
+  m.modes.forEach((f, i) => { const hz = f * vary() * (head ? 1.18 : 1); tone(t + .003 + Math.random() * .006, hz, m.ring * soft / (1 + i * .35), .2 * m.level * soft * v / (1 + i * .55), 'triangle', null, hz * (.93 + Math.random() * .05), .001); });
+  if (!blocked && m.rattle && Math.random() < m.rattle) scrapClatter(t + .05, 3, .45 * v);
+  if (heavy && !blocked) { tone(t, 120, .34, .7 * v, 'sine', bus, 38, .003); noiseHit(t + .01, .2, 520, .5, .35 * v, 'lowpass', bus, .004); }
+  if (crit && !blocked) { noiseHit(t + .004, .05, 5200, .8, .3 * v, 'highpass', null, .001); tone(t + .004, 1540 * vary(), .3, .16 * v, 'triangle', null, 1380, .001); }
+  if (opt.dip !== false) crowdDip(blocked ? .12 : clamp(.16 + v * .26 + (heavy ? .14 : 0), 0, .6));
+}
+function scrapClatter(t, n = 5, v = 1) { if (!ok()) return; for (let i = 0, at = t; i < n; i++, at += .06 + Math.random() * .08) { const fade = v * (1 - i / (n + 1)); noiseHit(at, .03, 1800 + Math.random() * 2200, 2, .22 * fade, 'bandpass', null, .001); tone(at, 500 + Math.random() * 1500, .09, .1 * fade, 'triangle', null, null, .001); } }
+function tearOff() { if (!ok()) return; const t = AC.currentTime; noiseHit(t, .32, 3100, 1.6, .42, 'bandpass', null, .004); [340, 770, 1490, 2620, 3900].forEach((f, i) => tone(t + Math.random() * .012, f, .55 / (1 + i * .4), .2 / (1 + i * .4), 'triangle', null, f * .86, .001)); tone(t, 150, .2, .8, 'sine', hitBus(), 52, .002); scrapClatter(t + .42, 5, .9); crowdDip(.55, 700); }
+function floorCrash() { if (!ok()) return; const t = AC.currentTime, bus = hitBus(); tone(t, 110, .5, .95, 'sine', bus, 30, .003); noiseHit(t, .24, 620, .5, .75, 'lowpass', bus, .002); noiseHit(t + .02, .5, 2400, 1, .16, 'bandpass', null, .01); scrapClatter(t + .16, 6, .9); crowdDip(.6, 800); }
+function whoosh(k = 1) { if (!ok()) return; const t = AC.currentTime, f = noiseHit(t, .22, 520, .9, .6 * k); f.frequency.exponentialRampToValueAtTime(2800, t + .19); }
+function servo(kind) { if (!ok()) return; const t = AC.currentTime, f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 3; const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(kind === 'hay' ? 90 : 160, t); o.frequency.exponentialRampToValueAtTime(kind === 'hay' ? 260 : 420, t + (kind === 'hay' ? .5 : .14)); env(g, t, .28, kind === 'hay' ? .55 : .16); o.connect(f).connect(g).connect(sfxBus); o.start(t); o.stop(t + .7); if (kind === 'hay') noiseHit(t, .6, 4200, .7, .13, 'highpass', null, .3); }
+function clank(v = 1) { if (!ok()) return; const t = AC.currentTime; noiseHit(t, .055, 1450, .6, .28 * v, 'bandpass', null, .002); [420, 760, 1280, 2130].forEach((f, i) => tone(t + Math.random() * .006, f * (.94 + Math.random() * .12), .28 / (1 + i * .65), .15 * v / (i + 1), 'triangle', null, f * (.88 + Math.random() * .1), .002)); noiseHit(t + .018, .09, 4100, .75, .13 * v, 'highpass', null, .003); }
 function zap() { if (!ok()) return; const t = AC.currentTime; for (let i = 0; i < 4; i++) tone(t + i * .035, 1800 - i * 300, .05, .05, 'square', null, 300); noiseHit(t, .2, 5000, 3, .12); }
 function steam() { if (!ok()) return; noiseHit(AC.currentTime, 1.1, 5200, .5, .12, 'highpass', null, .15); }
 function weld() { if (!ok()) return; const t = AC.currentTime; noiseHit(t, .55, 5500, .8, .16, 'highpass'); for (let i = 0; i < 5; i++) noiseHit(t + Math.random() * .4, .03, 7000, 3, .08, 'bandpass'); }
@@ -4666,7 +4700,7 @@ function handleEvents() {
         if (!e.blocked) G.hype = Math.min(1, G.hype + vd * .012 + (e.crit ? .15 : 0));
         if (vd > 9 && !e.blocked) { cheer(.3 + vd * .02); for (let j = 0; j < 3; j++) G.flashes.push({ x: Math.random() * W, y: 190 + Math.random() * 150, life: .15 }); }
         if (vd > 14 && !e.blocked && Math.random() < .5) ooh();
-        thud(vd, e.blocked, e.kind, e.target, e.crit);
+        thud(vd, e.blocked, e.kind, e.target, e.crit, { maker: hitMaker(o.spec, e.blocked ? 'arm' : e.target) });
         if (!e.blocked) {
           if (e.counterHit) crowdShout('counter', .94);
           else if (!e.ko && o.hp / o.s.hp <= .34) crowdShout('danger', .92);
@@ -4683,7 +4717,7 @@ function handleEvents() {
           else if (cl.length >= 3) { comm('combo', F, f.side); commColor('comboColor', F, f.side, null, .32); cl.length = 0; }
           else if (vd > 11 && Math.random() < .5) comm(e.target === 'head' ? 'bigHead' : 'bigBody', F, f.side);
         } else if (++G.blockRun[o.side] >= 4) { G.blockRun[o.side] = 0; commColor('blockColor', F, o.side, null, .6); }
-        if (e.ko) { G.slow = 1; G.hitstop = .22; stop = true; addText(W / 2, 190, 'K.O.', '#f0b20a', 130, 2.4); G.hype = 1; roar(); }
+        if (e.ko) { G.slow = 1; G.hitstop = .22; stop = true; addText(W / 2, 190, 'K.O.', '#f0b20a', 130, 2.4); G.hype = 1; floorCrash(); roar(); }
         break; }
       case 'miss': if (e.glare) addText(f.x, groundFor(f) - 260, 'BLINDED BY THE GLARE', '#fff1c2', 20, .8); if (G.tell && G.tell.side === e.side) G.tell = null; whoosh(); if (f.punch && f.punch.signature) comm('sigMiss', F, e.side, { sig: f.spec.signature.name }, 2); break;
       case 'dodge': if (G.tell && G.tell.side === o.side) G.tell = null; addText(f.x, groundFor(f) - 250, 'DODGED', '#c9a6ff', 26, .8); whoosh(1.4); if (o.punch && o.punch.signature) { comm('sigMiss', F, o.side, { sig: o.spec.signature.name }, 2); commColor('slipColor', F, e.side, null, .5); } else if (Math.random() < .3) comm('dodge', F, o.side); break;
@@ -4696,7 +4730,7 @@ function handleEvents() {
         break; }
       case 'feint': G.tell = { side: e.side, text: e.tell, life: .7, max: .7, feint: true }; servo('jab'); if (Math.random() < .35) comm('feint', F, e.side); break;
       case 'malf': { const [x, y] = partPos(f, e.part); sparks(x, y, -f.dir, 12, false, true); if (e.what === 'OVERHEAT') { for (let j = 0; j < 8; j++) smoke(f.x + (Math.random() - .5) * 30, y - 20, false); steam(); } addText(f.x, groundFor(f) - 275, e.what, '#ff9a3a', 28, 1.1); zap(); comm('malf', F, e.side, { what: e.what.toLowerCase() }, 2); commColor('malfColor', F, e.side, null, .35); break; }
-      case 'detach': { const [x, y] = partPos(f, e.part); spawnDebris(f, e.part, -f.dir * (120 + Math.random() * 120), -380 - Math.random() * 120); sparks(x, y, -f.dir, 30, true); fire(x, y, 6); addText(f.x, groundFor(f) - 285, 'ARM TORN OFF', '#ff5a4a', 34, 1.4); if (S.opt.shake) G.shake = 14; G.hype = 1; clank(); roar(.7); ooh(); comm('detach', F, 1 - e.side, null, 2); commColor('detachColor', F, e.side, null, .6); break; }
+      case 'detach': { const [x, y] = partPos(f, e.part); spawnDebris(f, e.part, -f.dir * (120 + Math.random() * 120), -380 - Math.random() * 120); sparks(x, y, -f.dir, 30, true); fire(x, y, 6); addText(f.x, groundFor(f) - 285, 'ARM TORN OFF', '#ff5a4a', 34, 1.4); if (S.opt.shake) G.shake = 14; G.hype = 1; tearOff(); roar(.7); ooh(); comm('detach', F, 1 - e.side, null, 2); commColor('detachColor', F, e.side, null, .6); break; }
       case 'offline': addText(f.x, groundFor(f) - 285, e.part === 'head' ? 'HEAD OFFLINE' : 'LEGS LOCKED', '#ff9a3a', 30, 1.3); zap(); comm('offline', F, e.side, { what: e.part === 'head' ? 'head unit' : 'leg drive' }, 2); commColor('offlineColor', F, e.side, null, .35); break;
       case 'clinch': { addText(W / 2, 160, 'CLINCH', '#ebe7de', 40, .9); clank(.5); if (Math.random() < .7) say('pbp', pickLine('clinch', M5L.clinch), 1, { tts: true, ttl: 4200 }); else say('color', pickLine('clinchColor', M5L.clinchColor), 1, { tts: true, ttl: 5200 }); break; }
       case 'clinchShot': { const an = anchors(o.spec.build); sparks(o.x - f.dir * an.half * .6, groundFor(o) + an.bodyY + 10, -f.dir, 3, false); thud(4, false, 'jab', 'body'); zoneHit(o.side, 'torso', false); break; }
@@ -4710,7 +4744,7 @@ function handleEvents() {
       case 'knockdown': {
         const human = e.side === F.human;
         if (!human && G.replayRound !== F.round) { G.replayRound = F.round; G.wantReplay = 'kd'; }
-        addText(W / 2, 170, 'DOWN!', '#ff5a4a', 96, 1.3); if (S.opt.shake) G.shake = 18; G.hype = Math.min(1, G.hype + .5); ooh(); roar(.8); crowdShout('danger', 1); G.refT = 99; G.refN = 0; thud(20, false, 'hay', 'body'); powerDown();
+        addText(W / 2, 170, 'DOWN!', '#ff5a4a', 96, 1.3); if (S.opt.shake) G.shake = 18; G.hype = Math.min(1, G.hype + .5); ooh(); roar(.8); crowdShout('danger', 1); G.refT = 99; G.refN = 0; thud(20, false, 'hay', 'body', false, { maker: hitMaker(f.spec, 'body') }); floorCrash(); powerDown();
         comm(human ? 'downYou' : 'down', F, 1 - e.side, null, 3);
         if (human && !F.duo) { G.dial = { ph: Math.random() * 6, speed: 2.6 + f.kdTotal * .45, zoneC: (Math.random() - .5) * 1.4, zoneW: clamp(.78 - (f.kdTotal - 1) * .14 - (1 - f.hp / f.s.hp) * .2, .26, .78), lock: 0, flash: 0, miss: 0 }; ringing(true); setMuffle(.75); }
         break; }
@@ -4739,7 +4773,7 @@ function handleEvents() {
         G.refT = 2.5; break; }
       case 'choose': if (F.human === e.side) addText(W / 2, 140, 'DESTROY OR SPARE?', '#ff5a4a', 54, 2.5); else addText(W / 2, 140, 'THE CROWD WANTS IT...', '#ebe7de', 40, 2); G.hype = 1; sting(); startChant('stomp'); comm('choose', F, e.side, null, 2); break;
       case 'fwindup': addText(f.x, groundFor(f) - 290, 'FINISHER', '#ff5a4a', 44, 1.2); G.slow = .6; servo('hay'); break;
-      case 'decap': { const L = F.f[1 - e.side], [x, y] = partPos(L, 'head'); spawnDebris(L, 'head', f.dir * 160, -620); fire(x, y, 26); sparks(x, y, f.dir, 50, true); for (let j = 0; j < 14; j++) smoke(x + (Math.random() - .5) * 40, y, true); G.screen = 1; if (S.opt.shake) G.shake = 26; G.hitstop = .25; stop = true; addText(W / 2, 200, 'DESTROYED', '#ff5a4a', 120, 2.6); G.hype = 1; explosion(); roar(1.3); comm('destroy', F, e.side, null, 3); commColor('destroyColor', F, e.side, null, .8); break; }
+      case 'decap': { const L = F.f[1 - e.side], [x, y] = partPos(L, 'head'); spawnDebris(L, 'head', f.dir * 160, -620); fire(x, y, 26); sparks(x, y, f.dir, 50, true); for (let j = 0; j < 14; j++) smoke(x + (Math.random() - .5) * 40, y, true); G.screen = 1; if (S.opt.shake) G.shake = 26; G.hitstop = .25; stop = true; addText(W / 2, 200, 'DESTROYED', '#ff5a4a', 120, 2.6); G.hype = 1; explosion(); tearOff(); roar(1.3); comm('destroy', F, e.side, null, 3); commColor('destroyColor', F, e.side, null, .8); break; }
       case 'spare': addText(W / 2, 200, 'SPARED', '#6cc28a', 100, 2.2); cheer(.8); comm('spare', F, e.side, null, 3); commColor('spareColor', F, e.side, null, .7); break;
       case 'flywheel': addText(f.x, groundFor(f) - 270, 'FLYWHEEL · FREE HAYMAKER', '#f0b20a', 22, .9); break;
       case 'whistle': addText(f.x, groundFor(f) - 270, 'STEAM VENT', '#ebe7de', 22, .9); for (let j = 0; j < 8; j++) smoke(f.x - f.dir * 40, groundFor(f) - 180 - j * 6, false); steam(); break;

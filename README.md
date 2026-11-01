@@ -104,7 +104,6 @@ The in-game **How to play** screen covers the rest.
 
 ## Good to know
 
-- **Menu and loading music is off in this build.** The track lists in `SCREEN_MUSIC_TRACKS` in `index.html` are empty, so those screens play without music.
 - **Saves stay in your browser.** Clearing site data removes your progress.
 - **Some voice lines vary by device.** Booth commentary is prerecorded with ElevenLabs voices. Lines with no matching recording, such as ones with names or scores, use your browser's built-in voice.
 - **It can run like an app.** Served over HTTPS, the game can be installed, and audio it has already played is cached for offline use.
