@@ -1,6 +1,6 @@
 // Scrapyard Circuit offline cache. The page is fetched fresh when online (so deploys show up);
 // audio and images are cached the first time they play and then served from the cache.
-const CACHE = 'scrapyard-v7';
+const CACHE = 'scrapyard-v8';
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png']).catch(() => {}))); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
