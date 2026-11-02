@@ -140,7 +140,7 @@ h2,h3,h4{margin:0}
 @keyframes l3in{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
 @media (max-width:760px){.vsmode b{font-size:24px}.vchip{min-width:0}.vchip b{font-size:16px;min-width:64px}.vspick span{display:none}.vsbadge{top:58px}.vsside .first{font-size:20px}.vsside small{font-size:16px}.vsgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end}.vsmid{display:none}.vsside .ovr b{font-size:48px}.vsside .line{font-size:15px}.cbar .hints{gap:8px;font-size:11px}.cbar .hints kbd{display:none}.mplate{bottom:56px}.mplate b{font-size:38px}.l3 span{font-size:18px}.l3 em{display:none}}
 @media (max-width:520px){.cbar{flex-wrap:wrap}.ticker{flex-basis:100%}.mitem b{font-size:32px}}
-.mwrap{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px max(24px,env(safe-area-inset-left));max-width:560px;min-height:0;overflow-y:auto}
+.mwrap{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;padding:24px max(24px,env(safe-area-inset-left));max-width:560px;min-height:0;overflow-y:auto;overflow-x:hidden}
 .mlogo{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 .mlogo .stripe{width:44px;height:44px}
 .mlogo h1{font-family:var(--display);font-weight:600;font-size:clamp(46px,7vw,76px);line-height:.8;margin:0;text-transform:uppercase;padding-top:8px}
@@ -3205,7 +3205,7 @@ function splatter(c, x, y, rad, col, seed) {
 }
 function setMenuSel(i, focus) {
   const items = $$('#mnav .mitem'); menuSel = (i + items.length) % items.length;
-  items.forEach((b, k) => b.classList.toggle('on', k === menuSel)); if (focus) items[menuSel].focus({ preventScroll: true });
+  items.forEach((b, k) => b.classList.toggle('on', k === menuSel)); if (focus) { const el = items[menuSel], reveal = () => { if (!el.classList.contains('on')) return; if (menuSel) el.scrollIntoView({ block: 'nearest' }); else el.closest('.mwrap').scrollTop = 0; }; el.focus({ preventScroll: true }); reveal(); setTimeout(reveal, 240); }
   renderMenuPlate();
 }
 function renderMenuPlate() {
@@ -3286,7 +3286,7 @@ function drawMenu(ts) {
     c.fillStyle = 'rgba(0,0,0,.35)'; c.beginPath(); c.ellipse(f.x, groundFor(f) + 2, 62, 9, 0, 0, 7); c.fill();
     drawRobot(c, { st: f.st, build: f.spec.build, paint: f.spec.paint, accent: f.spec.accent, decal: f.spec.decal, num: f.spec.num, tally: f.spec.tally, wear: f.spec.wear, wseed: f.spec.wseed, x: f.x + f.dir * step, ground: groundFor(f), dir: f.dir, scale: zScale(f), pose: poseFrom(f.st, p, f.punch, t, f.walk, i), t,
       dmg: { hpF: f.hp / f.s.hp, kd: 0, head: frac(f, 'head'), lead: frac(f, 'lead'), rear: frac(f, 'rear'), legs: frac(f, 'legs'), lost: f.lost, glitch: f.glitchT > 0 || f.st === 'kneel', heat: f.heat }, scratches: M.scr[i], flash: 0 }); }
-  const fogK = Math.max(fa.fogT || 0, fb.fogT || 0) / 7; if (fogK > 0) { for (let i = 0; i < 7; i++) { const fx = ((i * 173 + t * (14 + i * 3)) % (W + 300)) - 150, fy = GROUND - 60 - (i % 3) * 70; c.globalAlpha = .16 * Math.min(1, fogK * 2.5); c.fillStyle = '#c9d2d8'; c.beginPath(); c.ellipse(fx, fy, 190, 46, 0, 0, 7); c.fill(); } c.globalAlpha = 1; }
+  drawFogBanks(c, t, Math.max(fa.fogT || 0, fb.fogT || 0) / 7);
   if (M.heatT > 0) { const g3 = c.createLinearGradient(0, H, 0, 0); g3.addColorStop(0, `rgba(255,110,20,${.3 * Math.min(1, M.heatT / 1.2)})`); g3.addColorStop(1, 'rgba(255,140,40,0)'); c.fillStyle = g3; c.fillRect(0, 0, W, H); }
   c.textAlign = 'center'; for (const x of M.texts) { c.globalAlpha = Math.min(1, x.t / .4); c.fillStyle = x.col; c.font = '600 34px Teko, sans-serif'; c.fillText(x.s, M.camX, 150 - (1.2 - x.t) * 20); } c.globalAlpha = 1; c.textAlign = 'left';
   for (const sp of M.sparks) { const a = sp.t / .3, r = (sp.big ? 34 : 18) * (1.4 - a); c.globalAlpha = a; c.fillStyle = sp.blk ? '#9fd3ff' : sp.big ? '#fff3c4' : '#ffd36a'; c.beginPath(); c.arc(sp.x, sp.y, r * .45, 0, 7); c.fill(); c.strokeStyle = c.fillStyle; c.lineWidth = 2.5; for (let j = 0; j < 6; j++) { const an = j * 1.05 + sp.x; c.beginPath(); c.moveTo(sp.x + Math.cos(an) * r * .5, sp.y + Math.sin(an) * r * .5); c.lineTo(sp.x + Math.cos(an) * r * 1.2, sp.y + Math.sin(an) * r * 1.2); c.stroke(); } }
@@ -3487,8 +3487,52 @@ const CROWD_PROFILES = {
 };
 const LEAGUE_VENUE = ['lot', 'drain', 'arena', 'dome'];
 let curVenue = '', VFX = { barrels: [], bulbs: [], blink: [], phones: [] };
+/* ---- crowd: people are pre-drawn into one atlas per venue (12 looks x 3 distances x 3 poses) so a sold-out dome stays cheap ---- */
+const CROWD_LOOKS = {
+  lot: { rim: '255,178,104', shade: '26,18,14', heads: ['cap', 'hair', 'long', 'cap', 'beanie', 'bald'], tops: ['#4d3b2c', '#3b4650', '#5c3528', '#334033', '#574a30', '#6b6358', '#2f3a48', '#65462c'] },
+  drain: { rim: '126,214,190', shade: '12,18,16', heads: ['hood', 'hood', 'beanie', 'hair', 'long', 'bald'], tops: ['#25292b', '#33383a', '#1f3036', '#40303a', '#2c3a2e', '#4a3a24', '#363040', '#28343c'] },
+  harbor: { rim: '150,190,230', shade: '10,20,36', heads: ['beanie', 'beanie', 'cap', 'hair', 'hood', 'bald'], tops: ['#24384d', '#2c3f4a', '#7a6324', '#6a3a2a', '#35424a', '#40505a', '#1f2c3c', '#4d5a3a'], vest: '#b8742a' },
+  foundry: { rim: '255,168,84', shade: '26,16,10', heads: ['hardhat', 'hardhat', 'hardhat', 'hair', 'cap', 'bald'], tops: ['#3a4048', '#4c3a2a', '#2e3640', '#5a4630', '#40362e', '#343a34', '#4a4038', '#2a3038'], vest: '#b8642a' },
+  arena: { rim: '236,238,245', shade: '16,18,26', heads: ['hair', 'long', 'cap', 'hair', 'bald', 'beanie'], tops: ['#7a2c2c', '#2c4a70', '#454a52', '#d8d4c8', '#33363c', '#6a5a2a', '#2c5a52', '#54406a'] },
+  dome: { rim: '240,206,120', shade: '10,11,20', heads: ['hair', 'long', 'cap', 'hair', 'bald', 'hair'], tops: ['#8a7220', '#7a2630', '#24406a', '#d8d4c8', '#2e3038', '#3c3f48', '#8a7220', '#7a2630'] },
+};
+const CROWD_SKIN = ['#e2b999', '#c98e66', '#9a6744', '#6b452f', '#f0cdb0', '#4f3325'], CROWD_HAIR = ['#1a1412', '#2e2018', '#4a3020', '#6a5a4a', '#141418'], CROWD_HATS = ['#b8a040', '#b8b4a8', '#b86a2a'];
+const CROWD_CELL = [120, 150], CROWD_ANCHOR = [60, 62], CROWD_R = 20;
+let crowdAtlas = null, crowdAtlasVenue = '';
+function drawFan(c, x, y, look, skin, hair, top, kind, wide, vest, hat, rim, pose) {
+  const R = CROWD_R, sh = R * wide, neck = y + R * .85, chest = neck + R * .32, foot = y + R * 3.7;
+  const arm = (side, up) => { const sx = x + side * sh * .86, sy = chest + R * .22; c.strokeStyle = top; c.lineWidth = R * .62; c.lineCap = 'round'; c.beginPath(); c.moveTo(sx, sy); if (up) c.lineTo(sx + side * R * .42, y - R * 1.5); else c.lineTo(sx + side * R * .16, foot); c.stroke(); if (up) { c.fillStyle = skin; c.beginPath(); c.arc(sx + side * R * .46, y - R * 1.78, R * .36, 0, 7); c.fill(); } };
+  if (kind === 'long') { c.fillStyle = hair; c.beginPath(); c.moveTo(x - R * 1.04, y - R * .2); c.lineTo(x - R * 1.14, y + R * 1.5); c.lineTo(x + R * 1.14, y + R * 1.5); c.lineTo(x + R * 1.04, y - R * .2); c.arc(x, y - R * .2, R * 1.04, 0, Math.PI, true); c.fill(); }
+  arm(-1, pose === 2); arm(1, pose >= 1);
+  c.fillStyle = top; c.beginPath(); c.moveTo(x - R * .4, neck); c.quadraticCurveTo(x - sh, neck + R * .08, x - sh, chest + R * .5); c.lineTo(x - sh * .92, foot); c.lineTo(x + sh * .92, foot); c.lineTo(x + sh, chest + R * .5); c.quadraticCurveTo(x + sh, neck + R * .08, x + R * .4, neck); c.closePath(); c.fill();
+  if (vest) { c.fillStyle = vest; c.fillRect(x - sh * .78, chest + R * .95, sh * 1.56, R * .42); c.fillRect(x - sh * .78, chest + R * 1.75, sh * 1.56, R * .42); }
+  c.fillStyle = 'rgba(0,0,0,.22)'; c.beginPath(); c.moveTo(x - R * .08, chest); c.lineTo(x + sh * .95, chest + R * .3); c.lineTo(x + sh * .88, foot); c.lineTo(x - R * .08, foot); c.closePath(); c.fill();
+  c.fillStyle = skin; c.fillRect(x - R * .34, y + R * .55, R * .68, R * .55);
+  if (kind === 'hood') { c.fillStyle = top; c.beginPath(); c.arc(x, y - R * .06, R * 1.34, 0, 7); c.fill(); }
+  c.fillStyle = skin; c.beginPath(); c.arc(x, y, R, 0, 7); c.fill();
+  c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.arc(x, y, R, -Math.PI * .42, Math.PI * .42); c.quadraticCurveTo(x + R * .22, y, x + R * .3, y - R * .95); c.fill();
+  if (kind === 'hair' || kind === 'long') { c.fillStyle = hair; c.beginPath(); c.arc(x, y - R * .08, R * 1.04, Math.PI * 1.02, Math.PI * 1.98); c.quadraticCurveTo(x, y - R * .62, x - R * 1.04, y - R * .04); c.fill(); }
+  else if (kind === 'cap') { c.fillStyle = hat; c.beginPath(); c.arc(x, y - R * .2, R * 1.03, Math.PI, 0); c.closePath(); c.fill(); c.fillRect(x - R * 1.32, y - R * .3, R * 2.1, R * .24); }
+  else if (kind === 'beanie') { c.fillStyle = hat; c.beginPath(); c.arc(x, y - R * .18, R * 1.08, Math.PI, 0); c.lineTo(x + R * 1.08, y - R * .02); c.lineTo(x - R * 1.08, y - R * .02); c.closePath(); c.fill(); c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(x - R * 1.08, y - R * .3, R * 2.16, R * .28); }
+  else if (kind === 'hardhat') { c.fillStyle = hat; c.beginPath(); c.arc(x, y - R * .24, R * 1.08, Math.PI, 0); c.closePath(); c.fill(); c.fillRect(x - R * 1.42, y - R * .3, R * 2.84, R * .24); c.fillStyle = 'rgba(255,255,255,.28)'; c.fillRect(x - R * .14, y - R * 1.3, R * .28, R * 1.02); }
+  c.strokeStyle = `rgba(${rim},.5)`; c.lineWidth = R * .13; c.lineCap = 'round'; c.beginPath(); c.arc(x, y - (kind === 'hood' ? R * .06 : 0), kind === 'hood' ? R * 1.34 : R * 1.06, Math.PI * 1.2, Math.PI * 1.8); c.moveTo(x - sh * .94, chest + R * .32); c.quadraticCurveTo(x - sh * .9, neck + R * .1, x - R * .46, neck + R * .03); c.moveTo(x + R * .46, neck + R * .03); c.quadraticCurveTo(x + sh * .9, neck + R * .1, x + sh * .94, chest + R * .32); c.stroke();
+}
+function buildCrowdAtlas(r) {
+  const v = curVenue, look = CROWD_LOOKS[v] || CROWD_LOOKS.arena, [cw, ch] = CROWD_CELL, [ax, ay] = CROWD_ANCHOR;
+  if (!crowdAtlas) { crowdAtlas = document.createElement('canvas'); crowdAtlas.width = cw * 12; crowdAtlas.height = ch * 9; }
+  const c = crowdAtlas.getContext('2d'); c.clearRect(0, 0, crowdAtlas.width, crowdAtlas.height); crowdAtlasVenue = v;
+  for (let a = 0; a < 12; a++) {
+    const pick = list => list[r() * list.length | 0], skin = pick(CROWD_SKIN), hair = pick(CROWD_HAIR), top = look.tops[a % look.tops.length], kind = look.heads[a % look.heads.length], wide = 1.22 + r() * .5, vest = look.vest && r() < .3 ? look.vest : null, hat = kind === 'hardhat' ? pick(CROWD_HATS) : kind === 'cap' || kind === 'beanie' ? pick(look.tops) : hair;
+    for (let tone = 0; tone < 3; tone++) for (let pose = 0; pose < 3; pose++) {
+      const cx = a * cw, cy = (tone * 3 + pose) * ch; c.save(); c.beginPath(); c.rect(cx, cy, cw, ch); c.clip();
+      drawFan(c, cx + ax, cy + ay, look, skin, hair, top, kind, wide, vest, hat, look.rim, pose);
+      c.globalCompositeOperation = 'source-atop'; c.fillStyle = `rgba(${look.shade},${[.76, .6, .46][tone]})`; c.fillRect(cx, cy, cw, ch); c.restore();
+    }
+  }
+}
 function makeCrowd(r, rows, y0, rowH, base, step, sizeBase, pal, density) {
-  for (let row = 0; row < rows; row++) { const n = base + row * step; for (let i = 0; i < n; i++) { if (r() > density) continue; const pc = r(); CROWD.push({ x: (i + r() * .8) * (W / n) - 4, y: y0 + row * rowH + r() * 4, s: sizeBase + row * sizeBase * .12 + r() * 2, col: pc < .1 ? pal[1] : pc < .17 ? pal[2] : pc < .24 ? pal[3] : `rgb(${pal[0][0] + row * 4 + (r() * 10 | 0)},${pal[0][1] + row * 4},${pal[0][2] + row * 4})`, ph: r() * 6.28, sp: 6 + r() * 6, ex: r(), row }); } }
+  if (crowdAtlasVenue !== curVenue) buildCrowdAtlas(r);
+  for (let row = 0; row < rows; row++) { const n = base + row * step, tone = rows < 2 ? 2 : Math.min(2, Math.floor((row / (rows - 1)) * 2.999)); for (let i = 0; i < n; i++) { if (r() > density) continue; CROWD.push({ x: (i + r() * .8) * (W / n) - 4, y: y0 + row * rowH + r() * 4, s: sizeBase + row * sizeBase * .12 + r() * 2, look: r() * 12 | 0, tone, ph: r() * 6.28, sp: 6 + r() * 6, ex: r(), row }); } }
 }
 function chainFence(c, x, y, w, h, a) { c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip(); c.strokeStyle = `rgba(170,180,175,${a})`; c.lineWidth = 1.2; for (let i = -h; i < w; i += 14) { c.beginPath(); c.moveTo(x + i, y + h); c.lineTo(x + i + h, y); c.moveTo(x + i, y); c.lineTo(x + i + h, y + h); c.stroke(); } c.strokeStyle = `rgba(120,130,125,${Math.min(1, a * 2.4)})`; c.lineWidth = 4; c.beginPath(); c.moveTo(x, y + 2); c.lineTo(x + w, y + 2); c.stroke(); c.restore(); }
 function drawBarrel(c, x, y) { c.fillStyle = '#3a2a1e'; rr(c, x - 18, y - 46, 36, 46, 4); c.fill(); c.fillStyle = 'rgba(0,0,0,.35)'; c.fillRect(x - 18, y - 34, 36, 4); c.fillRect(x - 18, y - 16, 36, 4); c.fillStyle = '#120c08'; c.beginPath(); c.ellipse(x, y - 46, 18, 5, 0, 0, 7); c.fill(); }
@@ -3607,13 +3651,22 @@ function drawVenueFG(t) {
   if (curVenue === 'lot') for (let i = 0; i < 22; i++) { const x = (i * 97 + t * 14) % W, y = 200 + (i * 53 % 200) + Math.sin(t + i) * 6; ctx.fillStyle = 'rgba(255,210,150,.25)'; ctx.fillRect(x, y, 2, 2); }
 }
 function drawCrowd(c, t, hype) {
+  if (!crowdAtlas) return; const [cw, ch] = CROWD_CELL, [ax, ay] = CROWD_ANCHOR;
   for (const p of CROWD) {
-    const jump = Math.max(0, Math.sin(t * p.sp + p.ph)) * hype * 6 * (.4 + p.ex), y = p.y - jump;
-    c.fillStyle = p.col; c.beginPath(); c.ellipse(p.x, y + p.s * 1.9, p.s * 1.6, p.s * 1.3, 0, 0, 7); c.fill(); c.beginPath(); c.arc(p.x, y, p.s, 0, 7); c.fill();
-    if (hype > .5 && p.ex > 1.15 - hype * .6) { c.strokeStyle = p.col; c.lineWidth = 3; c.beginPath(); c.moveTo(p.x - p.s, y + p.s); c.lineTo(p.x - p.s * 1.6, y - p.s * 1.6 - jump * .3); c.moveTo(p.x + p.s, y + p.s); c.lineTo(p.x + p.s * 1.5, y - p.s * 1.7 - jump * .3); c.stroke(); }
+    const jump = Math.max(0, Math.sin(t * p.sp + p.ph)) * hype * 6 * (.4 + p.ex), y = p.y - jump, sway = Math.sin(t * 1.3 + p.ph) * p.s * .14 * (.4 + hype), mood = p.ex + Math.sin(t * .7 + p.ph) * .12;
+    const pose = hype > .5 && mood > 1.15 - hype * .6 ? 2 : hype > .3 && mood > 1.02 - hype * .62 ? 1 : 0, k = p.s / CROWD_R;
+    c.drawImage(crowdAtlas, p.look * cw, (p.tone * 3 + pose) * ch, cw, ch, p.x + sway - ax * k, y - ay * k, cw * k, ch * k);
   }
 }
-
+/* ---- fog hazard: soft drifting banks, not flat ovals ---- */
+let fogPuff = null;
+function drawFogBanks(c, t, fogK) {
+  if (fogK <= 0) return;
+  if (!fogPuff) { fogPuff = document.createElement('canvas'); fogPuff.width = 256; fogPuff.height = 256; const x = fogPuff.getContext('2d'), g = x.createRadialGradient(128, 128, 0, 128, 128, 128); g.addColorStop(0, 'rgba(201,210,216,1)'); g.addColorStop(.45, 'rgba(201,210,216,.5)'); g.addColorStop(1, 'rgba(201,210,216,0)'); x.fillStyle = g; x.fillRect(0, 0, 256, 256); }
+  c.save(); c.globalAlpha = .22 * Math.min(1, fogK * 2.5);
+  for (let i = 0; i < 9; i++) { const dw = 460 + (i % 3) * 90, dh = 120 + (i % 2) * 34, fx = ((i * 137 + t * (11 + i * 2.5)) % (W + dw)) - dw * .5, fy = GROUND - 56 - (i % 3) * 62 + Math.sin(t * .4 + i) * 7; c.drawImage(fogPuff, fx - dw / 2, fy - dh / 2, dw, dh); }
+  c.restore();
+}
 
 const VTHUMB = {};
 function venueThumbs() {
@@ -4933,7 +4986,7 @@ function render(t, dt) {
     if (sl.kind === 'puddle') { ctx.save(); ctx.globalAlpha = .55 * a; ctx.fillStyle = '#1d3a52'; ctx.beginPath(); ctx.ellipse(sx, sy, sl.r * 1.2, sl.r * .3, 0, 0, 7); ctx.fill(); ctx.globalAlpha = .4 * a; ctx.strokeStyle = '#9fd3ff'; ctx.lineWidth = 1; const rr = (t * 22 + sl.x) % 18; ctx.beginPath(); ctx.ellipse(sx + 6, sy, 4 + rr, (4 + rr) * .3, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = .3 * a; ctx.fillStyle = '#cfe8ff'; ctx.beginPath(); ctx.ellipse(sx - sl.r * .35, sy - 2, sl.r * .35, 2, -.1, 0, 7); ctx.fill(); ctx.restore(); continue; }
     ctx.save(); ctx.globalAlpha = .82 * a; ctx.fillStyle = '#09090b'; ctx.beginPath(); ctx.ellipse(sx, sy, sl.r * 1.15, sl.r * .32, 0, 0, 7); ctx.fill(); ctx.globalAlpha = .28 * a; ctx.fillStyle = '#7a8aa0'; ctx.beginPath(); ctx.ellipse(sx - sl.r * .3, sy - sl.r * .08, sl.r * .4, sl.r * .07, -.1, 0, 7); ctx.fill(); ctx.globalAlpha = .18 * a; ctx.fillStyle = '#b48cff'; ctx.beginPath(); ctx.ellipse(sx + sl.r * .25, sy + sl.r * .05, sl.r * .3, sl.r * .05, .1, 0, 7); ctx.fill(); ctx.restore(); }
   const fogK = Math.max(...G.F.f.map(f => f.fogT || 0)) / 7;
-  if (fogK > 0) { ctx.save(); for (let i = 0; i < 7; i++) { const fx = ((i * 173 + t * (14 + i * 3)) % (W + 300)) - 150, fy = GROUND - 60 - (i % 3) * 70; ctx.globalAlpha = .16 * Math.min(1, fogK * 2.5); ctx.fillStyle = '#c9d2d8'; ctx.beginPath(); ctx.ellipse(fx, fy, 190, 46, 0, 0, 7); ctx.fill(); } ctx.restore(); }
+  drawFogBanks(ctx, t, fogK);
   if (G.heatT > 0) { ctx.save(); const k = Math.min(1, G.heatT / 1.2); const g = ctx.createLinearGradient(0, H, 0, 0); g.addColorStop(0, `rgba(255,110,20,${.32 * k})`); g.addColorStop(.6, `rgba(255,140,40,${.1 * k})`); g.addColorStop(1, 'rgba(255,140,40,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore(); }
   ctx.globalCompositeOperation = 'lighter';
   if (curVenue !== 'lot') for (const [x0, ph] of [[300, 0], [660, 1.7]]) { const sw = Math.sin(t * .4 + ph) * 30, g = ctx.createLinearGradient(0, 0, 0, GROUND + 30); g.addColorStop(0, 'rgba(255,240,200,.1)'); g.addColorStop(1, 'rgba(255,240,200,.02)'); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x0 - 18, 0); ctx.lineTo(x0 + 18, 0); ctx.lineTo(x0 + 160 + sw, GROUND + 30); ctx.lineTo(x0 - 160 + sw, GROUND + 30); ctx.closePath(); ctx.fill(); }
