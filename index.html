@@ -3277,7 +3277,7 @@ function drawMenu(ts) {
   M.camX += ((fa.x + fb.x) / 2 - M.camX) * Math.min(1, dtm * 2);
   const cx = cw * (port ? .5 : .64), dx = clamp(cx - M.camX * k, cw - W * k, 0), dy = port ? ch * .8 - GROUND * k : (ch - H * k) / 2;
   c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = '#0b0c0e'; c.fillRect(0, 0, cw, ch);
-  c.setTransform(k, 0, 0, k, dx, dy); c.globalAlpha = .55; c.drawImage(layerBack, 0, 0); drawCrowd(c, t, .55 + Math.sin(t * .5) * .15 + Math.min(.3, M.sparks.length * .08)); c.drawImage(layerRing, 0, 0); c.globalAlpha = 1;
+  c.setTransform(k, 0, 0, k, dx, dy); c.globalAlpha = .55; c.drawImage(layerBack, 0, 0); drawCrowd(c, t, .55 + Math.sin(t * .5) * .15 + Math.min(.3, M.sparks.length * .08)); c.drawImage(layerRing, 0, 0); drawRingRopes(c, t); c.globalAlpha = 1;
   if (!M.splat) { M.splat = document.createElement('canvas'); M.splat.width = 900; M.splat.height = 600; const sx = M.splat.getContext('2d'); splatter(sx, 330, 300, 250, '#c7362f', 7); splatter(sx, 590, 300, 250, '#2a72a8', 11); splatter(sx, 460, 170, 150, '#f0b20a', 19); }
   c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalCompositeOperation = 'screen'; c.globalAlpha = .5; const sw = Math.min(cw * .7, ch * 1.4), bxs = M.camX * k + dx; c.drawImage(M.splat, bxs - sw / 2, GROUND * k + dy - sw * .62, sw, sw * .67); c.restore();
   drawSlicksOn(c, F.slicks, t);
@@ -3307,7 +3307,7 @@ function startTitleFx() {
   const cv = $('#titleCanvas'); if (!cv) return; sizeCanvas(cv, cv.clientWidth || 960, cv.clientHeight || 540);
   if (!TITLE) {
     const bg = document.createElement('canvas'); bg.width = W; bg.height = H; const x = bg.getContext('2d'), keep = curVenue;
-    try { buildLayers('dome'); x.drawImage(layerBack, 0, 0); drawCrowd(x, 2.1, .7); x.drawImage(layerRing, 0, 0); } catch (e) {}
+    try { buildLayers('dome'); x.drawImage(layerBack, 0, 0); drawCrowd(x, 2.1, .7); x.drawImage(layerRing, 0, 0); drawRingRopes(x, 2.1); } catch (e) {}
     if (keep) try { buildLayers(keep); } catch (e) {}
     const splat = document.createElement('canvas'); splat.width = 1200; splat.height = 700; const sx = splat.getContext('2d'); splatter(sx, 330, 420, 330, '#c7362f', 41); splatter(sx, 870, 420, 330, '#2a72a8', 43);
     const champ = BOT(champOf(3).id);
@@ -3468,7 +3468,7 @@ const cv = $('#arenaCanvas'), ctx = cv.getContext('2d');
 const W = 960, H = 480, GROUND = 420;
 let aScale = 1, G = null, seedN = 1;
 const layerBack = document.createElement('canvas'), layerRing = document.createElement('canvas'), layerFront = document.createElement('canvas');
-let CROWD = [];
+let CROWD = [], ringRopes = null;
 const VENUES = {
   lot: { name: 'Scrapyard Lot', desc: 'Dusk behind the salvage yard. Dirt floor, a ring of tires, folks watching from car roofs.', when: 'Friday · 7:40 PM', crowd: 'About 200 locals', tag: 'Where everybody starts', size: .25, key: 'outdoor' },
   drain: { name: 'The Drain', desc: 'A storm drain turned fight club. Chain-link cage, fire barrels, standing room only.', when: 'Saturday · 1:15 AM', crowd: '900, standing', tag: 'Underground · cash only', size: .5, key: 'tunnel' },
@@ -3603,11 +3603,24 @@ function buildLayers(v) {
   if (v === 'lot') for (let i = 0; i < 170; i++) { rg.fillStyle = `rgba(${r() < .5 ? '0,0,0' : '255,220,180'},${.08 + r() * .12})`; rg.fillRect(40 + r() * 880, 388 + r() * 60, 2 + r() * 3, 1.5); }
   if (v === 'drain') { rg.strokeStyle = '#1a1c1a'; rg.lineWidth = 3; rg.beginPath(); rg.ellipse(W / 2, 420, 60, 12, 0, 0, 7); rg.stroke(); rg.beginPath(); for (let i = -48; i <= 48; i += 12) { rg.moveTo(W / 2 + i, 410); rg.lineTo(W / 2 + i, 430); } rg.stroke(); for (let i = 0; i < 6; i++) { rg.fillStyle = 'rgba(0,0,0,.2)'; rg.beginPath(); rg.ellipse(100 + r() * 760, 395 + r() * 50, 20 + r() * 40, 5 + r() * 6, 0, 0, 7); rg.fill(); } }
   if (v === 'harbor') { rg.strokeStyle = 'rgba(0,0,0,.35)'; rg.lineWidth = 1.5; for (let y = 392; y < 452; y += 9) { rg.beginPath(); rg.moveTo(70 - (y - 384) * .8, y); rg.lineTo(890 + (y - 384) * .8, y); rg.stroke(); } }
-  if (v === 'arena' || v === 'dome') { rg.strokeStyle = v === 'dome' ? 'rgba(212,160,23,.35)' : 'rgba(255,255,255,.08)'; rg.lineWidth = 2; rg.beginPath(); rg.ellipse(W / 2, 420, 150, 20, 0, 0, 7); rg.stroke(); rg.fillStyle = v === 'dome' ? 'rgba(212,160,23,.2)' : 'rgba(240,178,10,.08)'; rg.font = '600 30px Teko, sans-serif'; rg.textAlign = 'center'; rg.fillText(v === 'dome' ? 'CROWN DOME' : 'REGIONAL CIRCUIT', W / 2, 430); rg.textAlign = 'left'; }
-  rg.fillStyle = '#1c1d20'; rg.fillRect(0, 452, W, H - 452);
+  const floorPath = () => { rg.beginPath(); rg.moveTo(70, 384); rg.lineTo(890, 384); rg.lineTo(944, 452); rg.lineTo(16, 452); rg.closePath(); };
+  const floorLogo = (text, col, size) => { rg.save(); rg.translate(W / 2, 421); rg.scale(1, .42); rg.fillStyle = col; rg.font = `600 ${size}px Teko, sans-serif`; rg.textAlign = 'center'; rg.textBaseline = 'middle'; rg.fillText(text, 0, 0); rg.restore(); };
+  if (v === 'arena' || v === 'dome') {
+    rg.strokeStyle = v === 'dome' ? 'rgba(212,160,23,.55)' : 'rgba(255,255,255,.2)'; rg.lineWidth = 2; rg.beginPath(); rg.moveTo(92, 389); rg.lineTo(868, 389); rg.lineTo(914, 447); rg.lineTo(46, 447); rg.closePath(); rg.stroke();
+    rg.lineWidth = 3; rg.beginPath(); rg.ellipse(W / 2, 420, 158, 25, 0, 0, 7); rg.stroke();
+    floorLogo(v === 'dome' ? 'CROWN DOME' : 'REGIONAL CIRCUIT', v === 'dome' ? 'rgba(212,160,23,.62)' : 'rgba(240,178,10,.42)', 62);
+  }
+  if (v === 'foundry') { rg.save(); floorPath(); rg.clip(); rg.strokeStyle = 'rgba(0,0,0,.34)'; rg.lineWidth = 1.5; for (let y = 396; y < 452; y += 17) { rg.beginPath(); rg.moveTo(0, y); rg.lineTo(W, y); rg.stroke(); } for (let i = -7; i <= 7; i++) { rg.beginPath(); rg.moveTo(W / 2 + i * 58, 384); rg.lineTo(W / 2 + i * 66, 452); rg.stroke(); } rg.restore(); floorLogo('FOUNDRY FLOOR', 'rgba(225,116,49,.36)', 58); }
+  if (v === 'harbor') floorLogo('PIER 9', 'rgba(10,10,12,.42)', 66);
+  { const pool = { lot: '255,190,120,.2', drain: '255,150,70,.15', harbor: '170,200,240,.15', foundry: '255,160,80,.2', arena: '255,250,235,.24', dome: '255,235,190,.28' }[v]; rg.save(); floorPath(); rg.clip();
+    rg.save(); rg.translate(W / 2, 420); rg.scale(1, .2); g = rg.createRadialGradient(0, 0, 20, 0, 0, 430); g.addColorStop(0, `rgba(${pool})`); g.addColorStop(.62, `rgba(${pool.split(',').slice(0, 3).join(',')},.08)`); g.addColorStop(1, `rgba(${pool.split(',').slice(0, 3).join(',')},0)`); rg.globalCompositeOperation = 'lighter'; rg.fillStyle = g; rg.fillRect(-500, -400, 1000, 800); rg.restore();
+    g = rg.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(0,0,0,.42)'); g.addColorStop(.2, 'rgba(0,0,0,0)'); g.addColorStop(.8, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.42)'); rg.fillStyle = g; rg.fillRect(0, 384, W, 68); rg.restore(); }
+  g = rg.createLinearGradient(0, 452, 0, H); g.addColorStop(0, '#26282c'); g.addColorStop(1, '#101114'); rg.fillStyle = g; rg.fillRect(0, 452, W, H - 452);
+  rg.fillStyle = 'rgba(0,0,0,.22)'; for (let x = 12; x < W; x += 34) rg.fillRect(x, 459, 2, H - 459);
+  rg.fillStyle = 'rgba(255,255,255,.1)'; rg.beginPath(); rg.moveTo(16, 452); rg.lineTo(944, 452); rg.lineTo(944, 453.5); rg.lineTo(16, 453.5); rg.closePath(); rg.fill();
   const stripe = { foundry: '#e17431', arena: '#4fa3d9', dome: '#d4a017' }[v] || '#f0b20a';
   rg.save(); rg.beginPath(); rg.rect(0, 452, W, 7); rg.clip(); rg.fillStyle = stripe; for (let x = 0; x < W; x += 24) { rg.beginPath(); rg.moveTo(x, 459); rg.lineTo(x + 12, 459); rg.lineTo(x + 20, 452); rg.lineTo(x + 8, 452); rg.fill(); } rg.restore();
-  rg.fillStyle = 'rgba(235,231,222,.35)'; rg.font = '500 12px "IBM Plex Mono", monospace'; rg.textAlign = 'center'; rg.fillText(VENUES[v].name.toUpperCase() + ' · NO REFUNDS', W / 2, 474); rg.textAlign = 'left';
+  rg.fillStyle = 'rgba(235,231,222,.62)'; rg.font = '600 16px Teko, sans-serif'; rg.textAlign = 'center'; rg.fillText(VENUES[v].name.toUpperCase() + ' · NO REFUNDS', W / 2, 475); rg.textAlign = 'left';
   const ropes = { lot: ['#6a4a2a', '#5a3e24'], harbor: ['#b89a6a', '#a3895c', '#8f784f'], foundry: ['#e17431', '#c8c0b4', '#d4a017'], arena: ['#c7362f', '#ebe7de', '#3f6fb5'], dome: ['#ebe7de', '#d4a017', '#ebe7de'] }[v];
   const backPost = x => {
     if (v === 'lot') { for (let i = 0; i < 4; i++) { const y = 372 - i * 26; rg.fillStyle = '#141414'; rg.beginPath(); rg.ellipse(x, y, 22, 13, 0, 0, 7); rg.fill(); rg.fillStyle = '#2a2a2a'; rg.beginPath(); rg.ellipse(x, y - 3, 12, 6, 0, 0, 7); rg.fill(); } }
@@ -3615,7 +3628,7 @@ function buildLayers(v) {
     else { rg.fillStyle = v === 'dome' ? '#8a6a10' : '#2a2d31'; rg.fillRect(x - 5, 262, 10, 124); rg.fillStyle = v === 'arena' ? (x < W / 2 ? '#a3262f' : '#24506a') : v === 'dome' ? '#d4a017' : '#555d66'; for (let i = 0; i < 3; i++) { rr(rg, x - 9, 280 + i * 34, 18, 22, 4); rg.fill(); } }
   };
   backPost(66); backPost(894);
-  if (ropes) ropes.forEach((c, i) => { const y = [280, 314, 348][i]; rg.strokeStyle = c; rg.lineWidth = v === 'harbor' ? 6 : 5; rg.beginPath(); rg.moveTo(66, y); rg.lineTo(894, y); rg.stroke(); if (v === 'harbor') { rg.strokeStyle = 'rgba(0,0,0,.3)'; rg.lineWidth = 1; for (let x = 70; x < 890; x += 8) { rg.beginPath(); rg.moveTo(x, y - 3); rg.lineTo(x + 5, y + 3); rg.stroke(); } } rg.strokeStyle = 'rgba(255,255,255,.14)'; rg.lineWidth = 1; rg.beginPath(); rg.moveTo(66, y - 2); rg.lineTo(894, y - 2); rg.stroke(); });
+  ringRopes = ropes ? { cols: ropes, w: v === 'harbor' ? 6 : 5, twist: v === 'harbor' } : null;
   if (v === 'drain') chainFence(rg, 40, 236, 880, 150, .2);
   for (const [x, y] of VFX.barrels) drawBarrel(rg, x, y);
   // front layer
@@ -3650,6 +3663,34 @@ function drawVenueFG(t) {
   if (curVenue === 'harbor') for (let i = 0; i < 3; i++) { const y = 330 + i * 30, x = ((t * (12 + i * 6)) % (W + 400)) - 400, fg = ctx.createLinearGradient(0, y - 30, 0, y + 30); fg.addColorStop(0, 'rgba(160,180,200,0)'); fg.addColorStop(.5, 'rgba(160,180,200,.1)'); fg.addColorStop(1, 'rgba(160,180,200,0)'); ctx.fillStyle = fg; ctx.fillRect(x, y - 30, 900, 60); ctx.fillRect(x - W - 400, y - 30, 900, 60); }
   if (curVenue === 'lot') for (let i = 0; i < 22; i++) { const x = (i * 97 + t * 14) % W, y = 200 + (i * 53 % 200) + Math.sin(t + i) * 6; ctx.fillStyle = 'rgba(255,210,150,.25)'; ctx.fillRect(x, y, 2, 2); }
 }
+/* ---- ring: ropes sag and shake, and the canvas keeps the fight's marks (cosmetic only) ---- */
+function drawRingRopes(c, t, amp = 0, hitX = W / 2) {
+  if (!ringRopes) return; const { cols, w, twist } = ringRopes, x0 = 66, x1 = 894, n = 40;
+  cols.forEach((col, i) => {
+    const base = [280, 314, 348][i], sag = 4 + i * 2.5, yAt = x => { const u = (x - x0) / (x1 - x0), d = (x - hitX) / 190; return base + Math.sin(u * Math.PI) * (sag + Math.sin(t * 1.1 + i) * .5) + (amp ? amp * Math.exp(-d * d) * Math.cos(t * 34 + i * .9 - (x - hitX) * .03) * Math.sin(u * Math.PI) : 0); };
+    const trace = dy => { c.beginPath(); for (let k = 0; k <= n; k++) { const x = x0 + (x1 - x0) * k / n; if (k) c.lineTo(x, yAt(x) + dy); else c.moveTo(x, yAt(x) + dy); } };
+    c.lineCap = 'round'; c.strokeStyle = 'rgba(0,0,0,.34)'; c.lineWidth = w + 1; trace(2.5); c.stroke();
+    c.strokeStyle = col; c.lineWidth = w; trace(0); c.stroke();
+    if (twist) { c.strokeStyle = 'rgba(0,0,0,.3)'; c.lineWidth = 1; c.beginPath(); for (let x = x0 + 4; x < x1 - 4; x += 8) { const y = yAt(x); c.moveTo(x, y - 3); c.lineTo(x + 5, y + 3); } c.stroke(); }
+    c.strokeStyle = 'rgba(255,255,255,.18)'; c.lineWidth = 1; trace(-w * .32); c.stroke();
+  });
+}
+function ropeKick(x, amp) { if (!G || S.opt.reduced) return; if (amp > (G.ropeAmp || 0)) { G.ropeAmp = amp; G.ropeX = x; } }
+function ringMarks() {
+  if (G.marks) return G.marksCtx; const m = document.createElement('canvas'); m.width = W; m.height = H; const x = m.getContext('2d');
+  x.beginPath(); x.moveTo(70, 384); x.lineTo(890, 384); x.lineTo(944, 452); x.lineTo(16, 452); x.closePath(); x.clip(); x.lineCap = 'round';
+  G.marks = m; G.marksCtx = x; return x;
+}
+function ringMark(kind, px, py, k = 1, dir = 1) {
+  if (!G) return; const x = ringMarks(), rnd = Math.random;
+  if (kind === 'scuff') { for (let i = 0, n = 2 + rnd() * 3 | 0; i < n; i++) { const sx = px + (rnd() - .5) * 46 * k, sy = py + (rnd() - .5) * 11, len = (7 + rnd() * 20) * k; x.strokeStyle = `rgba(0,0,0,${.16 + rnd() * .2})`; x.lineWidth = 1 + rnd() * 2; x.beginPath(); x.moveTo(sx, sy); x.lineTo(sx + dir * len, sy + (rnd() - .5) * 3); x.stroke(); if (rnd() < .55) { x.strokeStyle = 'rgba(200,205,210,.3)'; x.lineWidth = 1; x.beginPath(); x.moveTo(sx, sy - 1); x.lineTo(sx + dir * len * .6, sy - 1); x.stroke(); } } return; }
+  if (kind === 'scrape') { const len = 84 * k; for (let i = 0; i < 4; i++) { const sy = py - 7 + i * 5 + rnd() * 2; x.strokeStyle = `rgba(0,0,0,${.24 + rnd() * .16})`; x.lineWidth = 2 + rnd() * 3; x.beginPath(); x.moveTo(px - dir * len * .2, sy); x.lineTo(px + dir * len * (.7 + rnd() * .4), sy + (rnd() - .5) * 5); x.stroke(); } x.strokeStyle = 'rgba(200,205,210,.42)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(px, py); x.lineTo(px + dir * len * .8, py + 1); x.stroke(); return; }
+  if (kind === 'oil') { for (let i = 0; i < 5; i++) { const ex = px + (rnd() - .5) * 42 * k, ey = py + (rnd() - .5) * 9 * k, rx = (5 + rnd() * 15) * k; x.fillStyle = `rgba(8,8,10,${.32 + rnd() * .28})`; x.beginPath(); x.ellipse(ex, ey, rx, rx * .3, 0, 0, 7); x.fill(); } x.fillStyle = 'rgba(122,138,160,.1)'; x.beginPath(); x.ellipse(px - 4, py - 1, 11 * k, 2.4 * k, -.08, 0, 7); x.fill(); return; }
+  const r = 40 * k; x.save(); x.translate(px, py); x.scale(1, .3); const g = x.createRadialGradient(0, 0, 3, 0, 0, r); g.addColorStop(0, 'rgba(8,6,5,.68)'); g.addColorStop(.6, 'rgba(14,10,8,.28)'); g.addColorStop(1, 'rgba(14,10,8,0)'); x.fillStyle = g; x.fillRect(-r, -r, r * 2, r * 2); x.restore();
+}
+function ringHit(o, dir, vd, e) { const near = o.x < RING.L + 90 || o.x > RING.R - 90 || (o.z || 0) < RING.ZMIN + 22; ropeKick(o.x, Math.min(near ? 7 : 2.4, vd * (near ? .6 : .18))); if (!e.blocked && vd >= 5) ringMark('scuff', o.x, groundFor(o) + 3, Math.min(1.5, .6 + vd * .05), dir); }
+function ringFall(f) { const d = f.dir ? -f.dir : 1; ropeKick(f.x, 9); ringMark('scrape', f.x, groundFor(f) + 3, 1, d); ringMark('scorch', f.x, groundFor(f) + 3, .9); }
+function markSlicks(slicks) { if (!slicks || !slicks.length) return; if (!G.markedSlicks) G.markedSlicks = new WeakSet(); for (const sl of slicks) if (!sl.kind && !G.markedSlicks.has(sl)) { G.markedSlicks.add(sl); ringMark('oil', sl.x, GROUND + sl.z * .34 + 4, sl.r / 34); } }
 function drawCrowd(c, t, hype) {
   if (!crowdAtlas) return; const [cw, ch] = CROWD_CELL, [ax, ay] = CROWD_ANCHOR;
   for (const p of CROWD) {
@@ -3674,7 +3715,7 @@ function venueThumbs() {
   for (const v of Object.keys(VENUES)) {
     buildLayers(v);
     const c = document.createElement('canvas'); c.width = 480; c.height = 240; const x = c.getContext('2d');
-    x.scale(.5, .5); x.drawImage(layerBack, 0, 0); drawCrowd(x, 1.3, .55); x.drawImage(layerRing, 0, 0); x.drawImage(layerFront, 0, 0);
+    x.scale(.5, .5); x.drawImage(layerBack, 0, 0); drawCrowd(x, 1.3, .55); x.drawImage(layerRing, 0, 0); drawRingRopes(x, 1.3); x.drawImage(layerFront, 0, 0);
     try { VTHUMB[v] = c.toDataURL('image/jpeg', .82); } catch (e) { VTHUMB[v] = ''; }
   }
   if (keep) buildLayers(keep);
@@ -4325,7 +4366,7 @@ function playSystemVoice(it, done) {
     utterance = new SpeechSynthesisUtterance(it.text);
     const cast = CAST[it.who];
     utterance.voice = cast.systemVoice || autoSystemVoice(it.who) || null;
-    utterance.rate = cast.rate; utterance.pitch = cast.pitch; utterance.volume = clamp(S.opt.voice, 0, 1);
+    utterance.rate = cast.rate; utterance.pitch = cast.pitch; utterance.volume = clamp(S.opt.voice, 0, 1) * boothLevel();
     utterance.onstart = () => { if (VOX.cur !== it) return; started = true; clearTimeout(VOX.timer); setVoiceStatus('system-voice'); showCap(it.who, it.text, 'SYSTEM VOICE'); duck(true); };
     utterance.onend = finish;
     utterance.onerror = () => { if (VOX.cur !== it) return; if (!started) { VOX.synthActive = false; VOX.synthUtterance = null; textFallback(it, done); } else finish(); };
@@ -4383,7 +4424,7 @@ function playClip(it, done) {
     try { audio.pause(); } catch (e) {}
     playCaptionOnly(it, done);
   };
-  VOX.audio = audio; audio.preload = 'auto'; audio.volume = clamp(S.opt.voice, 0, 1);
+  VOX.audio = audio; audio.preload = 'auto'; audio.volume = clamp(S.opt.voice, 0, 1) * boothLevel();
   try { audio.load(); } catch (e) {}
   audio.onplay = () => { if (VOX.cur !== it) { audio.pause(); return; } started = true; clearTimeout(VOX.timer); setVoiceStatus('on-air'); showCap(it.who, asset.text || it.text, 'ON AIR'); duck(true); };
   audio.onended = () => { VOX.audio = null; done(); };
@@ -4404,6 +4445,20 @@ function nextLine() {
   const it = VOX.queue.shift(); if (!it) { hideCap(VOX.status === 'text-only' ? 1600 : 350); duck(false); setVoiceStatus('ready'); updateCommentaryLive(); return; }
   startLine(it, now); updateCommentaryLive();
 }
+/* ---- the referee count: fired by the sim's count event on its own channel, never queued, so voice, number and caption stay together ---- */
+const refClips = {}; let refClipNow = null, refBoothTimer = 0;
+const boothLevel = () => (performance.now() < (VOX.refUntil || 0) ? .35 : 1);
+function primeRefCount() { if (typeof Audio !== 'function') return; for (let n = 1; n <= 10; n++) { if (refClips[n]) continue; const asset = commentaryAsset({ who: 'ref', text: NUMW[n], assetKey: `ref.count.${n}` }); if (!asset || !asset.src || asset.speaker !== 'ref') continue; try { const a = new Audio(new URL(asset.src, document.baseURI).href); a.preload = 'auto'; a.load(); refClips[n] = a; } catch (e) {} } }
+function stopRefCount() { clearTimeout(refBoothTimer); VOX.refUntil = 0; if (refClipNow) { try { refClipNow.pause(); } catch (e) {} refClipNow = null; } if (VOX.audio) VOX.audio.volume = clamp(S.opt.voice, 0, 1); }
+function playRefCount(n) {
+  const text = NUMW[n] || String(n); VOX.refUntil = performance.now() + 1100;
+  if (VOX.audio) VOX.audio.volume = clamp(S.opt.voice, 0, 1) * boothLevel();
+  clearTimeout(refBoothTimer); refBoothTimer = setTimeout(() => { if (VOX.audio && boothLevel() === 1) VOX.audio.volume = clamp(S.opt.voice, 0, 1); }, 1120);
+  showCap('ref', text, 'ON AIR'); if (!VOX.cur) hideCap(800);
+  if (refClipNow) { try { refClipNow.pause(); } catch (e) {} refClipNow = null; }
+  if (!voiceOn('ref')) return; primeRefCount(); const a = refClips[n]; if (!a) return;
+  a.volume = clamp(S.opt.voice, 0, 1); try { a.currentTime = 0; } catch (e) {} refClipNow = a; a.play().catch(() => {});
+}
 function startLine(it, now) {
   VOX.cur = it; it.startedAt = now; if (it.group) { VOX.activeGroup = it.group; VOX.groupUntil = Math.max(VOX.groupUntil, now + it.groupHoldMs); }
   setVoiceStatus('starting');
@@ -4411,7 +4466,7 @@ function startLine(it, now) {
   const done = () => { if (finished || VOX.cur !== it) return; finished = true; clearTimeout(VOX.timer); if (it.cb) try { it.cb(); } catch (e) {} if (it.group && it.groupHoldMs) VOX.groupUntil = Math.max(VOX.groupUntil, performance.now() + it.groupHoldMs); const left = it.who === 'ref' ? 30 : it.captionOnly ? 30 : 85; VOX.timer = setTimeout(nextLine, left); };
   playClip(it, done);
 }
-function pauseVoice(p) { VOX.paused = p; if (p) { VOX.queue = []; VOX.activeGroup = null; VOX.groupUntil = 0; stopSpeech(); hideCap(0); } else if (!VOX.cur) nextLine(); }
+function pauseVoice(p) { VOX.paused = p; if (p) { stopRefCount(); VOX.queue = []; VOX.activeGroup = null; VOX.groupUntil = 0; stopSpeech(); hideCap(0); } else if (!VOX.cur) nextLine(); }
 
 /* ---------- the booth: Hank Ruiz (play-by-play) and Sparkplug (retired fighting robot, colour) ---------- */
 const bagState = {}, lastPick = {};
@@ -4470,7 +4525,7 @@ const LINES = {
   comeback: ["And now the tide is turning! {a} is taking over!", "{a} has come all the way back in this fight!"],
   danger: ["{b} is in serious trouble here!", "{b} is hurt, smoke pouring out!", "One more clean shot could finish {b}."],
   ko: ["IT IS ALL OVER! {a} WINS IT!", "That's it! {a} has done it!", "Stop the fight! {a} wins!"],
-  counted: ["Nine... TEN! {b} could not beat the count! {a} wins by knockout!"],
+  counted: ["{b} could not beat the count! {a} wins by knockout!"],
   tko: ["The referee steps in! Technical knockout for {a}!", "That is a TKO! {a} wins!"],
   decision: ["We go to the scorecards. {a} wins by decision, {detail}.", "The judges have it {detail} for {a}!"],
   choose: ["The crowd wants it. Will {a} finish the job?", "Here's the moment. Destroy or spare?"],
@@ -4753,7 +4808,7 @@ function handleEvents() {
         if (!e.blocked) G.hype = Math.min(1, G.hype + vd * .012 + (e.crit ? .15 : 0));
         if (vd > 9 && !e.blocked) { cheer(.3 + vd * .02); for (let j = 0; j < 3; j++) G.flashes.push({ x: Math.random() * W, y: 190 + Math.random() * 150, life: .15 }); }
         if (vd > 14 && !e.blocked && Math.random() < .5) ooh();
-        thud(vd, e.blocked, e.kind, e.target, e.crit, { maker: hitMaker(o.spec, e.blocked ? 'arm' : e.target) });
+        thud(vd, e.blocked, e.kind, e.target, e.crit, { maker: hitMaker(o.spec, e.blocked ? 'arm' : e.target) }); ringHit(o, f.dir, vd, e);
         if (!e.blocked) {
           if (e.counterHit) crowdShout('counter', .94);
           else if (!e.ko && o.hp / o.s.hp <= .34) crowdShout('danger', .92);
@@ -4770,7 +4825,7 @@ function handleEvents() {
           else if (cl.length >= 3) { comm('combo', F, f.side); commColor('comboColor', F, f.side, null, .32); cl.length = 0; }
           else if (vd > 11 && Math.random() < .5) comm(e.target === 'head' ? 'bigHead' : 'bigBody', F, f.side);
         } else if (++G.blockRun[o.side] >= 4) { G.blockRun[o.side] = 0; commColor('blockColor', F, o.side, null, .6); }
-        if (e.ko) { G.slow = 1; G.hitstop = .22; stop = true; addText(W / 2, 190, 'K.O.', '#f0b20a', 130, 2.4); G.hype = 1; floorCrash(); roar(); }
+        if (e.ko) { G.slow = 1; G.hitstop = .22; stop = true; addText(W / 2, 190, 'K.O.', '#f0b20a', 130, 2.4); G.hype = 1; floorCrash(); ringFall(o); roar(); }
         break; }
       case 'miss': if (e.glare) addText(f.x, groundFor(f) - 260, 'BLINDED BY THE GLARE', '#fff1c2', 20, .8); if (G.tell && G.tell.side === e.side) G.tell = null; whoosh(); if (f.punch && f.punch.signature) comm('sigMiss', F, e.side, { sig: f.spec.signature.name }, 2); break;
       case 'dodge': if (G.tell && G.tell.side === o.side) G.tell = null; addText(f.x, groundFor(f) - 250, 'DODGED', '#c9a6ff', 26, .8); whoosh(1.4); if (o.punch && o.punch.signature) { comm('sigMiss', F, o.side, { sig: o.spec.signature.name }, 2); commColor('slipColor', F, e.side, null, .5); } else if (Math.random() < .3) comm('dodge', F, o.side); break;
@@ -4783,7 +4838,7 @@ function handleEvents() {
         break; }
       case 'feint': G.tell = { side: e.side, text: e.tell, life: .7, max: .7, feint: true }; servo('jab'); if (Math.random() < .35) comm('feint', F, e.side); break;
       case 'malf': { const [x, y] = partPos(f, e.part); sparks(x, y, -f.dir, 12, false, true); if (e.what === 'OVERHEAT') { for (let j = 0; j < 8; j++) smoke(f.x + (Math.random() - .5) * 30, y - 20, false); steam(); } addText(f.x, groundFor(f) - 275, e.what, '#ff9a3a', 28, 1.1); zap(); comm('malf', F, e.side, { what: e.what.toLowerCase() }, 2); commColor('malfColor', F, e.side, null, .35); break; }
-      case 'detach': { const [x, y] = partPos(f, e.part); spawnDebris(f, e.part, -f.dir * (120 + Math.random() * 120), -380 - Math.random() * 120); sparks(x, y, -f.dir, 30, true); fire(x, y, 6); addText(f.x, groundFor(f) - 285, 'ARM TORN OFF', '#ff5a4a', 34, 1.4); if (S.opt.shake) G.shake = 14; G.hype = 1; tearOff(); roar(.7); ooh(); comm('detach', F, 1 - e.side, null, 2); commColor('detachColor', F, e.side, null, .6); break; }
+      case 'detach': { const [x, y] = partPos(f, e.part); spawnDebris(f, e.part, -f.dir * (120 + Math.random() * 120), -380 - Math.random() * 120); sparks(x, y, -f.dir, 30, true); fire(x, y, 6); addText(f.x, groundFor(f) - 285, 'ARM TORN OFF', '#ff5a4a', 34, 1.4); if (S.opt.shake) G.shake = 14; G.hype = 1; tearOff(); ropeKick(f.x, 6); ringMark('oil', f.x, groundFor(f) + 4, 1.1); roar(.7); ooh(); comm('detach', F, 1 - e.side, null, 2); commColor('detachColor', F, e.side, null, .6); break; }
       case 'offline': addText(f.x, groundFor(f) - 285, e.part === 'head' ? 'HEAD OFFLINE' : 'LEGS LOCKED', '#ff9a3a', 30, 1.3); zap(); comm('offline', F, e.side, { what: e.part === 'head' ? 'head unit' : 'leg drive' }, 2); commColor('offlineColor', F, e.side, null, .35); break;
       case 'clinch': { addText(W / 2, 160, 'CLINCH', '#ebe7de', 40, .9); clank(.5); if (Math.random() < .7) say('pbp', pickLine('clinch', M5L.clinch), 1, { tts: true, ttl: 4200 }); else say('color', pickLine('clinchColor', M5L.clinchColor), 1, { tts: true, ttl: 5200 }); break; }
       case 'clinchShot': { const an = anchors(o.spec.build); sparks(o.x - f.dir * an.half * .6, groundFor(o) + an.bodyY + 10, -f.dir, 3, false); thud(4, false, 'jab', 'body'); zoneHit(o.side, 'torso', false); break; }
@@ -4797,14 +4852,14 @@ function handleEvents() {
       case 'knockdown': {
         const human = e.side === F.human;
         if (!human && G.replayRound !== F.round) { G.replayRound = F.round; G.wantReplay = 'kd'; }
-        addText(W / 2, 170, 'DOWN!', '#ff5a4a', 96, 1.3); if (S.opt.shake) G.shake = 18; G.hype = Math.min(1, G.hype + .5); ooh(); roar(.8); crowdShout('danger', 1); G.refT = 99; G.refN = 0; thud(20, false, 'hay', 'body', false, { maker: hitMaker(f.spec, 'body') }); floorCrash(); powerDown();
+        addText(W / 2, 170, 'DOWN!', '#ff5a4a', 96, 1.3); if (S.opt.shake) G.shake = 18; G.hype = Math.min(1, G.hype + .5); ooh(); roar(.8); crowdShout('danger', 1); G.refT = 99; G.refN = 0; thud(20, false, 'hay', 'body', false, { maker: hitMaker(f.spec, 'body') }); floorCrash(); ringFall(f); powerDown(); primeRefCount();
         comm(human ? 'downYou' : 'down', F, 1 - e.side, null, 3);
         if (human && !F.duo) { G.dial = { ph: Math.random() * 6, speed: 2.6 + f.kdTotal * .45, zoneC: (Math.random() - .5) * 1.4, zoneW: clamp(.78 - (f.kdTotal - 1) * .14 - (1 - f.hp / f.s.hp) * .2, .26, .78), lock: 0, flash: 0, miss: 0 }; ringing(true); setMuffle(.75); }
         break; }
       case 'kneel': { comm('kneel', F, 1 - e.side, null, 2); servo('hay'); const [x, y] = partPos(f, 'torso'); sparks(x, y, 1, 6, false, true); if (e.side === F.human) setMuffle(.4); break; }
       case 'boot': { bootHit(e.hits); const [x, y] = partPos(f, 'head'); sparks(x, y, 1, 8, false, true); if (G.dial) { G.dial.flash = 1; G.dial.zoneC = (Math.random() - .5) * 1.5; G.dial.speed += .35; } break; }
       case 'bootMiss': bootMiss(); if (G.dial) { G.dial.miss = 1; G.dial.lock = .45; } if (S.opt.shake) G.shake = 6; break;
-      case 'count': { G.refN = e.n; beep(e.n >= 8); say('ref', NUMW[e.n] || String(e.n), 3, { group: 'ref-count', lock: true, groupHoldMs: 1250, ttl: 2400, assetKey: `ref.count.${e.n}` }); const d = F.f[e.side]; addText(d.x, groundFor(d) - 160, String(e.n), e.n >= 8 ? '#ff5a4a' : '#ebe7de', 90, .7); if (e.n >= 7) G.hype = 1; break; }
+      case 'count': { G.refN = e.n; beep(e.n >= 8); playRefCount(e.n); const d = F.f[e.side]; addText(d.x, groundFor(d) - 160, String(e.n), e.n >= 8 ? '#ff5a4a' : '#ebe7de', 90, .7); if (e.n >= 7) G.hype = 1; break; }
       case 'secondwind': addText(f.x, groundFor(f) - 305, 'SECOND WIND', '#6cc28a', 32, 1.4); comm('secondwind', F, e.side, null, 2); commColor('secondwindColor', F, e.side, null, .3); break;
       case 'rise': addText(f.x, groundFor(f) - 270, 'BACK UP!', '#6cc28a', 40, 1.2); G.refT = .8; cheer(.8); roar(.6); crowdShout('comeback', .95); powerUp(); comm('rise', F, 1 - e.side, { n: e.n }, 3); commColor('riseColor', F, e.side, { n: e.n }, .5); if (e.side === F.human) { G.dial = null; ringing(false); setMuffle(0); } break;
       case 'resume': addText(W / 2, 200, 'FIGHT', '#f0b20a', 64, .9); break;
@@ -4826,7 +4881,7 @@ function handleEvents() {
         G.refT = 2.5; break; }
       case 'choose': if (F.human === e.side) addText(W / 2, 140, 'DESTROY OR SPARE?', '#ff5a4a', 54, 2.5); else addText(W / 2, 140, 'THE CROWD WANTS IT...', '#ebe7de', 40, 2); G.hype = 1; sting(); startChant('stomp'); comm('choose', F, e.side, null, 2); break;
       case 'fwindup': addText(f.x, groundFor(f) - 290, 'FINISHER', '#ff5a4a', 44, 1.2); G.slow = .6; servo('hay'); break;
-      case 'decap': { const L = F.f[1 - e.side], [x, y] = partPos(L, 'head'); spawnDebris(L, 'head', f.dir * 160, -620); fire(x, y, 26); sparks(x, y, f.dir, 50, true); for (let j = 0; j < 14; j++) smoke(x + (Math.random() - .5) * 40, y, true); G.screen = 1; if (S.opt.shake) G.shake = 26; G.hitstop = .25; stop = true; addText(W / 2, 200, 'DESTROYED', '#ff5a4a', 120, 2.6); G.hype = 1; explosion(); tearOff(); roar(1.3); comm('destroy', F, e.side, null, 3); commColor('destroyColor', F, e.side, null, .8); break; }
+      case 'decap': { const L = F.f[1 - e.side], [x, y] = partPos(L, 'head'); spawnDebris(L, 'head', f.dir * 160, -620); fire(x, y, 26); sparks(x, y, f.dir, 50, true); for (let j = 0; j < 14; j++) smoke(x + (Math.random() - .5) * 40, y, true); G.screen = 1; if (S.opt.shake) G.shake = 26; G.hitstop = .25; stop = true; addText(W / 2, 200, 'DESTROYED', '#ff5a4a', 120, 2.6); G.hype = 1; explosion(); tearOff(); ropeKick(L.x, 10); ringMark('scorch', L.x, groundFor(L) + 3, 1.7); ringMark('oil', L.x, groundFor(L) + 4, 1.3); roar(1.3); comm('destroy', F, e.side, null, 3); commColor('destroyColor', F, e.side, null, .8); break; }
       case 'spare': addText(W / 2, 200, 'SPARED', '#6cc28a', 100, 2.2); cheer(.8); comm('spare', F, e.side, null, 3); commColor('spareColor', F, e.side, null, .7); break;
       case 'flywheel': addText(f.x, groundFor(f) - 270, 'FLYWHEEL · FREE HAYMAKER', '#f0b20a', 22, .9); break;
       case 'whistle': addText(f.x, groundFor(f) - 270, 'STEAM VENT', '#ebe7de', 22, .9); for (let j = 0; j < 8; j++) smoke(f.x - f.dir * 40, groundFor(f) - 180 - j * 6, false); steam(); break;
@@ -4980,7 +5035,8 @@ function render(t, dt) {
   ctx.save(); ctx.translate(W / 2 + (Math.random() - .5) * sh, H / 2 + (Math.random() - .5) * sh); ctx.scale(z, z); ctx.translate(-cx, -cy);
   ctx.drawImage(layerBack, 0, 0); drawCrowd(ctx, t, G.hype); drawVenueBG(t);
   for (const fl of G.flashes) { ctx.fillStyle = `rgba(255,255,255,${Math.min(1, fl.life * 6)})`; ctx.beginPath(); ctx.arc(fl.x, fl.y, 3, 0, 7); ctx.fill(); }
-  ctx.drawImage(layerRing, 0, 0);
+  ctx.drawImage(layerRing, 0, 0); if (G.ropeAmp) { G.ropeAmp *= Math.pow(.015, dt); if (G.ropeAmp < .05) G.ropeAmp = 0; } drawRingRopes(ctx, t, G.ropeAmp || 0, G.ropeX); if (G.marks) ctx.drawImage(G.marks, 0, 0);
+  markSlicks(G.F.slicks);
   for (const sl of (G.F.slicks || [])) { const a = Math.min(1, sl.t / 1.5), sx = sl.x, sy = GROUND + sl.z * .34 + 4;
     if (sl.kind === 'scrap') { ctx.save(); ctx.globalAlpha = a; for (let i = 0; i < 9; i++) { const r1 = Math.sin(sl.x * 7.1 + i * 12.9) * .5 + .5, r2 = Math.sin(sl.x * 3.3 + i * 5.7) * .5 + .5; ctx.fillStyle = ['#5d6168', '#7a6248', '#8c8f94', '#3f4247'][i % 4]; ctx.save(); ctx.translate(sx + (r1 - .5) * sl.r * 2.2, sy + (r2 - .5) * sl.r * .5); ctx.rotate(r1 * 6); if (i % 3 === 0) { ctx.beginPath(); ctx.arc(0, 0, 3.5, 0, 7); ctx.fill(); ctx.fillStyle = '#2a2c30'; ctx.beginPath(); ctx.arc(0, 0, 1.4, 0, 7); ctx.fill(); } else ctx.fillRect(-6, -2, 12 + r2 * 6, 3.5); ctx.restore(); } ctx.restore(); continue; }
     if (sl.kind === 'puddle') { ctx.save(); ctx.globalAlpha = .55 * a; ctx.fillStyle = '#1d3a52'; ctx.beginPath(); ctx.ellipse(sx, sy, sl.r * 1.2, sl.r * .3, 0, 0, 7); ctx.fill(); ctx.globalAlpha = .4 * a; ctx.strokeStyle = '#9fd3ff'; ctx.lineWidth = 1; const rr = (t * 22 + sl.x) % 18; ctx.beginPath(); ctx.ellipse(sx + 6, sy, 4 + rr, (4 + rr) * .3, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = .3 * a; ctx.fillStyle = '#cfe8ff'; ctx.beginPath(); ctx.ellipse(sx - sl.r * .35, sy - 2, sl.r * .35, 2, -.1, 0, 7); ctx.fill(); ctx.restore(); continue; }
