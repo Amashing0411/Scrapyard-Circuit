@@ -917,7 +917,7 @@ function renderCareer() {
     + tile('tourney', 'Tournament', S.tourney && !S.tourney.done ? `Round ${S.tourney.r + 1} of 3` : S.tourney && S.tourney.done ? (S.tourney.champ === 'you' ? 'Champion!' : 'Finished') : LEAGUES[tourneyLg()].name + ' Open', S.tourney && !S.tourney.done ? `Next: ${esc(tName(tourneyOpp()))}` : `8 bots · fee ${tFee(tourneyLg())} · prize ${tPurse(tourneyLg()) * 4}`)
      + tile('market', 'Scrap market', 'Buy &amp; sell', 'Parts and tune-ups')
      + tile('salvage', 'Salvage runs', S.workbookRun?.status === 'active' ? 'Run in progress' : 'The Crater', S.workbookRun?.status === 'active' ? `Heat ${S.workbookRun.heat} · ${S.workbookRun.usedPicks} picks · carried loot` : 'Scavenge, bank your finds, build the bot')
-     + tile('scrapworks', 'Scrapworks', `${Object.values(S.materials).reduce((sum,count) => sum + Math.max(0, +count || 0), 0)} materials`, 'Refine and craft')
+     + tile('scrapworks', 'Scrapworks', `${Object.values(S.materials).reduce((sum,count) => sum + Math.max(0, +count || 0), 0)}`, 'Materials · refine and craft')
      + tile('progression', 'Salvage rank', `Rank ${salvageRank.rank}`, `${salvageRank.totalXP.toLocaleString()} / ${salvageRank.nextThresholdXP.toLocaleString()} XP`)
     + tile('trophies', 'Trophies', `${Object.keys(S.trophies).length}/${TROPHIES.length}`, Object.keys(S.trophies).length ? TROPHIES.filter(t => S.trophies[t[0]]).slice(-4).map(t => t[1]).join(' ') : 'The shelf is empty');
   applyHubGroups();

@@ -1,0 +1,1141 @@
+{
+ "build": {
+  "head": "bucket",
+  "torso": "barrel",
+  "legs": "stumps",
+  "lead": "pipe",
+  "rear": "pipe",
+  "back": "none"
+ },
+ "paint": "#e8b10c",
+ "accent": "#16181b",
+ "decal": "none",
+ "num": 7,
+ "style": "outboxer",
+ "mech": "benny",
+ "trait": "stock",
+ "opp": "homework",
+ "name": "Ironside",
+ "scrap": 5000,
+ "rec": {
+  "w": 0,
+  "l": 0,
+  "ko": 0,
+  "des": 0
+ },
+ "owned": [
+  "bucket",
+  "barrel",
+  "pipe",
+  "stumps"
+ ],
+ "mechs": [
+  "benny"
+ ],
+ "chips": [
+  "stock"
+ ],
+ "wins": [],
+ "sandbox": false,
+ "rounds": 3,
+ "len": 45,
+ "nick": "The Underdog",
+ "home": "Eastside",
+ "story": "Built from a dead forklift and a church raffle prize. Nobody gave it a chance.",
+ "wear": 1,
+ "sig": "haymaker",
+ "sigs": [
+  "haymaker"
+ ],
+ "plan": "balanced",
+ "training": {
+  "head": 0,
+  "body": 0,
+  "guard": 0,
+  "hay": 0,
+  "slip": 0,
+  "read": 0
+ },
+ "history": [],
+ "ctrl": "coach",
+ "seenIntro": false,
+ "dmg": {},
+ "partWear": {
+  "head|bucket": {
+   "condition": 100,
+   "integrity": 100,
+   "repairCount": 0,
+   "faults": [],
+   "detached": false,
+   "patched": false,
+   "overhauls": 0
+  },
+  "torso|barrel": {
+   "condition": 100,
+   "integrity": 100,
+   "repairCount": 0,
+   "faults": [],
+   "detached": false,
+   "patched": false,
+   "overhauls": 0
+  },
+  "lead|pipe": {
+   "condition": 100,
+   "integrity": 100,
+   "repairCount": 0,
+   "faults": [],
+   "detached": false,
+   "patched": false,
+   "overhauls": 0
+  },
+  "rear|pipe": {
+   "condition": 100,
+   "integrity": 100,
+   "repairCount": 0,
+   "faults": [],
+   "detached": false,
+   "patched": false,
+   "overhauls": 0
+  },
+  "legs|stumps": {
+   "condition": 100,
+   "integrity": 100,
+   "repairCount": 0,
+   "faults": [],
+   "detached": false,
+   "patched": false,
+   "overhauls": 0
+  }
+ },
+ "stable": [
+  {
+   "id": "bot-starter",
+   "bayIndex": -1,
+   "storageLocation": "truck",
+   "frameItemId": "frame-6",
+   "role": "Fighter",
+   "fatigue": 0,
+   "survivedFights": 0,
+   "wrecksSurvived": 0,
+   "veteran": false,
+   "legend": false,
+   "frameCapacityBonus": 0,
+   "legendPaintUnlocked": false,
+   "legendCrowdBonus": false,
+   "partsHistory": [
+    {
+     "kind": "part",
+     "system": "legacy",
+     "action": "migration-fitted",
+     "day": 1,
+     "itemId": "part-1",
+     "defId": "bucket",
+     "name": "Bucket Head",
+     "maker": "Junkline",
+     "slot": "head"
+    },
+    {
+     "kind": "part",
+     "system": "legacy",
+     "action": "migration-fitted",
+     "day": 1,
+     "itemId": "part-2",
+     "defId": "barrel",
+     "name": "Barrel Core",
+     "maker": "Junkline",
+     "slot": "torso"
+    },
+    {
+     "kind": "part",
+     "system": "legacy",
+     "action": "migration-fitted",
+     "day": 1,
+     "itemId": "part-3",
+     "defId": "pipe",
+     "name": "Pipe Swingers",
+     "maker": "Junkline",
+     "slot": "lead"
+    },
+    {
+     "kind": "part",
+     "system": "legacy",
+     "action": "migration-fitted",
+     "day": 1,
+     "itemId": "part-4",
+     "defId": "pipe",
+     "name": "Pipe Swingers",
+     "maker": "Junkline",
+     "slot": "rear"
+    },
+    {
+     "kind": "part",
+     "system": "legacy",
+     "action": "migration-fitted",
+     "day": 1,
+     "itemId": "part-5",
+     "defId": "stumps",
+     "name": "Tread Stumps",
+     "maker": "Junkline",
+     "slot": "legs"
+    },
+    {
+     "kind": "frame",
+     "action": "frame-assigned",
+     "day": 1,
+     "itemId": "frame-6",
+     "defId": "church-raffle-chassis",
+     "name": "Church Raffle Chassis",
+     "maker": "GB",
+     "slot": "frame"
+    }
+   ],
+   "makers": [
+    "Junkline",
+    "GB"
+   ],
+   "scars": [],
+   "build": {
+    "head": "bucket",
+    "torso": "barrel",
+    "legs": "stumps",
+    "lead": "pipe",
+    "rear": "pipe",
+    "back": "none"
+   },
+   "equippedItems": {
+    "head": "part-1",
+    "torso": "part-2",
+    "lead": "part-3",
+    "rear": "part-4",
+    "legs": "part-5"
+   },
+   "paint": "#e8b10c",
+   "accent": "#16181b",
+   "decal": "none",
+   "num": 7,
+   "style": "outboxer",
+   "mech": "benny",
+   "trait": "stock",
+   "name": "Ironside",
+   "nick": "The Underdog",
+   "home": "Eastside",
+   "story": "Built from a dead forklift and a church raffle prize. Nobody gave it a chance.",
+   "wear": 1,
+   "sig": "haymaker",
+   "sigs": [
+    "haymaker"
+   ],
+   "plan": "balanced",
+   "training": {
+    "head": 0,
+    "body": 0,
+    "guard": 0,
+    "hay": 0,
+    "slip": 0,
+    "read": 0
+   },
+   "history": [],
+   "rec": {
+    "w": 0,
+    "l": 0,
+    "ko": 0,
+    "des": 0
+   },
+   "dmg": {},
+   "partWear": {
+    "head|bucket": {
+     "condition": 100,
+     "integrity": 100,
+     "repairCount": 0,
+     "faults": [],
+     "detached": false,
+     "patched": false,
+     "overhauls": 0
+    },
+    "torso|barrel": {
+     "condition": 100,
+     "integrity": 100,
+     "repairCount": 0,
+     "faults": [],
+     "detached": false,
+     "patched": false,
+     "overhauls": 0
+    },
+    "lead|pipe": {
+     "condition": 100,
+     "integrity": 100,
+     "repairCount": 0,
+     "faults": [],
+     "detached": false,
+     "patched": false,
+     "overhauls": 0
+    },
+    "rear|pipe": {
+     "condition": 100,
+     "integrity": 100,
+     "repairCount": 0,
+     "faults": [],
+     "detached": false,
+     "patched": false,
+     "overhauls": 0
+    },
+    "legs|stumps": {
+     "condition": 100,
+     "integrity": 100,
+     "repairCount": 0,
+     "faults": [],
+     "detached": false,
+     "patched": false,
+     "overhauls": 0
+    }
+   },
+   "walkout": "anthem",
+   "pyro": "fire",
+   "tune": {},
+   "worn": {},
+   "mods": {},
+   "workbookPlan": {},
+   "workbookFittedItems": {}
+  },
+  {
+   "build": {
+    "head": "none",
+    "torso": "none",
+    "lead": "none",
+    "rear": "none",
+    "legs": "none",
+    "back": "none"
+   },
+   "equippedItems": {},
+   "paint": "#e8b10c",
+   "accent": "#16181b",
+   "decal": "none",
+   "num": 7,
+   "style": "outboxer",
+   "mech": "benny",
+   "trait": "stock",
+   "name": "Fixture",
+   "nick": "",
+   "home": "Eastside",
+   "story": "",
+   "wear": 0,
+   "sig": "haymaker",
+   "sigs": [
+    "haymaker"
+   ],
+   "plan": "balanced",
+   "training": {},
+   "history": [],
+   "rec": {
+    "w": 0,
+    "l": 0,
+    "ko": 0,
+    "des": 0
+   },
+   "dmg": {},
+   "partWear": {},
+   "walkout": "anthem",
+   "pyro": "fire",
+   "tune": {},
+   "worn": {},
+   "mods": {},
+   "id": "bot-build-1",
+   "combatModel": "workbook",
+   "bayIndex": 1,
+   "storageLocation": "garage",
+   "frameItemId": "frame-7",
+   "role": "Fighter",
+   "fatigue": 0,
+   "survivedFights": 0,
+   "wrecksSurvived": 0,
+   "veteran": false,
+   "legend": false,
+   "frameCapacityBonus": 0,
+   "legendPaintUnlocked": false,
+   "legendCrowdBonus": false,
+   "partsHistory": [
+    {
+     "kind": "frame",
+     "action": "frame-assigned",
+     "day": 1,
+     "itemId": "frame-7",
+     "defId": "forklift-frame",
+     "name": "Forklift Frame",
+     "maker": "JL",
+     "slot": "frame"
+    },
+    {
+     "kind": "part",
+     "system": "workbook",
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-8",
+     "defId": "GR-218",
+     "name": "Grange Visor S9",
+     "maker": "Grange Cooperative",
+     "slot": "head",
+     "botId": "bot-build-1"
+    },
+    {
+     "kind": "part",
+     "system": "workbook",
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-9",
+     "defId": "HL-154",
+     "name": "Hollis Furnace 4",
+     "maker": "Hollis Agricultural",
+     "slot": "torsoCore",
+     "botId": "bot-build-1"
+    },
+    {
+     "kind": "part",
+     "system": "workbook",
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-a",
+     "defId": "HL-158",
+     "name": "Hollis Swinger Mk 2",
+     "maker": "Hollis Agricultural",
+     "slot": "leadArm",
+     "botId": "bot-build-1"
+    },
+    {
+     "kind": "part",
+     "system": "workbook",
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-b",
+     "defId": "HL-158",
+     "name": "Hollis Swinger Mk 2",
+     "maker": "Hollis Agricultural",
+     "slot": "rearArm",
+     "botId": "bot-build-1"
+    },
+    {
+     "kind": "part",
+     "system": "workbook",
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-c",
+     "defId": "BR-222",
+     "name": "Brute Knuckle X-4",
+     "maker": "Brute Demolition",
+     "slot": "fists",
+     "botId": "bot-build-1"
+    },
+    {
+     "kind": "part",
+     "system": "workbook",
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-d",
+     "defId": "HL-150",
+     "name": "Hollis Stump 7",
+     "maker": "Hollis Agricultural",
+     "slot": "legs",
+     "botId": "bot-build-1"
+    }
+   ],
+   "makers": [
+    "JL",
+    "Grange Cooperative",
+    "Hollis Agricultural",
+    "Brute Demolition"
+   ],
+   "scars": [],
+   "workbookPlan": {},
+   "workbookFittedItems": {
+    "head": "wbpart-8",
+    "torsoCore": "wbpart-9",
+    "leadArm": "wbpart-a",
+    "rearArm": "wbpart-b",
+    "fists": "wbpart-c",
+    "legs": "wbpart-d"
+   },
+   "combatReady": true
+  }
+ ],
+ "activeBotId": "bot-starter",
+ "stableSchema": 9,
+ "stableBays": 2,
+ "stableDay": 1,
+ "starterFramesSeeded": true,
+ "starterChurchReinforcementApplied": true,
+ "equippedItems": {
+  "head": "part-1",
+  "torso": "part-2",
+  "lead": "part-3",
+  "rear": "part-4",
+  "legs": "part-5"
+ },
+ "items": [
+  {
+   "itemId": "part-1",
+   "kind": "part",
+   "defId": "bucket",
+   "pool": "head",
+   "location": "bay",
+   "botId": "bot-starter",
+   "slot": "head",
+   "state": {
+    "condition": 100,
+    "integrity": 100,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "worn": false,
+   "tune": 0,
+   "source": "unspecified"
+  },
+  {
+   "itemId": "part-2",
+   "kind": "part",
+   "defId": "barrel",
+   "pool": "torso",
+   "location": "bay",
+   "botId": "bot-starter",
+   "slot": "torso",
+   "state": {
+    "condition": 100,
+    "integrity": 100,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "worn": false,
+   "tune": 0,
+   "source": "unspecified"
+  },
+  {
+   "itemId": "part-3",
+   "kind": "part",
+   "defId": "pipe",
+   "pool": "arms",
+   "location": "bay",
+   "botId": "bot-starter",
+   "slot": "lead",
+   "state": {
+    "condition": 100,
+    "integrity": 100,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "worn": false,
+   "tune": 0,
+   "source": "unspecified"
+  },
+  {
+   "itemId": "part-4",
+   "kind": "part",
+   "defId": "pipe",
+   "pool": "arms",
+   "location": "bay",
+   "botId": "bot-starter",
+   "slot": "rear",
+   "state": {
+    "condition": 100,
+    "integrity": 100,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "worn": false,
+   "tune": 0,
+   "source": "unspecified"
+  },
+  {
+   "itemId": "part-5",
+   "kind": "part",
+   "defId": "stumps",
+   "pool": "legs",
+   "location": "bay",
+   "botId": "bot-starter",
+   "slot": "legs",
+   "state": {
+    "condition": 100,
+    "integrity": 100,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "worn": false,
+   "tune": 0,
+   "source": "unspecified"
+  },
+  {
+   "itemId": "frame-6",
+   "kind": "frame",
+   "defId": "church-raffle-chassis",
+   "location": "truck",
+   "botId": "bot-starter",
+   "slot": null,
+   "integrity": 50,
+   "reinforcements": 3,
+   "history": [
+    {
+     "action": "loaded-to-truck",
+     "botId": "bot-starter",
+     "day": 1
+    }
+   ]
+  },
+  {
+   "itemId": "frame-7",
+   "kind": "frame",
+   "defId": "forklift-frame",
+   "location": "bay",
+   "botId": "bot-build-1",
+   "slot": null,
+   "integrity": 55,
+   "reinforcements": 3,
+   "history": [
+    {
+     "action": "assigned-to-build",
+     "botId": "bot-build-1",
+     "day": 1
+    }
+   ]
+  },
+  {
+   "itemId": "wbpart-8",
+   "kind": "workbook-part",
+   "defId": "GR-218",
+   "location": "bay",
+   "botId": "bot-build-1",
+   "slot": "head",
+   "state": {
+    "condition": 64,
+    "integrity": 81,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "repairs": 0,
+   "tune": 0,
+   "mods": [],
+   "makerMark": "",
+   "history": [
+    {
+     "action": "acquired",
+     "source": "fixture",
+     "day": 1
+    },
+    {
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-8",
+     "defId": "GR-218",
+     "name": "Grange Visor S9",
+     "maker": "Grange Cooperative",
+     "botId": "bot-build-1",
+     "slot": "head"
+    }
+   ]
+  },
+  {
+   "itemId": "wbpart-9",
+   "kind": "workbook-part",
+   "defId": "HL-154",
+   "location": "bay",
+   "botId": "bot-build-1",
+   "slot": "torsoCore",
+   "state": {
+    "condition": 64,
+    "integrity": 81,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "repairs": 0,
+   "tune": 0,
+   "mods": [],
+   "makerMark": "",
+   "history": [
+    {
+     "action": "acquired",
+     "source": "fixture",
+     "day": 1
+    },
+    {
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-9",
+     "defId": "HL-154",
+     "name": "Hollis Furnace 4",
+     "maker": "Hollis Agricultural",
+     "botId": "bot-build-1",
+     "slot": "torsoCore"
+    }
+   ]
+  },
+  {
+   "itemId": "wbpart-a",
+   "kind": "workbook-part",
+   "defId": "HL-158",
+   "location": "bay",
+   "botId": "bot-build-1",
+   "slot": "leadArm",
+   "state": {
+    "condition": 64,
+    "integrity": 81,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "repairs": 0,
+   "tune": 0,
+   "mods": [],
+   "makerMark": "",
+   "history": [
+    {
+     "action": "acquired",
+     "source": "fixture",
+     "day": 1
+    },
+    {
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-a",
+     "defId": "HL-158",
+     "name": "Hollis Swinger Mk 2",
+     "maker": "Hollis Agricultural",
+     "botId": "bot-build-1",
+     "slot": "leadArm"
+    }
+   ]
+  },
+  {
+   "itemId": "wbpart-b",
+   "kind": "workbook-part",
+   "defId": "HL-158",
+   "location": "bay",
+   "botId": "bot-build-1",
+   "slot": "rearArm",
+   "state": {
+    "condition": 64,
+    "integrity": 81,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "repairs": 0,
+   "tune": 0,
+   "mods": [],
+   "makerMark": "",
+   "history": [
+    {
+     "action": "acquired",
+     "source": "fixture",
+     "day": 1
+    },
+    {
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-b",
+     "defId": "HL-158",
+     "name": "Hollis Swinger Mk 2",
+     "maker": "Hollis Agricultural",
+     "botId": "bot-build-1",
+     "slot": "rearArm"
+    }
+   ]
+  },
+  {
+   "itemId": "wbpart-c",
+   "kind": "workbook-part",
+   "defId": "BR-222",
+   "location": "bay",
+   "botId": "bot-build-1",
+   "slot": "fists",
+   "state": {
+    "condition": 64,
+    "integrity": 81,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "repairs": 0,
+   "tune": 0,
+   "mods": [],
+   "makerMark": "",
+   "history": [
+    {
+     "action": "acquired",
+     "source": "fixture",
+     "day": 1
+    },
+    {
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-c",
+     "defId": "BR-222",
+     "name": "Brute Knuckle X-4",
+     "maker": "Brute Demolition",
+     "botId": "bot-build-1",
+     "slot": "fists"
+    }
+   ]
+  },
+  {
+   "itemId": "wbpart-d",
+   "kind": "workbook-part",
+   "defId": "HL-150",
+   "location": "bay",
+   "botId": "bot-build-1",
+   "slot": "legs",
+   "state": {
+    "condition": 64,
+    "integrity": 81,
+    "repairCount": 0,
+    "faults": [],
+    "detached": false,
+    "patched": false,
+    "overhauls": 0
+   },
+   "repairs": 0,
+   "tune": 0,
+   "mods": [],
+   "makerMark": "",
+   "history": [
+    {
+     "action": "acquired",
+     "source": "fixture",
+     "day": 1
+    },
+    {
+     "action": "fitted",
+     "day": 1,
+     "itemId": "wbpart-d",
+     "defId": "HL-150",
+     "name": "Hollis Stump 7",
+     "maker": "Hollis Agricultural",
+     "botId": "bot-build-1",
+     "slot": "legs"
+    }
+   ]
+  }
+ ],
+ "nextItemId": 14,
+ "hallOfWrecks": [],
+ "truckSchema": 5,
+ "truckSeeded": true,
+ "truck": {
+  "truckId": "truck-starter",
+  "defId": "rust-bucket-pickup",
+  "condition": 100,
+  "integrity": 100,
+  "moduleIds": [],
+  "crew": [],
+  "cargoItemIds": [],
+  "botIds": [
+   "bot-starter"
+  ],
+  "location": "garbage-town",
+  "clockHour": 8,
+  "history": [],
+  "hypeArrivalPending": false
+ },
+ "rivals": {},
+ "belts": {},
+ "holders": {},
+ "world": {
+  "rec": {
+   "homework": [
+    2,
+    6
+   ],
+   "monsoon": [
+    3,
+    6
+   ],
+   "gaff": [
+    4,
+    5
+   ],
+   "graveyard": [
+    5,
+    5
+   ],
+   "dumpster": [
+    6,
+    4
+   ],
+   "mamafixit": [
+    7,
+    4
+   ],
+   "beacon": [
+    8,
+    3
+   ],
+   "rex": [
+    9,
+    3
+   ],
+   "steamhammer": [
+    10,
+    2
+   ],
+   "faithful": [
+    41,
+    19
+   ],
+   "needle": [
+    12,
+    1
+   ],
+   "haybale": [
+    13,
+    1
+   ],
+   "brine": [
+    8,
+    5
+   ],
+   "socket": [
+    9,
+    5
+   ],
+   "glacier": [
+    10,
+    4
+   ],
+   "pinball": [
+    11,
+    4
+   ],
+   "kettledrum": [
+    12,
+    3
+   ],
+   "wreckless": [
+    13,
+    3
+   ],
+   "grudge": [
+    27,
+    12
+   ],
+   "deacon": [
+    15,
+    2
+   ],
+   "duchess": [
+    16,
+    1
+   ],
+   "harbor": [
+    17,
+    1
+   ],
+   "teakettle": [
+    18,
+    0
+   ],
+   "tollbooth": [
+    19,
+    0
+   ],
+   "paperweight": [
+    14,
+    4
+   ],
+   "mismatch": [
+    15,
+    4
+   ],
+   "cinder": [
+    16,
+    4
+   ],
+   "channel9": [
+    17,
+    3
+   ],
+   "fridgemagnet": [
+    18,
+    3
+   ],
+   "undertow": [
+    19,
+    3
+   ],
+   "lamplighter": [
+    20,
+    2
+   ],
+   "nightjar": [
+    21,
+    2
+   ],
+   "jackpot": [
+    22,
+    2
+   ],
+   "cathedral": [
+    23,
+    1
+   ],
+   "busstop": [
+    24,
+    1
+   ],
+   "thresher": [
+    25,
+    1
+   ],
+   "sickle": [
+    19,
+    3
+   ],
+   "velvet": [
+    21,
+    3
+   ],
+   "sparky": [
+    23,
+    3
+   ],
+   "wildfire": [
+    25,
+    2
+   ],
+   "nightshift": [
+    27,
+    2
+   ],
+   "kiln": [
+    29,
+    2
+   ],
+   "lastcall": [
+    31,
+    1
+   ],
+   "sprocket": [
+    33,
+    1
+   ],
+   "demoday": [
+    35,
+    1
+   ],
+   "towtess": [
+    37,
+    0
+   ],
+   "rivet": [
+    39,
+    0
+   ],
+   "foreman": [
+    41,
+    0
+   ]
+  },
+  "log": [],
+  "n": 0
+ },
+ "walkout": "anthem",
+ "pyro": "fire",
+ "gym": 1,
+ "tune": {},
+ "worn": {},
+ "market": null,
+ "workbookMarket": null,
+ "workbookLedger": [],
+ "workbookProgression": {
+  "xp": 500
+ },
+ "event": null,
+ "mods": {},
+ "tourney": null,
+ "sponsor": null,
+ "sponsorsDone": 0,
+ "trophies": {},
+ "workbookAchievements": {},
+ "venueWins": [],
+ "h2h": {},
+ "news": [],
+ "voicePrefs": {
+  "pbp": "",
+  "color": ""
+ },
+ "nextRunId": 1,
+ "workbookRunHistory": [],
+ "workbookRun": null,
+ "workbookBlueprints": [],
+ "workbookTutorial": {
+  "status": "available",
+  "runId": null,
+  "rewardGranted": false,
+  "foundItemIds": []
+ },
+ "opt": {
+  "punchcam": true,
+  "reduced": false,
+  "cb": false,
+  "keys": {},
+  "music": 0.6,
+  "sfx": 0.85,
+  "crowd": 0.8,
+  "voice": 0.9,
+  "announcer": true,
+  "commentary": true,
+  "shake": true,
+  "subtitles": true,
+  "cinematic": true,
+  "hazards": true,
+  "replays": true
+ },
+ "materials": {
+  "MT-01": 12,
+  "MT-02": 0,
+  "MT-03": 0,
+  "MT-04": 0,
+  "MT-05": 0,
+  "MT-06": 0,
+  "MT-07": 0,
+  "MT-08": 0,
+  "MT-09": 0,
+  "MT-10": 0,
+  "MT-11": 0,
+  "MT-12": 0,
+  "MT-13": 0,
+  "MT-14": 0,
+  "MT-15": 0,
+  "MT-16": 0,
+  "MT-17": 0,
+  "MT-18": 0
+ },
+ "consumables": {
+  "patchKit": 0
+ },
+ "workbookCraftOrders": [],
+ "nextCraftOrderId": 1,
+ "venue": "auto",
+ "defend": null
+}

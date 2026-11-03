@@ -40,9 +40,9 @@ Accept the workbook's other recommendations as written: shared hub with instance
 ### A. Foundation
 1. [x] Sign off the decisions above and close Phase 0.
 2. [x] Tag `c644bfa` (48 bots) as the frozen v7 combat reference. Local tag, not pushed yet.
-3. [ ] Sort out the repo: this work shares no history with GitHub's `main`, so the live site can't update from it yet. GitHub already holds almost all of `audio/`; 11 local files are missing there and 3 differ.
+3. [x] Live site decision (2026-11-03): `scrapyard-circuit.vercel.app` keeps the old game for now. Test on Vercel preview links, and merge into `main` when Milestone C is ready for testers. This work shares no history with `main`, so that merge must exclude the studio files, and rolling a converted save back to the old build needs testing first. Every audio file the code names by path is already on GitHub.
 4. [x] Split `index.html` into `src/`: sim, draw, data, ui, venues, audio, voice, arena, plus two stylesheets.
-5. [~] Automated tests with fixed seeds cover the fight sim and the repair, wreck, dismantle and XP formulas. Save migration tests are still missing.
+5. [x] Automated tests with fixed seeds cover the fight sim, the repair, wreck, dismantle and XP formulas, and loading real v7 and custom-bot saves.
 6. [x] Balance report: `node tools/balance-report.cjs`.
 
 ### B. Damage loop (Tabs: Damage & Repair, Status Effects, Materials, Crafting)
@@ -181,5 +181,5 @@ These need a value or a ruling. Each gets a proposal when its milestone starts.
 | Social & PvP phase numbers don't match the Roadmap tab (shared hub is 2 vs 4) | Two tabs | G |
 
 ## 7. First steps
-1. Finish Milestone A: save migration tests, repo and audio.
+1. Milestone A is closed.
 2. Start Milestone B with material-based repairs.

@@ -44,9 +44,9 @@ function readSources(htmlPath) {
 }
 
 /** Boots the game once. Returns evaluate(expression), which runs inside the game's own scope. */
-function loadGame(htmlPath = path.join(ROOT, 'index.html'), seed = 1234) {
+function loadGame(htmlPath = path.join(ROOT, 'index.html'), seed = 1234, storage = {}) {
   const { sources, manifest } = readSources(htmlPath);
-  const data = new Map();
+  const data = new Map(Object.entries(storage));
   const localStorage = { getItem: k => data.has(k) ? data.get(k) : null, setItem: (k, v) => data.set(k, String(v)), removeItem: k => data.delete(k), clear: () => data.clear() };
   const math = {}; for (const key of Object.getOwnPropertyNames(Math)) math[key] = Math[key];
   math.random = seededRandom(seed);
@@ -66,7 +66,7 @@ function loadGame(htmlPath = path.join(ROOT, 'index.html'), seed = 1234) {
   sandbox.window = sandbox; sandbox.self = sandbox; sandbox.globalThis = sandbox;
   const context = vm.createContext(sandbox);
   for (const { name, code } of sources) new vm.Script(code, { filename: name }).runInContext(context);
-  return { evaluate: expression => vm.runInContext(expression, context), localStorage };
+  return { evaluate: expression => vm.runInContext(expression, context), localStorage, storage: () => Object.fromEntries(data) };
 }
 
 module.exports = { loadGame, readSources, ROOT };

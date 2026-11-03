@@ -1,0 +1,330 @@
+{
+ "build": {
+  "head": "optic",
+  "torso": "barrel",
+  "legs": "stumps",
+  "lead": "pipe",
+  "rear": "pipe",
+  "back": "none"
+ },
+ "paint": "#e8b10c",
+ "accent": "#16181b",
+ "decal": "none",
+ "num": 7,
+ "style": "outboxer",
+ "mech": "benny",
+ "trait": "stock",
+ "opp": "homework",
+ "name": "Rusty",
+ "scrap": 777,
+ "rec": {
+  "w": 5,
+  "l": 2,
+  "ko": 3,
+  "des": 1
+ },
+ "owned": [
+  "bucket",
+  "barrel",
+  "pipe",
+  "stumps",
+  "optic"
+ ],
+ "mechs": [
+  "benny"
+ ],
+ "chips": [
+  "stock"
+ ],
+ "wins": [],
+ "sandbox": false,
+ "rounds": 3,
+ "len": 45,
+ "nick": "The Fixture",
+ "home": "Eastside",
+ "story": "Built from a dead forklift and a church raffle prize. Nobody gave it a chance.",
+ "wear": 1,
+ "sig": "haymaker",
+ "sigs": [
+  "haymaker"
+ ],
+ "plan": "balanced",
+ "training": {
+  "head": 0,
+  "body": 0,
+  "guard": 0,
+  "hay": 0,
+  "slip": 0,
+  "read": 0
+ },
+ "history": [
+  {
+   "opp": "homework",
+   "win": true,
+   "how": "KO",
+   "round": 2
+  }
+ ],
+ "ctrl": "coach",
+ "seenIntro": true,
+ "dmg": {
+  "head": 0.4,
+  "hull": 0.25,
+  "lead": 0.1,
+  "rear": 0,
+  "legs": 0.7,
+  "lost": {
+   "lead": false
+  },
+  "conds": [
+   {
+    "part": "legs",
+    "type": "gear"
+   }
+  ]
+ },
+ "rivals": {},
+ "belts": {
+  "0": true
+ },
+ "holders": {},
+ "world": {
+  "rec": {
+   "homework": [
+    2,
+    6
+   ],
+   "monsoon": [
+    3,
+    6
+   ],
+   "gaff": [
+    4,
+    5
+   ],
+   "graveyard": [
+    5,
+    5
+   ],
+   "dumpster": [
+    6,
+    4
+   ],
+   "mamafixit": [
+    7,
+    4
+   ],
+   "beacon": [
+    8,
+    3
+   ],
+   "rex": [
+    9,
+    3
+   ],
+   "steamhammer": [
+    10,
+    2
+   ],
+   "faithful": [
+    41,
+    19
+   ],
+   "needle": [
+    12,
+    1
+   ],
+   "haybale": [
+    13,
+    1
+   ],
+   "brine": [
+    8,
+    5
+   ],
+   "socket": [
+    9,
+    5
+   ],
+   "glacier": [
+    10,
+    4
+   ],
+   "pinball": [
+    11,
+    4
+   ],
+   "kettledrum": [
+    12,
+    3
+   ],
+   "wreckless": [
+    13,
+    3
+   ],
+   "grudge": [
+    27,
+    12
+   ],
+   "deacon": [
+    15,
+    2
+   ],
+   "duchess": [
+    16,
+    1
+   ],
+   "harbor": [
+    17,
+    1
+   ],
+   "teakettle": [
+    18,
+    0
+   ],
+   "tollbooth": [
+    19,
+    0
+   ],
+   "paperweight": [
+    14,
+    4
+   ],
+   "mismatch": [
+    15,
+    4
+   ],
+   "cinder": [
+    16,
+    4
+   ],
+   "channel9": [
+    17,
+    3
+   ],
+   "fridgemagnet": [
+    18,
+    3
+   ],
+   "undertow": [
+    19,
+    3
+   ],
+   "lamplighter": [
+    20,
+    2
+   ],
+   "nightjar": [
+    21,
+    2
+   ],
+   "jackpot": [
+    22,
+    2
+   ],
+   "cathedral": [
+    23,
+    1
+   ],
+   "busstop": [
+    24,
+    1
+   ],
+   "thresher": [
+    25,
+    1
+   ],
+   "sickle": [
+    19,
+    3
+   ],
+   "velvet": [
+    21,
+    3
+   ],
+   "sparky": [
+    23,
+    3
+   ],
+   "wildfire": [
+    25,
+    2
+   ],
+   "nightshift": [
+    27,
+    2
+   ],
+   "kiln": [
+    29,
+    2
+   ],
+   "lastcall": [
+    31,
+    1
+   ],
+   "sprocket": [
+    33,
+    1
+   ],
+   "demoday": [
+    35,
+    1
+   ],
+   "towtess": [
+    37,
+    0
+   ],
+   "rivet": [
+    39,
+    0
+   ],
+   "foreman": [
+    41,
+    0
+   ]
+  },
+  "log": [],
+  "n": 0
+ },
+ "walkout": "anthem",
+ "pyro": "fire",
+ "gym": 1,
+ "tune": {},
+ "worn": {},
+ "market": null,
+ "event": null,
+ "mods": {},
+ "tourney": null,
+ "sponsor": null,
+ "sponsorsDone": 0,
+ "trophies": {
+  "first": 1
+ },
+ "venueWins": [],
+ "drillBest": 0,
+ "defend": null,
+ "h2h": {},
+ "news": [],
+ "voicePrefs": {
+  "pbp": "",
+  "color": ""
+ },
+ "opt": {
+  "punchcam": true,
+  "reduced": false,
+  "cb": false,
+  "keys": {},
+  "music": 0.6,
+  "sfx": 0.85,
+  "crowd": 0.8,
+  "voice": 0.9,
+  "announcer": true,
+  "commentary": true,
+  "shake": true,
+  "subtitles": true,
+  "cinematic": true,
+  "hazards": true,
+  "replays": true
+ },
+ "venue": "auto"
+}
