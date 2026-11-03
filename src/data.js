@@ -1098,12 +1098,18 @@ function repairMaterialNeed(slot) {
 const repairMaterialPrice = (id, count) => Math.ceil(count * (+WORKBOOK_MATERIAL_BY_ID[id]?.baseValueScrap || 0) * REPAIR_RULES.buyMarkup);
 /** Full price of repairing these slots: scrap fee, materials used, and any shortfall bought automatically. */
 function repairQuote(slots) {
-  const fee = slots.reduce((sum, slot) => sum + repairCost(slot), 0), materials = {}, buy = {}; let buyScrap = 0;
-  if (S.sandbox) return { fee:0, materials, buy, buyScrap:0, total:0 };
+  const fee = slots.reduce((sum, slot) => sum + repairCost(slot), 0), materials = {};
   for (const slot of slots) for (const [id, count] of Object.entries(repairMaterialNeed(slot))) materials[id] = (materials[id] || 0) + count;
+  return workshopBill(fee, materials);
+}
+/** A workshop job's price: its scrap fee plus anything missing from stock, bought automatically. */
+function workshopBill(fee, materials) {
+  const buy = {}; let buyScrap = 0;
+  if (S.sandbox) return { fee:0, materials:{}, buy, buyScrap:0, total:0 };
   for (const [id, count] of Object.entries(materials)) { const missing = Math.max(0, count - workbookMaterialCount(id)); if (missing) { buy[id] = missing; buyScrap += repairMaterialPrice(id, missing); } }
   return { fee, materials, buy, buyScrap, total:fee + buyScrap };
 }
+const payWorkshopBill = bill => { if (S.sandbox) return; S.scrap -= bill.total; for (const [id, count] of Object.entries(bill.materials)) S.materials[id] = Math.max(0, workbookMaterialCount(id) - count); };
 const repairNeeded = slot => { const s = repairState(slot); return !!(s.detached || s.condition < s.integrity || s.faults.length || s.patched); };
 const canWorkshopRepair = slot => { const s = repairState(slot); return s.integrity >= REPAIR_THRESHOLD && (s.detached || s.condition < s.integrity || s.patched) && (!s.detached || ['head', 'lead', 'rear'].includes(slot)); };
 const repairTotal = () => repairQuote(PART_STATE_SLOTS.filter(canWorkshopRepair)).total;
@@ -1127,7 +1133,7 @@ function doRepair(k) {
   const slots = k === 'all' ? PART_STATE_SLOTS.filter(canWorkshopRepair) : [k].filter(canWorkshopRepair), quote = repairQuote(slots);
   if (!slots.length) return false;
   if (!S.sandbox && S.scrap < quote.total) { toast(`Not enough scrap. That repair costs ${quote.total}.`); return false; }
-  if (!S.sandbox) { S.scrap -= quote.total; for (const [id, count] of Object.entries(quote.materials)) S.materials[id] = Math.max(0, workbookMaterialCount(id) - count); }
+  payWorkshopBill(quote);
   const repairedFromBroken = slots.some(slot => repairState(slot).condition < 15); for (const slot of slots) workshopRepair(slot); if (repairedFromBroken) evaluateWorkbookAchievements({ type:'repair', fromBroken:true });
   save(); refreshWallet(); return true;
 }
@@ -1151,6 +1157,65 @@ function emergencyRepair() {
     Object.assign(repairState(slot), { ...REPAIR_RULES.replacement, detached:false, faults:[], patched:false, repairCount:0, overhauls:0 }); // worn out: a junkyard replacement
   }
   save(); return true;
+}
+/* Provisional: the workbook gives the dismantle yield and overhaul limits, but not what a part contains or an overhaul costs. */
+const PART_WORK_RULES = {
+  contentFasteners:4, contentFamily: { min:2, max:12, valueShare:.5 },
+  overhaul: { integrity:20, cap:90, maxPerPart:2, materialShare:.5, feeShare:.25, feeMin:30, minRank:2 }
+};
+function partWorkInfo(item) {
+  if (item?.kind === 'workbook-part') { const def = WORKBOOK_PART_BY_ID[item.defId]; return def ? { name:def.name, baseValue:+def.baseValueScrap || 0, family:def.material } : null; }
+  const found = item?.kind === 'part' ? partByAny(item.defId) : null;
+  return found ? { name:found.q.name, baseValue:+found.q.cost || 0, family:REPAIR_RULES.defaultFamily } : null;
+}
+/** What a whole part is made of, as { materialId: count }. */
+function partMaterialContent(item) {
+  const info = partWorkInfo(item); if (!info) return {};
+  const material = familyRepairMaterial(info.family), { min, max, valueShare } = PART_WORK_RULES.contentFamily, fasteners = REPAIR_RULES.fasteners.id;
+  const content = { [material.id]:clamp(Math.round(info.baseValue / Math.max(1, +material.baseValueScrap || 1) * valueShare), min, max) };
+  content[fasteners] = (content[fasteners] || 0) + PART_WORK_RULES.contentFasteners;
+  return content;
+}
+/** What dismantling gives back: 30% + 0.4% × Integrity of the part's materials, at least one of each. */
+function dismantleYield(item) {
+  const share = workbookDismantleMaterialYield(+item?.state?.integrity || 0);
+  return Object.fromEntries(Object.entries(partMaterialContent(item)).map(([id, count]) => [id, Math.max(1, Math.floor(count * share))]));
+}
+const partWorkItem = id => (S.items || []).find(item => item && item.itemId === id && (item.kind === 'part' || item.kind === 'workbook-part')) || null;
+/** Destroys a spare part in the stash for materials. Fitted parts must come off first. */
+function dismantlePart(itemId) {
+  const item = partWorkItem(itemId), info = partWorkInfo(item); if (!info || item.location !== 'stash') return false;
+  const returned = dismantleYield(item);
+  for (const [id, count] of Object.entries(returned)) addWorkbookMaterial(id, count);
+  S.items = S.items.filter(row => row !== item);
+  if (item.kind === 'part' && !S.items.some(row => row && row.kind === 'part' && row.defId === item.defId)) S.owned = (S.owned || []).filter(id => id !== item.defId);
+  addWorkbookLedgerEntry({ action:'dismantle', itemId:item.itemId, defId:item.defId, materials:returned, scrap:0 });
+  save(); return true;
+}
+/** Parts the Scrapworks can reach: the active bot's fitted parts and everything in the stash. */
+const partWorkItems = () => (S.items || []).filter(item => item && (item.kind === 'part' || item.kind === 'workbook-part') && partWorkInfo(item) && (item.location === 'stash' || (item.location === 'bay' && item.botId === S.activeBotId)));
+function overhaulQuote(item) {
+  const info = partWorkInfo(item), { materialShare, feeShare, feeMin } = PART_WORK_RULES.overhaul;
+  return workshopBill(Math.max(feeMin, Math.round((info?.baseValue || 0) * feeShare)), Object.fromEntries(Object.entries(partMaterialContent(item)).map(([id, count]) => [id, Math.ceil(count * materialShare)])));
+}
+/** Why this part can't be overhauled, or '' if it can. */
+function overhaulBlocker(item) {
+  const state = item?.state || {}, { cap, maxPerPart, minRank } = PART_WORK_RULES.overhaul;
+  if (!S.sandbox && workbookRankState().rank < minRank) return `Needs Rank ${minRank}`;
+  if ((+state.overhauls || 0) >= maxPerPart) return `Already overhauled ${maxPerPart} times`;
+  if ((+state.integrity || 0) >= cap) return 'In good shape';
+  if ((+state.integrity || 0) < REPAIR_THRESHOLD) return 'Too worn out';
+  return '';
+}
+/** Restores Integrity, the only way to undo wear. Condition stays as it is; repair it separately. */
+function overhaulPart(itemId) {
+  const item = partWorkItem(itemId); if (!item || overhaulBlocker(item) || !partWorkItems().includes(item)) return false;
+  const bill = overhaulQuote(item), { integrity, cap } = PART_WORK_RULES.overhaul;
+  if (!S.sandbox && S.scrap < bill.total) { toast(`Not enough scrap. That overhaul costs ${bill.total}.`); return false; }
+  payWorkshopBill(bill);
+  item.state = cleanPartState(item.state); item.state.integrity = Math.min(cap, item.state.integrity + integrity); item.state.overhauls++;
+  addWorkbookLedgerEntry({ action:'overhaul', itemId:item.itemId, defId:item.defId, materials:bill.materials, scrap:-bill.total });
+  save(); refreshWallet(); return true;
 }
 /** One-time supplies, so the first repairs don't feel like a tax. Runs for new careers and converted saves. */
 function grantRepairSupplies() {

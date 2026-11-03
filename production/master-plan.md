@@ -47,8 +47,8 @@ Accept the workbook's other recommendations as written: shared hub with instance
 
 ### B. Damage loop (Tabs: Damage & Repair, Status Effects, Materials, Crafting)
 1. [x] Workshop repairs use materials as well as scrap, for stock and custom bots, and missing materials are bought automatically.
-2. Dismantle a part for materials (yield 30% + 0.4% × Integrity).
-3. Overhaul (+20 Integrity, max 2 per part, cap 90).
+2. [x] Dismantle a spare part for materials (yield 30% + 0.4% × Integrity).
+3. [x] Overhaul (+20 Integrity, max 2 per part, cap 90). Provisional: Rank 2, no blueprint or Mechanic skill until those exist.
 4. [~] Re-attach works at 30% Condition and −15 Integrity, using fasteners and weld rods directly. The craftable kit (CR-16) isn't used yet.
 5. Fault services: coolant flush, recalibration, gear rebuild.
 6. Memorialise rare parts as trophies.
