@@ -1,5 +1,7 @@
 # Game Concept: Scrapyard Circuit (working title)
 
+> **Superseded on scope and platform (2026-11-03).** The v3 workbook is now the scope contract, with Offline 1.0 as the first release, and the game stays on HTML/JavaScript. This document's fantasy and pillars still guide the design where they don't conflict. See `production/master-plan.md`.
+
 *Created: 2026-10-31*
 *Status: Draft*
 

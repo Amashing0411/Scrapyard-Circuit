@@ -1,6 +1,6 @@
 # Phase 0 — Decide and Preserve
 
-**Status:** In progress; standard-run loss rule selected  
+**Status:** Decisions signed off 2026-11-03; v7 reference tagged
 **Source:** Scrapyard Circuit Online Design v3 workbook, Phase 0 and Risks & Decisions  
 **Workbook effort estimate:** 1 person-week  
 **Workbook exit test:** Decisions signed off.
@@ -33,8 +33,8 @@ These are the workbook's recommendations, not new decisions made by the assistan
 | Workbook footwork bridge | Divide Footwork by 100, then apply the Load-overage penalty | Selected by the user on 2026-11-03 |
 | Legend crowd reward | +10% fight Hype gain | Selected by the user on 2026-11-03 |
 | Corner Weld Condition amount | Workbook-built bots restore +42 Condition per weld; the mechanic does not change this base amount. The workbook's fitted weld-restoration trait can still modify it. Legacy v7 mechanics retain their existing 30, 18, and 24 values. | Selected by the user on 2026-11-03 |
-| Garage upgrade reputation gates | Workbook gives Scrap prices for 2→4, 4→6, and 6→8 bays but no Council reputation threshold for any step | Open; preserve prices and do not invent thresholds |
-| Clinic tune-up price | Workbook names the service but gives no price | Open; do not invent a price |
+| Garage upgrade reputation gates | Workbook gives Scrap prices for 2→4, 4→6, and 6→8 bays but no Council reputation threshold for any step | Open; propose a provisional value in Milestone E2 |
+| Clinic tune-up price | Workbook names the service but gives no price | Open; propose a provisional value in Milestone E2 |
 | Fight-wreck trigger | Roll the Stable & Wrecks check when torso Condition reaches 0 in a career fight | Selected by the user on 2026-11-03; run wrecks stay under the separate selected run-loss rules |
 | Emergency loaner fit | Laundromat Shell has 10 Capacity while the minimum workbook core needs 20 | Selected by the user: keep the legacy starter loadout as an offline continuation bridge; do not treat it as a workbook Capacity-valid build |
 
@@ -73,9 +73,9 @@ These rules govern different activity types and are now the shared basis for lat
 - [x] Reorder the implementation so offline work finishes before online integration.
 - [x] User selects the standard-mode and fight-wreck rules.
 - [x] User selects the workbook-to-v7 Hull, Footwork, and damage-field bridge.
-- [ ] Confirm the remaining workbook recommendations or mark exceptions.
-- [ ] Keep v7 frozen as the combat reference.
-- [ ] Review and sign off Phase 0 decisions.
+- [x] Confirm the remaining workbook recommendations or mark exceptions.
+- [x] Keep v7 frozen as the combat reference (git tag `v7-combat-reference`).
+- [x] Review and sign off Phase 0 decisions.
 
 ## Phase 0 completion record
 
@@ -88,9 +88,14 @@ These rules govern different activity types and are now the shared basis for lat
 | Road map structure | Draft editable graph from the workbook's 19 locations | 2026-11-03 | Links and base hours are implementation assumptions, not workbook-specified facts |
 | Emergency loaner loadout | Laundromat Shell with the existing legacy starter loadout | 2026-11-03 | User-approved continuation bridge; remains legacy combat, not a Capacity-valid workbook build |
 | Workbook combat bridge | Frame Base Hull + Torso Hull; Footwork ÷ 100 then Load penalty; Arm Power damage; Fist Impact visible but inactive | 2026-11-03 | Confirmed bridge inputs; full effect mapping remains open |
-| Workbook combat scale (supersedes the bridge inputs above) | Custom bots use the v7 damage curve, with stats scaled into the roster range by `WORKBOOK_COMBAT_SCALE`, because raw workbook numbers won every fight | 2026-11-03 | Active; values tuned by simulation and open to playtest |
+| Workbook combat scale (supersedes the bridge inputs above) | Custom bots use the v7 damage curve, with stats scaled into the roster range by `WORKBOOK_COMBAT_SCALE`, because raw workbook numbers won every fight | 2026-11-03 | Accepted by the user 2026-11-03; values open to playtest |
 | Salvage XP awards | Win 60, loss 20, extraction 80 (`WORKBOOK_XP_AWARDS`), so rank gates can open; the workbook set no values | 2026-11-03 | Active; provisional |
-| v7 combat reference preserved | Pending | — | Workbook Phase 0 deliverable |
+| v7 combat reference preserved | Git tag `v7-combat-reference` on `c644bfa`, the 48-bot build | 2026-11-03 | Local tag, not pushed yet |
+| Platform | Stay on HTML/JavaScript | 2026-11-03 | Overrides the Godot pin; the workbook wants fight code shared with the server |
+| Scope | The workbook is the scope contract; Offline 1.0 is the first release | 2026-11-03 | Overrides the Corner Genius MVP scope |
+| Missing workbook values | Propose each one, mark it provisional, tune it in playtests | 2026-11-03 | Replaces "do not invent values" |
+| Early-league wreck risk | Use the Venues tab's Wreck risk so licensed early venues rarely wreck a bot | 2026-11-03 | Not implemented yet; Milestone B or D |
+| Business model | Decide before Milestone G; premium or cosmetics only, never paid power or repairs | 2026-11-03 | Deferred on purpose |
 
 ## Phase 1 handoff
 

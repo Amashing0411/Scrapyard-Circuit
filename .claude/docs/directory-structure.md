@@ -27,6 +27,7 @@ own toolchain:
 
 | `engine.name` | Code root | Why it cannot be `src/` |
 |---|---|---|
+| **Web** (this project) | `src/` | No constraint. `index.html` lists the files to load, in order. |
 | **Godot** | `src/` | No constraint — Godot loads from `res://` anywhere under the project root. |
 | **Unity** | `Assets/` | Unity compiles **only** `Assets/` and `Packages/`. Code outside them is invisible to the compiler. |
 | **Unreal** | `Source/<Module>/` | UnrealBuildTool discovers modules under `Source/`; content lives in `Content/`. A module elsewhere is not built. |
@@ -39,6 +40,7 @@ substitute the row above. `src/` is the table's Godot row, not a universal path.
 
 | `engine.name` | Test root | Anywhere else |
 |---|---|---|
+| **Web** (this project) | `tests/unit/`, `tests/integration/` | — |
 | **Godot** | `tests/unit/`, `tests/integration/` | — |
 | **Unity** | `Assets/Tests/EditMode/`, `Assets/Tests/PlayMode/` | not compiled: "0 tests, Passed" |
 | **Unreal** | `Source/<Module>/Private/Tests/` | not built: "No automation tests matched" |

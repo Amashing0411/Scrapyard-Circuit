@@ -33,32 +33,32 @@ modes:
   rigor: full
   automation: guided
 
+# Web game, decided 2026-11-03 (production/master-plan.md). The schema only allows Godot, Unity or Unreal, so
+# name is left out. Skills that route by engine do not apply; use general-purpose programmers. The Godot install is no longer used.
 engine:
-  name: "Godot"
-  version: "4.7"
-  language: "GDScript"
-  rendering: "Forward+"
-  physics: "Jolt"
-  path: "C:/Users/HP/Desktop/Scrapyard Showdown/Godot/Godot_v4.7-stable_win64_console.exe"   # not on PATH
+  version: "ES2022"
+  language: "JavaScript"
+  rendering: "Canvas 2D"
+  physics: "Custom fight sim"
+  path: null
 
 specialists:
-  code: "godot-gdscript-specialist"
-  shader: "godot-shader-specialist"
-  ui: "godot-specialist"
-  additional: ["godot-gdextension-specialist"]
+  code: "gameplay-programmer"
+  shader: null
+  ui: "ui-programmer"
+  additional: []
 
 naming:
   classes: PascalCase
-  variables: snake_case
+  variables: camelCase
   constants: SCREAMING_SNAKE
   signals: past_tense
-  files: snake_case
-  scenes: snake_case
+  files: kebab-case
 
 commands:
   # build: no export presets exist yet. Set it via /settings once a
   # "Windows Desktop" (or other) preset is created in export_presets.cfg.
   build: "[TO BE CONFIGURED]"
-  test: '"C:/Users/HP/Desktop/Scrapyard Showdown/Godot/Godot_v4.7-stable_win64_console.exe" --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode'
-  run: '"C:/Users/HP/Desktop/Scrapyard Showdown/Godot/Godot_v4.7-stable_win64_console.exe" --path . --windowed --resolution 1280x720'
-  smoke: '"C:/Users/HP/Desktop/Scrapyard Showdown/Godot/Godot_v4.7-stable_win64_console.exe" --headless --quit-after 5'
+  test: 'node --test "tests/unit/**/*.test.cjs"'
+  run: 'python -m http.server 8765 --bind 127.0.0.1'
+  smoke: 'node tools/balance-report.cjs'
