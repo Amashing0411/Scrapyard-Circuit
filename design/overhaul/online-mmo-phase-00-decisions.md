@@ -89,6 +89,8 @@ These rules govern different activity types and are now the shared basis for lat
 | Emergency loaner loadout | Laundromat Shell with the existing legacy starter loadout | 2026-11-03 | User-approved continuation bridge; remains legacy combat, not a Capacity-valid workbook build |
 | Workbook combat bridge | Frame Base Hull + Torso Hull; Footwork ÷ 100 then Load penalty; Arm Power damage; Fist Impact visible but inactive | 2026-11-03 | Confirmed bridge inputs; full effect mapping remains open |
 | Workbook combat scale (supersedes the bridge inputs above) | Custom bots use the v7 damage curve, with stats scaled into the roster range by `WORKBOOK_COMBAT_SCALE`, because raw workbook numbers won every fight | 2026-11-03 | Accepted by the user 2026-11-03; values open to playtest |
+| Repair costs | 2–10 fasteners, 1 family material per 25 Condition, re-attach 6 fasteners and 4 weld rods, missing materials at base × 1.2, starter supplies 20/10/10, instant repairs. Re-attach fees cut to head 40 and arms 30 (from 140 and 90) | 2026-11-03 | Provisional; user accepted the first five, and the fee cut is proposed |
+| Emergency repair | Free fix of whatever blocks the next fight when the player can't afford it; Integrity wear still applies | 2026-11-03 | Provisional; proposed, so running out of scrap can't end a career |
 | Salvage XP awards | Win 60, loss 20, extraction 80 (`WORKBOOK_XP_AWARDS`), so rank gates can open; the workbook set no values | 2026-11-03 | Active; provisional |
 | v7 combat reference preserved | Git tag `v7-combat-reference` on `c644bfa`, the 48-bot build | 2026-11-03 | Local tag, not pushed yet |
 | Platform | Stay on HTML/JavaScript | 2026-11-03 | Overrides the Godot pin; the workbook wants fight code shared with the server |

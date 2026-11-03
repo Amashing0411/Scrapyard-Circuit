@@ -284,7 +284,7 @@ const h2hOf = id => S.h2h[id] || [0, 0];
 /* Persistent per-part Condition and Integrity. */
 const PART_STATE_SLOTS = ['head', 'torso', 'lead', 'rear', 'legs', 'back'];
 const PART_STATE_POOL = { head: 'head', torso: 'torso', lead: 'arms', rear: 'arms', legs: 'legs', back: 'back' };
-const LOST_COST = { head: 140, lead: 90, rear: 90 }, REPAIR_THRESHOLD = 25;
+const LOST_COST = { head: 40, lead: 30, rear: 30 }, REPAIR_THRESHOLD = 25; // provisional, see tools/repair-economy-report.cjs
 const FAULT_FIX = { oil: 'Coolant flush / oil seals', leak: 'Coolant flush', drain: 'Charged cell swap', plating: 'Re-bolt', gear: 'Gear rebuild', stutter: 'Gear rebuild', wobble: 'Recalibration', glitch: 'Recalibration' };
 const wearKey = (slot, id) => `${slot}|${id}`;
 function cleanPartState(raw = {}) {
@@ -1057,38 +1057,99 @@ function migrateFrameItems() {
   if (S.stableSchema < 8) { S.stableSchema = 8; changed = true; }
   if (changed) save();
 }
+/* Provisional repair costs, see production/master-plan.md (Milestone B). */
+const REPAIR_RULES = {
+  fasteners: { id:'MT-15', min:2, max:10 }, conditionPerMaterial:25, defaultFamily:'Ferrous', buyMarkup:1.2,
+  reattach: { 'MT-15':6, 'MT-16':4 }, reattachCondition:30, loss: { normal:3, fromBroken:10, reattach:15 },
+  starterSupplies: { 'MT-15':20, 'MT-16':10, 'MT-01':10 }
+};
+const REPAIR_BOT_KEYS = { head:'head', torso:'torsoCore', lead:'leadArm', rear:'rearArm', legs:'legs', back:'back' };
+/** The part in a slot of the active bot, whether stock or custom, with what its repair needs to know. */
+function repairPart(slot) {
+  const bot = activeStableBot();
+  if (bot?.combatModel === 'workbook') {
+    const item = workbookPartItemById(bot.workbookFittedItems?.[REPAIR_BOT_KEYS[slot]]), def = item && WORKBOOK_PART_BY_ID[item.defId];
+    if (!def) return { state:cleanPartState(), baseValue:0, family:REPAIR_RULES.defaultFamily, loss:REPAIR_RULES.loss.normal, empty:true };
+    item.state = cleanPartState(item.state);
+    return { state:item.state, baseValue:+def.baseValueScrap || 0, family:def.material, loss:+(/−(\d+)/.exec(def.repairDurability || '')?.[1]) || REPAIR_RULES.loss.normal, item, bot };
+  }
+  const id = S.build[slot], q = id && id !== 'none' ? part(PART_STATE_POOL[slot], id) : null;
+  return { state:partStateFor(slot), baseValue:q ? (+q.cost || 0) : 0, family:REPAIR_RULES.defaultFamily, loss:REPAIR_RULES.loss.normal, empty:!q };
+}
+const repairState = slot => repairPart(slot).state;
 function repairCost(slot) {
-  const state = partStateFor(slot), id = S.build[slot]; if (!id || id === 'none') return 0;
+  const target = repairPart(slot), state = target.state; if (target.empty) return 0;
   if (state.detached) return LOST_COST[slot] || 0;
   if (state.integrity < REPAIR_THRESHOLD) return 0;
-  const q = part(PART_STATE_POOL[slot], id), baseValue = q ? (+q.cost || 0) : 0;
   if (state.condition >= state.integrity && !state.faults.length && !state.patched) return 0;
-  return Math.round(baseValue * .6 * Math.max(0, state.integrity - state.condition) / 100 * (1 + .08 * state.repairCount)) || 0;
+  return Math.round(target.baseValue * .6 * Math.max(0, state.integrity - state.condition) / 100 * (1 + .08 * state.repairCount)) || 0;
 }
-const repairNeeded = slot => { const s = partStateFor(slot); return !!(s.detached || s.condition < s.integrity || s.faults.length || s.patched); };
-const canWorkshopRepair = slot => { const s = partStateFor(slot); return s.integrity >= REPAIR_THRESHOLD && (s.detached || s.condition < s.integrity || s.patched) && (!s.detached || ['head', 'lead', 'rear'].includes(slot)); };
-const repairTotal = () => PART_STATE_SLOTS.reduce((sum, slot) => sum + (canWorkshopRepair(slot) ? repairCost(slot) : 0), 0);
-const hasLost = () => ['head', 'lead', 'rear'].some(slot => partStateFor(slot).detached);
-const dmgAvg = () => 1 - ['head', 'torso', 'lead', 'rear', 'legs'].reduce((sum, slot) => sum + partStateFor(slot).condition, 0) / 500;
-const hasPartWear = () => PART_STATE_SLOTS.some(slot => { const s = partStateFor(slot); return s.condition < 100 || s.integrity < 100 || s.detached || s.faults.length > 0; });
+const familyRepairMaterial = family => WORKBOOK_MATERIAL_DEFS.filter(row => row.family === family).sort((a, b) => a.tier - b.tier)[0] || WORKBOOK_MATERIAL_DEFS.find(row => row.family === REPAIR_RULES.defaultFamily);
+/** Materials one slot's repair uses, as { materialId: count }. */
+function repairMaterialNeed(slot) {
+  const target = repairPart(slot), state = target.state, { fasteners, conditionPerMaterial, reattach } = REPAIR_RULES;
+  if (state.detached) return { ...reattach };
+  const restored = Math.max(0, state.integrity - state.condition);
+  if (!restored) return { [fasteners.id]:fasteners.min };
+  const need = { [fasteners.id]:clamp(Math.round(fasteners.min + (fasteners.max - fasteners.min) * restored / 100), fasteners.min, fasteners.max) }, material = familyRepairMaterial(target.family);
+  need[material.id] = (need[material.id] || 0) + Math.ceil(restored / conditionPerMaterial);
+  return need;
+}
+const repairMaterialPrice = id => Math.ceil((+WORKBOOK_MATERIAL_BY_ID[id]?.baseValueScrap || 0) * REPAIR_RULES.buyMarkup);
+/** Full price of repairing these slots: scrap fee, materials used, and any shortfall bought automatically. */
+function repairQuote(slots) {
+  const fee = slots.reduce((sum, slot) => sum + repairCost(slot), 0), materials = {}, buy = {}; let buyScrap = 0;
+  if (S.sandbox) return { fee:0, materials, buy, buyScrap:0, total:0 };
+  for (const slot of slots) for (const [id, count] of Object.entries(repairMaterialNeed(slot))) materials[id] = (materials[id] || 0) + count;
+  for (const [id, count] of Object.entries(materials)) { const missing = Math.max(0, count - workbookMaterialCount(id)); if (missing) { buy[id] = missing; buyScrap += missing * repairMaterialPrice(id); } }
+  return { fee, materials, buy, buyScrap, total:fee + buyScrap };
+}
+const repairNeeded = slot => { const s = repairState(slot); return !!(s.detached || s.condition < s.integrity || s.faults.length || s.patched); };
+const canWorkshopRepair = slot => { const s = repairState(slot); return s.integrity >= REPAIR_THRESHOLD && (s.detached || s.condition < s.integrity || s.patched) && (!s.detached || ['head', 'lead', 'rear'].includes(slot)); };
+const repairTotal = () => repairQuote(PART_STATE_SLOTS.filter(canWorkshopRepair)).total;
+const hasLost = () => ['head', 'lead', 'rear'].some(slot => repairState(slot).detached);
+const dmgAvg = () => 1 - ['head', 'torso', 'lead', 'rear', 'legs'].reduce((sum, slot) => sum + repairState(slot).condition, 0) / 500;
+const hasPartWear = () => PART_STATE_SLOTS.some(slot => { const s = repairState(slot); return s.condition < 100 || s.integrity < 100 || s.detached || s.faults.length > 0; });
 function workshopRepair(slot) {
-  const state = partStateFor(slot);
   if (!repairNeeded(slot)) return false;
+  const target = repairPart(slot), state = target.state, { loss } = REPAIR_RULES; // read after the check: reading a part's state replaces the stored object
   if (state.detached) {
     if (!['head', 'lead', 'rear'].includes(slot) || state.integrity < REPAIR_THRESHOLD) return false;
-    state.detached = false; state.condition = 30; state.integrity = Math.max(0, state.integrity - 15); state.patched = false; return true;
+    state.detached = false; state.condition = REPAIR_RULES.reattachCondition; state.integrity = Math.max(0, state.integrity - loss.reattach); state.patched = false;
+  } else {
+    if (state.integrity < REPAIR_THRESHOLD) return false;
+    state.integrity = Math.max(0, state.integrity - (state.condition < 15 ? loss.fromBroken : target.loss)); state.condition = state.integrity; state.repairCount++; state.patched = false;
   }
-  if (state.integrity < REPAIR_THRESHOLD) return false;
-  const loss = state.condition < 15 ? 10 : 3;
-  state.integrity = Math.max(0, state.integrity - loss); state.condition = state.integrity; state.repairCount++; state.patched = false; return true;
+  if (target.item) logWorkbookPartHistory(target.item, 'repaired', { botId:target.bot.id, slot, condition:state.condition, integrity:state.integrity });
+  return true;
 }
 function doRepair(k) {
-  const slots = k === 'all' ? PART_STATE_SLOTS.filter(canWorkshopRepair) : [k].filter(canWorkshopRepair), c = slots.reduce((sum, slot) => sum + repairCost(slot), 0);
+  const slots = k === 'all' ? PART_STATE_SLOTS.filter(canWorkshopRepair) : [k].filter(canWorkshopRepair), quote = repairQuote(slots);
   if (!slots.length) return false;
-  if (!S.sandbox && S.scrap < c) { toast(`Not enough scrap. That repair costs ${c}.`); return false; }
-  if (!S.sandbox) S.scrap -= c;
-  const repairedFromBroken = slots.some(slot => partStateFor(slot).condition < 15); for (const slot of slots) workshopRepair(slot); if (repairedFromBroken) evaluateWorkbookAchievements({ type:'repair', fromBroken:true });
+  if (!S.sandbox && S.scrap < quote.total) { toast(`Not enough scrap. That repair costs ${quote.total}.`); return false; }
+  if (!S.sandbox) { S.scrap -= quote.total; for (const [id, count] of Object.entries(quote.materials)) S.materials[id] = Math.max(0, workbookMaterialCount(id) - count); }
+  const repairedFromBroken = slots.some(slot => repairState(slot).condition < 15); for (const slot of slots) workshopRepair(slot); if (repairedFromBroken) evaluateWorkbookAchievements({ type:'repair', fromBroken:true });
   save(); refreshWallet(); return true;
+}
+/** Slots that must be fixed before the active bot can fight, and can be. */
+function repairBlockingSlots() {
+  const blockers = ['head', 'lead', 'rear'].filter(slot => repairState(slot).detached);
+  if (repairState('torso').condition < 15) blockers.push('torso');
+  if (['lead', 'rear'].every(slot => { const p = repairState(slot); return p.detached || (p.condition > 0 && p.condition < 15); })) blockers.push('lead', 'rear');
+  return [...new Set(blockers)].filter(canWorkshopRepair);
+}
+/** Mang Benny's free patch-up, so running out of scrap can never end a career. Integrity wear still applies. */
+const emergencyRepairAvailable = () => { const slots = repairBlockingSlots(); return !S.sandbox && !!slots.length && S.scrap < repairQuote(slots).total; };
+function emergencyRepair() {
+  if (!emergencyRepairAvailable()) return false;
+  for (const slot of repairBlockingSlots()) workshopRepair(slot);
+  save(); return true;
+}
+/** One-time supplies, so the first repairs don't feel like a tax. Runs for new careers and converted saves. */
+function grantRepairSupplies() {
+  if (S.repairSuppliesGranted) return;
+  S.repairSuppliesGranted = true;
+  for (const [id, count] of Object.entries(REPAIR_RULES.starterSupplies)) addWorkbookMaterial(id, count);
 }
 function storeDamage(me) {
   if (me.spec.workbookCombat) {
@@ -1140,7 +1201,7 @@ function installWearFaults(F, f) {
 }
 function pushNews(t) { S.news.unshift(t); S.news = S.news.slice(0, 6); }
 let viewLg = 0;
-const repairBlocksFight = () => { const core = partStateFor('torso'), armsOut = ['lead', 'rear'].every(slot => { const p = partStateFor(slot); return p.detached || (p.condition > 0 && p.condition < 15); }); return hasLost() || core.condition < 15 || core.integrity <= 0 || armsOut; };
+const repairBlocksFight = () => { const core = repairState('torso'), armsOut = ['lead', 'rear'].every(slot => { const p = repairState(slot); return p.detached || (p.condition > 0 && p.condition < 15); }); return hasLost() || core.condition < 15 || core.integrity <= 0 || armsOut; };
 function canFight() {
   const bot = activeStableBot();
   if (bot?.wreckStatus === 'salvageable') return false;

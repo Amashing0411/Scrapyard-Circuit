@@ -36,7 +36,7 @@ test('v7_save_becomes_a_one_bot_stable_with_a_truck', () => {
 test('custom_bot_save_keeps_fitted_parts_wear_materials_and_xp', () => {
   const game = boot(schema9Save);
   const state = read(game, `(() => { const bot = S.stable.find(row => row.name === 'Fixture'), head = workbookPartItemById(bot.workbookFittedItems.head); return { model:bot.combatModel, slots:Object.keys(bot.workbookFittedItems).sort(), condition:head.state.condition, integrity:head.state.integrity, material:S.materials['MT-01'], xp:S.workbookProgression.xp, scrap:S.scrap, inTruck:S.stable[0].storageLocation }; })()`);
-  assert.deepStrictEqual(state, { model:'workbook', slots:['fists','head','leadArm','legs','rearArm','torsoCore'], condition:64, integrity:81, material:12, xp:500, scrap:5000, inTruck:'truck' });
+  assert.deepStrictEqual(state, { model:'workbook', slots:['fists','head','leadArm','legs','rearArm','torsoCore'], condition:64, integrity:81, material:22, xp:500, scrap:5000, inTruck:'truck' });
 });
 
 const resave = save => { const game = boot(save); game.evaluate('save()'); return game.storage()['scrapyard-v3']; };

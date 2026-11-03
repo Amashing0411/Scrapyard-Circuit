@@ -1052,7 +1052,7 @@ function applyFightWreck(me, fin) {
 function afterCareerFight(me, opp, win, reason, fin, bt) {
   const out = { belt: '', rival: '', repair: 0, coreBreach: !!me.coreBreached }, P = playerSpec(), stop = reason === 'KO' || reason === 'TKO';
   addSalvageXP(win ? WORKBOOK_XP_AWARDS.fightWin : WORKBOOK_XP_AWARDS.fightLoss); storeDamage(me); const workbookFight = !!me.spec.workbookCombat, workbookCore = workbookFight && workbookPartItemById(me.spec.workbookCombat.itemIds.torso);
-  out.repair = workbookFight ? 0 : repairTotal(); out.workbookRepairPending = workbookFight;
+  out.repair = repairTotal(); out.workbookRepairPending = workbookFight;
   const survivedFight = reason !== 'Forfeit' && (workbookFight ? +(workbookCore?.state?.condition ?? 0) > 0 : partStateFor('torso').condition > 0);
   const stableBot = activeStableBot(), achievementFit = stableBot ? workbookAchievementFitInfo(stableBot) : null, ownedBotCountBefore = (S.stable || []).filter(bot => bot && !bot.loaner).length;
   if (stableBot) {

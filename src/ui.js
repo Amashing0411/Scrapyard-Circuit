@@ -13,6 +13,7 @@ migrateFrameItems();
 migrateTruck();
 migrateTruckModuleItems();
 migrateTruckCrew();
+grantRepairSupplies();
 function refreshWorkbookCombatReadiness() {
   let changed = false;
   for (const bot of S.stable || []) if (bot && bot.combatModel === 'workbook') { const ready = workbookCombatAdapter(bot).ready; if (bot.combatReady !== ready) { bot.combatReady = ready; changed = true; } }
@@ -1102,16 +1103,16 @@ function carTile(id) {
   showCarPanel(carPanel === id ? '' : id); uiClick();
 }
 function renderBay() {
-  const el = $('#hubBay'); if (!el) return; const tot = repairTotal(), repairable = PART_STATE_SLOTS.some(canWorkshopRepair), hasFaults = PART_STATE_SLOTS.some(slot => partStateFor(slot).faults.length), beyondRepair = PART_STATE_SLOTS.some(slot => partStateFor(slot).integrity < REPAIR_THRESHOLD);
+  const el = $('#hubBay'); if (!el) return; const tot = repairTotal(), repairable = PART_STATE_SLOTS.some(canWorkshopRepair), hasFaults = PART_STATE_SLOTS.some(slot => repairState(slot).faults.length), beyondRepair = PART_STATE_SLOTS.some(slot => repairState(slot).integrity < REPAIR_THRESHOLD), allQuote = repairQuote(PART_STATE_SLOTS.filter(canWorkshopRepair)), usesText = Object.entries(allQuote.materials).map(([id, count]) => `${count} ${WORKBOOK_MATERIAL_BY_ID[id].name}`).join(', '), buyingText = Object.values(allQuote.buy).reduce((sum, count) => sum + count, 0);
   const stateName = c => c >= 90 ? 'Pristine' : c >= 75 ? 'Scuffed' : c >= 40 ? 'Damaged' : c >= 15 ? 'Critical' : c > 0 ? 'Broken' : 'Destroyed';
   const rows = PART_STATE_SLOTS.map(slot => {
-    const s = partStateFor(slot), row = SLOTS.find(x => x[0] === slot), c = repairCost(slot), faults = s.faults.map(f => `${CONDS[f.type]?.name || f.type} · fix: ${FAULT_FIX[f.type] || 'service required'}`);
+    const s = repairState(slot), row = SLOTS.find(x => x[0] === slot), c = repairQuote([slot]).total, faults = s.faults.map(f => `${CONDS[f.type]?.name || f.type} · fix: ${FAULT_FIX[f.type] || 'service required'}`);
     const status = s.detached ? 'Detached' : stateName(s.condition), can = canWorkshopRepair(slot), beyond = s.integrity < REPAIR_THRESHOLD;
-    return `<div class="brow${s.detached ? ' lost' : ''}"><span>${row[1]}</span><i><b style="width:${Math.round(s.condition)}%;background:${zoneCol(s.condition / 100, s.detached) || '#555'}"></b></i><em>${status} · ${Math.round(s.condition)}/${Math.round(s.integrity)}</em>${can ? `<button class="small-btn" data-fix="${slot}" title="${s.detached ? 'Re-attach' : 'Workshop repair'} · ${c} scrap">${c || 'Fix'}</button>` : '<s></s>'}${faults.length ? `<small>Fault: ${esc(faults.join(', '))}</small>` : ''}${beyond ? '<small>Beyond workshop repair · dismantling needs the material inventory phase.</small>' : ''}</div>`;
+    return `<div class="brow${s.detached ? ' lost' : ''}"><span>${row[1]}</span><i><b style="width:${Math.round(s.condition)}%;background:${zoneCol(s.condition / 100, s.detached) || '#555'}"></b></i><em>${status} · ${Math.round(s.condition)}/${Math.round(s.integrity)}</em>${can ? `<button class="small-btn" data-fix="${slot}" title="${s.detached ? 'Re-attach' : 'Repair'} · ${c} scrap">${c ? `${c} scrap` : 'Fix'}</button>` : '<s></s>'}${faults.length ? `<small>Fault: ${esc(faults.join(', '))}</small>` : ''}${beyond ? '<small>Worn out. No more repairs.</small>' : ''}</div>`;
   }).join('');
   const idleNote = hasFaults ? 'This fault needs a workshop service that is not available yet.' : beyondRepair ? 'Parts below 25 Integrity need dismantling or replacement.' : 'All installed parts are ready for the next fight.';
-  el.innerHTML = `<div class="panel rbay"><h4 class="htitle">Repair bay</h4><div class="rbwrap"><canvas id="baySil" width="88" height="124" aria-label="Persistent part Condition"></canvas><div class="rbsum"><b>${Math.round((1 - dmgAvg()) * 100)}%</b><small>average Condition</small>${repairable ? `<span>${tot} scrap for available repairs</span>` : ''}</div></div><div class="rbrows">${rows}</div>
-    ${repairable ? `<button class="btn ${repairBlocksFight() ? 'primary' : ''}" data-fix="all">Workshop repair · ${tot}</button><p class="note">Repair raises Condition to the part's post-repair Integrity. The repair lowers Integrity by 3, or 10 from Broken.</p>` : `<p class="note">${idleNote}</p>`}</div>`;
+  el.innerHTML = `<div class="panel rbay"><h4 class="htitle">Repair bay</h4><div class="rbwrap"><canvas id="baySil" width="88" height="124" aria-label="Persistent part Condition"></canvas><div class="rbsum"><b>${Math.round((1 - dmgAvg()) * 100)}%</b><small>average Condition</small>${repairable ? `<span>${tot} scrap to fix everything</span>` : ''}</div></div><div class="rbrows">${rows}</div>
+    ${repairable ? `<button class="btn ${repairBlocksFight() ? 'primary' : ''}" data-fix="all">${tot ? `Repair all · ${tot} scrap` : 'Repair all'}</button><p class="note">Uses ${esc(usesText)}${buyingText ? ` · buying ${buyingText} you're missing` : ''}. Each repair wears the part a little.</p>${emergencyRepairAvailable() ? '<button class="btn primary" data-emergency-fix>Short on scrap? Mang Benny patches it for free</button>' : ''}` : `<p class="note">${idleNote}</p>`}</div>`;
   const f = mkFighter(playerSpec(), 0); drawSil($('#baySil'), f, 0, 0);
 }
 function renderBelts() {
@@ -1157,6 +1158,7 @@ $('#scrCareer').addEventListener('click', e => {
   const wc = e.target.closest('[data-hwc]'); if (wc) { hubWc = wc.dataset.hwc; renderCareer(); return; }
   const sg = e.target.closest('[data-spsign]'); if (sg) { const x = SPONSORS.find(y => y.id === sg.dataset.spsign); if (x && x.req() && !S.sponsor) { S.sponsor = { id: x.id, left: CONTRACT_LEN }; S.scrap += x.pay; save(); refreshWallet(); uiConfirm(); toast(`Signed with ${x.name}. +${x.pay} scrap.`, 'good'); pushNews(`${playerSpec().name} signs with ${x.name}`); renderCareer(); } return; }
   if (e.target.closest('[data-spdrop]')) { if (pendingBuy === 'spdrop') { pendingBuy = null; S.sponsor = null; save(); toast('Contract dropped.'); } else pendingBuy = 'spdrop'; renderCareer(); return; }
+  if (e.target.closest('[data-emergency-fix]')) { if (emergencyRepair()) { uiConfirm(); toast('Mang Benny got it running. Just enough to fight.', 'good'); renderCareer(); } return; }
   const fx = e.target.closest('[data-fix]'); if (fx) { if (doRepair(fx.dataset.fix)) { uiConfirm(); toast('Repaired.'); renderCareer(); } return; }
   const gd = e.target.closest('[data-grudge],[data-defend]'); if (gd && !gd.disabled) { const id = gd.dataset.grudge || gd.dataset.defend; S.opp = id; hubLg = BOT(id).lg; carPanel = ''; carSel = 0; save(); uiConfirm(); renderCareer(); return; }
   const hc = e.target.closest('[data-hctrl]'); if (hc) { S.ctrl = hc.dataset.hctrl; save(); renderCareer(); return; }
@@ -1247,7 +1249,7 @@ $('#scrSettings').addEventListener('click', e => {
   const sc = e.target.closest('[data-sctrl]'); if (sc) { S.ctrl = sc.dataset.sctrl; save(); renderSettings(); return; }
   if (e.target.closest('#sandboxT')) { S.sandbox = !S.sandbox; save(); renderSettings(); refreshWallet(); return; }
   if (e.target.closest('#voiceTest')) { initAudio(); shutUp(); say('ring', 'Ladies and gentlemen... welcome to the Scrapyard Circuit!', 3, { group: 'voice-test', lock: true, assetKey: 'ring.open' }); say('pbp', 'Big shot to the head by Graveyard Shift!', 2, { group: 'voice-test', assetKey: 'pbp.bigHead' }); say('color', 'The noise is already up, Hank. That first clean exchange is going to tell us a lot.', 2, { group: 'voice-test', assetKey: 'color.openColor' }); say('ref', 'One', 2, { group: 'voice-test', assetKey: 'ref.count.1' }); say('pbp', 'Dynamic fallback check for the live call.', 1, { group: 'voice-test', assetKey: 'debug.missing' }); return; }
-  if (e.target.closest('#resetBtn')) { if (pendingBuy === 'reset') { const keep = S.opt; try { localStorage.removeItem(SAVE_KEY); } catch (er) {} S = JSON.parse(JSON.stringify(DEFAULT)); S.opt = keep; S.training = normalizeTraining({}); WS.hd = { ...DEF_HD }; WS.td = { ...DEF_TD }; save(); pendingBuy = null; toast('Career wiped. Back to the scrapyard.'); renderSettings(); refreshWallet(); } else { pendingBuy = 'reset'; renderSettings(); } return; }
+  if (e.target.closest('#resetBtn')) { if (pendingBuy === 'reset') { const keep = S.opt; try { localStorage.removeItem(SAVE_KEY); } catch (er) {} S = JSON.parse(JSON.stringify(DEFAULT)); S.opt = keep; S.training = normalizeTraining({}); WS.hd = { ...DEF_HD }; WS.td = { ...DEF_TD }; grantRepairSupplies(); save(); pendingBuy = null; toast('Career wiped. Back to the scrapyard.'); renderSettings(); refreshWallet(); } else { pendingBuy = 'reset'; renderSettings(); } return; }
 });
 /* ---------- main menu ---------- */
 let menuK = 1, menuScene = null, menuVenuePending = null, menuSparLastHit = '';

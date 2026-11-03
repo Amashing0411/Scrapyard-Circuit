@@ -46,14 +46,14 @@ Accept the workbook's other recommendations as written: shared hub with instance
 6. [x] Balance report: `node tools/balance-report.cjs`.
 
 ### B. Damage loop (Tabs: Damage & Repair, Status Effects, Materials, Crafting)
-1. Workshop repairs use materials as well as scrap.
+1. [x] Workshop repairs use materials as well as scrap, for stock and custom bots, and missing materials are bought automatically.
 2. Dismantle a part for materials (yield 30% + 0.4% × Integrity).
 3. Overhaul (+20 Integrity, max 2 per part, cap 90).
-4. Re-attach using a kit, at 30% Condition and −15 Integrity.
+4. [~] Re-attach works at 30% Condition and −15 Integrity, using fasteners and weld rods directly. The craftable kit (CR-16) isn't used yet.
 5. Fault services: coolant flush, recalibration, gear rebuild.
 6. Memorialise rare parts as trophies.
 7. A clear damage report after every fight.
-8. Review how often heads are destroyed (about 75% of Scrapyard fights), since that now blocks the next fight.
+8. Bring repair costs to the 30–45% income target. Run `node tools/repair-economy-report.cjs`: today a fight's repairs bought from scratch cost more than its purse, mostly because heads are destroyed in about 75% of Scrapyard fights and block the next fight.
 
 **Test:** give 5 testers a part that became unrepairable and ask them why.
 
@@ -182,4 +182,4 @@ These need a value or a ruling. Each gets a proposal when its milestone starts.
 
 ## 7. First steps
 1. Milestone A is closed.
-2. Start Milestone B with material-based repairs.
+2. Continue Milestone B: repair economy, then dismantling.
