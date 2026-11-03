@@ -1124,9 +1124,8 @@ function resultM4() {
     const w = m.wreck, odds = `Salvageable ${Math.round(w.salvageable * 100)}% · Totaled ${Math.round(w.totaled * 100)}% · Annihilated ${Math.round(w.annihilated * 100)}%`;
     out.push(`<p class="wreck-note"><b>Fight wreck · ${esc(w.outcome)}</b> — ${esc(w.botName)} · ${odds}. ${w.outcome === 'Salvageable' ? `The bot and fitted parts survive at 0–10% Condition; each part lost 15 Integrity. Rebuild at Scrapworks for ${w.rebuildScrapCost} Scrap plus materials and one day.` : `The frame and bot are lost. Recovered parts were transferred to stash; see the Hall of Wrecks in the Garage.`}${w.loanerGranted ? ' Junkline issued a Laundromat Shell loaner with starter parts.' : ''}</p>`);
   }
-  const workbookCombat = G.F.f[0].spec.workbookCombat, workbookItems = workbookCombat ? Object.values(workbookCombat.itemIds).map(workbookPartItemById).filter(Boolean) : [], workbookDamaged = workbookItems.some(item => +item.state?.condition < 100 || +item.state?.integrity < 100 || item.state?.detached || item.state?.faults?.length);
-  if (workbookCombat) out.push(workbookDamaged ? '<p class="note carry">Damage goes home with you.</p>' : '<p class="note carry">No damage to take home.</p>');
-  else out.push(hasPartWear() ? `<p class="note carry">Damage goes home with you. Condition and Integrity are recorded per part. Current workshop repair estimate: <b>${m.repair || 0}</b> scrap${hasLost() ? '. Torn-off parts must be refitted before the next fight.' : ', or keep fighting hurt.'}</p>` : '<p class="note carry">No damage to take home.</p>');
+  const reportRows = damageReportRows();
+  out.push(reportRows.length ? `<div class="carryReport"><b>Going home with</b>${reportRows.map(row => `<p>${esc(SLOTS.find(x => x[0] === row.slot)?.[1] || row.slot)} · <em>${esc(row.status)}</em>${row.fault ? ` · ${esc(row.fault)}` : ''} <small>${row.condition}/${row.integrity}</small></p>`).join('')}<p class="note carry">${repairBlocksFight() ? 'Fix this before your next fight.' : 'Repair it or fight hurt.'}${m.repair ? ` Repairs: <b>${m.repair}</b> scrap.` : ''}</p></div>` : '<p class="note carry">No damage to take home.</p>');
   return out.join('');
 }
 function coachReport(F) {

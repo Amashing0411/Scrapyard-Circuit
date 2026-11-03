@@ -50,9 +50,9 @@ Accept the workbook's other recommendations as written: shared hub with instance
 2. [x] Dismantle a spare part for materials (yield 30% + 0.4% × Integrity).
 3. [x] Overhaul (+20 Integrity, max 2 per part, cap 90). Provisional: Rank 2, no blueprint or Mechanic skill until those exist.
 4. [~] Re-attach works at 30% Condition and −15 Integrity, using fasteners and weld rods directly. The craftable kit (CR-16) isn't used yet.
-5. Fault services: coolant flush, recalibration, gear rebuild.
+5. [x] Fault services: coolant flush, recalibration, gear rebuild, cell swap, re-bolt.
 6. Memorialise rare parts as trophies.
-7. A clear damage report after every fight.
+7. [x] A clear damage report after every fight.
 8. [~] Soften wear (accepted 2026-11-03): a repaired part starts each fight at full health, Destroy and Wreck checks follow venue risk, and repair wear is lighter. A stock bot now wins about 5 of 30 in simulation (`node tools/career-sim-report.cjs`), against 12 of 30 with no wear. The target is 8–12; recheck after overhauls and part replacement.
 
 **Test:** give 5 testers a part that became unrepairable and ask them why.

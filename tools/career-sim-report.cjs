@@ -8,10 +8,11 @@ for (let career = 0; career < CAREERS; career++) {
   rows.push(JSON.parse(game.evaluate(`JSON.stringify((() => {
     const clone = value => JSON.parse(JSON.stringify(value)), league = ROSTER.filter(row => row.lg === 0), tryRules = ${RULES};
     if (tryRules.offlineHeadCondition) REPAIR_RULES.offlineHeadCondition = tryRules.offlineHeadCondition; Object.assign(REPAIR_RULES.loss, tryRules.loss || {}); Object.assign(REPAIR_RULES.replacement, tryRules.replacement || {}); if (tryRules.destroyMul !== undefined) for (const style of Object.values(STYLES)) style.destroy *= tryRules.destroyMul;
-    const out = { overhauls:0, destroyedBy:0, wins:0, repairs:0, emergencies:0, noRepair:0, stuckAt:null, wornOutAt:null, minScrap:S.scrap };
+    const out = { services:0, serviceScrap:0, overhauls:0, destroyedBy:0, wins:0, repairs:0, emergencies:0, noRepair:0, stuckAt:null, wornOutAt:null, minScrap:S.scrap };
     for (let fight = 0; fight < ${FIGHTS}; fight++) {
       for (const slot of PART_STATE_SLOTS.filter(canWorkshopRepair)) { const state = repairState(slot); if (state.detached || state.condition < (tryRules.repairBelow ?? 101)) { if (doRepair(slot)) out.repairs++; else out.noRepair++; } }
       if (tryRules.overhaulBelow) for (const item of partWorkItems()) if (item.location === 'bay' && item.state.integrity < tryRules.overhaulBelow && overhaulPart(item.itemId)) out.overhauls++;
+      if (tryRules.serviceFaults) for (const slot of PART_STATE_SLOTS) { const bill = faultServiceQuote(slot); if (bill && serviceFault(slot)) { out.services++; out.serviceScrap += bill.total; } }
       if (emergencyRepair()) out.emergencies++;
       if (repairBlocksFight()) { out.stuckAt = fight + 1; break; }
       const bot = league[fight % league.length], F = simulate(clone(playerSpec()), clone(bot), ${1000 + career * 31} + fight * 7919, { rounds:3, roundLen:45, destroyMul:venueDestroyChance(LEAGUE_VENUE[0]) }), win = F.winner === 0;
@@ -26,7 +27,7 @@ const mean = pick => Math.round(rows.reduce((sum, row) => sum + pick(row), 0) / 
 const worn = rows.map(row => row.wornOutAt).filter(Boolean);
 console.log(`${CAREERS} careers of up to ${FIGHTS} Scrapyard fights, no sponsors, salvage or part upgrades`);
 console.table({
-  'Wins': mean(row => row.wins), 'Overhauls': mean(row => row.overhauls), 'Times destroyed': mean(row => row.destroyedBy), 'Ending scrap': mean(row => row.endScrap), 'Lowest scrap': mean(row => row.minScrap),
+  'Wins': mean(row => row.wins), 'Overhauls': mean(row => row.overhauls), 'Fault services': mean(row => row.services), 'Scrap on fault services': mean(row => row.serviceScrap), 'Times destroyed': mean(row => row.destroyedBy), 'Ending scrap': mean(row => row.endScrap), 'Lowest scrap': mean(row => row.minScrap),
   'Free emergency repairs': mean(row => row.emergencies), 'Careers stuck': rows.filter(row => row.stuckAt).length, 'Fights played': mean(row => row.stuckAt || FIGHTS),
   'Careers with a worn-out part': worn.length, 'First worn-out part at fight': worn.length ? Math.round(worn.reduce((a, b) => a + b, 0) / worn.length) : '-',
   'Head Integrity at the end': mean(row => row.integrity.head), 'Torso Integrity at the end': mean(row => row.integrity.torso)

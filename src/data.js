@@ -1158,6 +1158,33 @@ function emergencyRepair() {
   }
   save(); return true;
 }
+/* Workshop services that clear a carried fault. Materials are from the Crafting and Status Effects tabs. */
+const FAULT_SERVICE_ITEMS = {
+  coolantFlush: { name:'Coolant flush', materials:{ 'MT-17':3, 'MT-10':1 } }, gearRebuild: { name:'Gear rebuild', materials:{ 'MT-02':2, 'MT-15':4, 'MT-09':1 } },
+  recalibration: { name:'Recalibration', materials:{ 'MT-08':1 } }, cellSwap: { name:'Charged cell swap', materials:{ 'MT-14':1 } }, reBolt: { name:'Re-bolt', materials:{ 'MT-15':4 } }
+};
+const FAULT_SERVICES = { oil:FAULT_SERVICE_ITEMS.coolantFlush, leak:FAULT_SERVICE_ITEMS.coolantFlush, drain:FAULT_SERVICE_ITEMS.cellSwap, plating:FAULT_SERVICE_ITEMS.reBolt, gear:FAULT_SERVICE_ITEMS.gearRebuild, stutter:FAULT_SERVICE_ITEMS.gearRebuild, wobble:FAULT_SERVICE_ITEMS.recalibration, glitch:FAULT_SERVICE_ITEMS.recalibration };
+/** Everything needed to clear this slot's faults, or null if it has none. */
+function faultServiceQuote(slot) {
+  const faults = repairState(slot).faults; if (!faults.length) return null;
+  const materials = {}; for (const fault of faults) for (const [id, count] of Object.entries(FAULT_SERVICES[fault.type]?.materials || {})) materials[id] = (materials[id] || 0) + count;
+  return workshopBill(0, materials);
+}
+function serviceFault(slot) {
+  const bill = faultServiceQuote(slot); if (!bill) return false;
+  if (!S.sandbox && S.scrap < bill.total) { toast(`Not enough scrap. That service costs ${bill.total}.`); return false; }
+  payWorkshopBill(bill); const target = repairPart(slot); target.state.faults = [];
+  if (target.item) logWorkbookPartHistory(target.item, 'fault-serviced', { botId:target.bot.id, slot });
+  save(); refreshWallet(); return true;
+}
+/** What the fight left on each part, in plain words. Lists only parts that need attention. */
+function damageReportRows() {
+  return PART_STATE_SLOTS.flatMap(slot => {
+    const state = repairState(slot), fault = state.faults[0] && CONDS[state.faults[0].type]?.name;
+    const status = state.detached ? 'Torn off' : state.integrity < REPAIR_THRESHOLD ? 'Worn out' : state.condition < 15 ? 'Broken' : state.condition < state.integrity ? 'Damaged' : state.condition < 75 ? 'Worn' : fault;
+    return status ? [{ slot, status, fault: status === fault ? '' : fault || '', condition:Math.round(state.condition), integrity:Math.round(state.integrity) }] : [];
+  });
+}
 /* Provisional: the workbook gives the dismantle yield and overhaul limits, but not what a part contains or an overhaul costs. */
 const PART_WORK_RULES = {
   contentFasteners:4, contentFamily: { min:2, max:12, valueShare:.5 },
