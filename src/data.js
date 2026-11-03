@@ -1057,10 +1057,10 @@ function migrateFrameItems() {
   if (S.stableSchema < 8) { S.stableSchema = 8; changed = true; }
   if (changed) save();
 }
-/* Provisional repair costs, see production/master-plan.md (Milestone B). */
+/* Provisional repair costs and wear, see production/master-plan.md (Milestone B). Custom parts wear at their catalog rate instead of loss.normal. */
 const REPAIR_RULES = {
   fasteners: { id:'MT-15', min:2, max:10 }, conditionPerMaterial:25, defaultFamily:'Ferrous', buyMarkup:1.2,
-  reattach: { 'MT-15':6, 'MT-16':4 }, reattachCondition:30, offlineHeadCondition:1, replacement: { condition:40, integrity:60 }, loss: { normal:3, fromBroken:10, reattach:15 },
+  reattach: { 'MT-15':6, 'MT-16':4 }, reattachCondition:30, offlineHeadCondition:1, replacement: { condition:40, integrity:60 }, loss: { normal:1, fromBroken:3, reattach:5 },
   starterSupplies: { 'MT-15':20, 'MT-16':10, 'MT-01':10 }
 };
 const REPAIR_BOT_KEYS = { head:'head', torso:'torsoCore', lead:'leadArm', rear:'rearArm', legs:'legs', back:'back' };
@@ -1139,6 +1139,10 @@ function repairBlockingSlots() {
   return [...new Set(blockers)].filter(slot => !repairPart(slot).empty);
 }
 /** Mang Benny's free help, so running out of scrap or wearing out a part can never end a career. */
+/** Whether a torso kill at this venue rolls a Wreck check. */
+const fightWreckApplies = (venueId, roll) => roll < venueWreckChance(venueId);
+/** No Wreck check this time: the bot goes home with its torso barely working. */
+function survivedWreckCheck() { repairState('torso').condition = 1; }
 const emergencyRepairAvailable = () => { const slots = repairBlockingSlots(); if (S.sandbox || !slots.length) return false; const fixable = slots.filter(canWorkshopRepair); return fixable.length < slots.length || S.scrap < repairQuote(fixable).total; };
 function emergencyRepair() {
   if (!emergencyRepairAvailable()) return false;
@@ -1155,15 +1159,17 @@ function grantRepairSupplies() {
   for (const [id, count] of Object.entries(REPAIR_RULES.starterSupplies)) addWorkbookMaterial(id, count);
 }
 /** A head knocked offline by punches is Broken, not gone: only a Destroy finisher tears it off. */
+/** Fight health back to Condition: the share left, scaled to the part's Integrity. A part with anything left never rounds down to 0. */
+const conditionFromHealth = (share, integrity) => { const condition = clamp(share, 0, 1) * clamp(+integrity || 0, 0, 100); return share > 0 ? Math.max(1, Math.round(condition)) : 0; };
 const storedCondition = (slot, condition, detached) => slot === 'head' && !detached ? Math.max(REPAIR_RULES.offlineHeadCondition, condition) : condition;
 function storeDamage(me) {
   if (me.spec.workbookCombat) {
     const zones = { head: 'head', torso: 'torso', lead: 'lead', rear: 'rear', legs: 'legs' };
     for (const [slot, zone] of Object.entries(zones)) {
       const item = workbookPartItemById(me.spec.workbookCombat.itemIds[slot]); if (!item) continue;
-      const source = me.spec.partWear && me.spec.partWear[slot], state = item.state = cleanPartState(item.state || {}), condition = Math.round(clamp(frac(me, zone) * 100, 0, 100));
+      const source = me.spec.partWear && me.spec.partWear[slot], state = item.state = cleanPartState(item.state || {}); let condition = 0;
       if (source) { state.integrity = Math.min(state.integrity, source.integrity); state.repairCount = Math.max(state.repairCount, source.repairCount); }
-      if (slot === 'torso' && me.coreBreached) state.integrity = 0;
+      if (slot === 'torso' && me.coreBreached) state.integrity = 0; condition = conditionFromHealth(frac(me, zone), Math.max(state.integrity, 1));
       state.detached = ['head', 'lead', 'rear'].includes(slot) && (!!me.lost[slot] || (condition <= 0 && slot !== 'head'));
       state.condition = storedCondition(slot, condition, state.detached);
       state.faults = me.cond[slot] && CONDS[me.cond[slot].type] ? [{ type: me.cond[slot].type, severity: clamp(me.cond[slot].sev || 1, 1, 3) }] : [];
@@ -1174,20 +1180,22 @@ function storeDamage(me) {
   const owner = (S.stable || []).find(bot => bot && bot.id === (S.activeBotId || 'bot-starter'));
   const zones = { head: 'head', torso: 'torso', lead: 'lead', rear: 'rear', legs: 'legs' };
   for (const [slot, zone] of Object.entries(zones)) {
-    const state = partStateFor(slot), source = me.spec.partWear && me.spec.partWear[slot], condition = Math.round(clamp(frac(me, zone) * 100, 0, 100));
+    const state = partStateFor(slot), source = me.spec.partWear && me.spec.partWear[slot]; let condition = 0;
     if (source) { state.integrity = Math.min(state.integrity, source.integrity); state.repairCount = Math.max(state.repairCount, source.repairCount); }
-    if (slot === 'torso' && me.coreBreached) state.integrity = 0;
+    if (slot === 'torso' && me.coreBreached) state.integrity = 0; condition = conditionFromHealth(frac(me, zone), Math.max(state.integrity, 1));
     state.detached = ['head', 'lead', 'rear'].includes(slot) && (!!me.lost[slot] || (condition <= 0 && slot !== 'head'));
     state.condition = storedCondition(slot, condition, state.detached);
     state.faults = me.cond[slot] && CONDS[me.cond[slot].type] ? [{ type: me.cond[slot].type, severity: clamp(me.cond[slot].sev || 1, 1, 3) }] : [];
     const item = activePartItem(slot, me.spec.build?.[slot]); if (owner && item) recordStablePartHistory(owner, item, 'fight-damaged', { slot, condition, integrity: state.integrity });
   }
 }
+/** How much of a part's fight health is left: its Condition as a share of what repairs can reach. Scars lower stats, not health. */
+const fightHealthShare = state => { const condition = clamp(+state.condition || 0, 0, 100), integrity = clamp(+state.integrity || 0, 0, 100); return integrity > 0 ? Math.min(1, condition / integrity) : condition / 100; };
 function applyCarry(f) {
   const wear = f.spec.partWear || (f.spec.id === 'you' ? partWearForBuild(f.spec.build) : null); if (!wear) return;
-  f.startCondition = Object.fromEntries(PART_STATE_SLOTS.slice(0, 5).map(slot => [slot, wear[slot]?.condition ?? 100]));
-  for (const slot of ['head', 'lead', 'rear', 'legs']) { const state = wear[slot] || cleanPartState(); f.ph[slot] = Math.max(0, f.s.phMax[slot] * state.condition / 100); if (['head', 'lead', 'rear'].includes(slot)) f.lost[slot] = !!state.detached; f.broken[slot] = state.condition > 0 && state.condition < 15; }
-  const core = wear.torso || cleanPartState(); f.hp = Math.max(0, Math.round(f.s.hp * core.condition / 100)); f.broken.torso = core.condition > 0 && core.condition < 15;
+  f.startCondition = Object.fromEntries(PART_STATE_SLOTS.slice(0, 5).map(slot => [slot, 100 * fightHealthShare(wear[slot] || cleanPartState())]));
+  for (const slot of ['head', 'lead', 'rear', 'legs']) { const state = wear[slot] || cleanPartState(); f.ph[slot] = Math.max(0, f.s.phMax[slot] * fightHealthShare(state)); if (['head', 'lead', 'rear'].includes(slot)) f.lost[slot] = !!state.detached; f.broken[slot] = state.condition > 0 && state.condition < 15; }
+  const core = wear.torso || cleanPartState(); f.hp = Math.max(0, Math.round(f.s.hp * fightHealthShare(core))); f.broken.torso = core.condition > 0 && core.condition < 15;
   for (const slot of PART_STATE_SLOTS) { const fault = (wear[slot]?.faults || [])[0]; if (fault && CONDS[fault.type]) f.cond[slot] = { type: fault.type, sev: fault.severity, t: Infinity, persistent: true }; }
 }
 function installWearFaults(F, f) {

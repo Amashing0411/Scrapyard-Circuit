@@ -363,13 +363,18 @@ function workbookRankState(xp = S.workbookProgression?.xp) {
   return { totalXP, index, current, startXP, progressXP:Math.min(current.xpToNext, Math.max(0, totalXP - startXP)), rank:current.rank, nextThresholdXP:current.cumulativeXP };
 }
 const WORKBOOK_VENUE_RULES_BY_LEGACY_ID = {
-  lot: { venue: 'Garbage Town Pit', illegalParts: 'Banned' },
-  drain: { venue: 'The Drain', illegalParts: 'Tolerated' },
-  harbor: { venue: 'Floodline Docks', illegalParts: 'Banned' },
-  foundry: { venue: 'Kiln Row Foundry', illegalParts: 'Banned' },
-  arena: { venue: 'Regional Arena', illegalParts: 'Banned' },
-  dome: { venue: 'Crown Dome', illegalParts: 'Banned (DQ)' }
+  lot: { venue: 'Garbage Town Pit', illegalParts: 'Banned', wreckRisk: 'Low' },
+  drain: { venue: 'The Drain', illegalParts: 'Tolerated', wreckRisk: 'Medium' },
+  harbor: { venue: 'Floodline Docks', illegalParts: 'Banned', wreckRisk: 'Medium' },
+  foundry: { venue: 'Kiln Row Foundry', illegalParts: 'Banned', wreckRisk: 'Medium' },
+  arena: { venue: 'Regional Arena', illegalParts: 'Banned', wreckRisk: 'Medium' },
+  dome: { venue: 'Crown Dome', illegalParts: 'Banned (DQ)', wreckRisk: 'Low' }
 };
+/* How a venue's Wreck risk (Venues tab) scales CPU Destroy finishers and how often a torso kill rolls a Wreck check. Provisional. */
+const WRECK_RISK_RULES = { Low: { destroy:.25, wreck:.25 }, Medium: { destroy:.5, wreck:.5 }, High: { destroy:1, wreck:.75 }, 'Very high': { destroy:1.5, wreck:1 } };
+const venueWreckRules = id => WRECK_RISK_RULES[WORKBOOK_VENUE_RULES_BY_LEGACY_ID[id]?.wreckRisk];
+const venueDestroyChance = id => venueWreckRules(id)?.destroy ?? 1;
+const venueWreckChance = id => venueWreckRules(id)?.wreck ?? 1;
 const WORKBOOK_PHASE1B_MAKERS = new Set(["HO", "MR", "VT"]);
 const WORKBOOK_PHASE1B_PARTS = WORKBOOK_PART_DEFS.filter(def => WORKBOOK_PHASE1B_MAKERS.has(def.phase1BFactionCode));
 /* WORKBOOK-PHASE1B-PARTS-END */
@@ -1210,7 +1215,7 @@ function stepFinisher(F) {
   } else if (fn.stage === 'choose') {
     fn.ct += DT; approach(W, L);
     if (G?.F === F && G.match?.runEncounter && !fn.choice) fn.choice = 'spare';
-    if ((F.human !== W.side || F.duo) && fn.ct > 1.4 && !fn.choice) fn.choice = F.rng() < W.sty.destroy ? 'destroy' : 'spare';
+    if ((F.human !== W.side || F.duo) && fn.ct > 1.4 && !fn.choice) fn.choice = F.rng() < W.sty.destroy * (F.cfg.destroyMul ?? 1) ? 'destroy' : 'spare';
     if (F.human === W.side && fn.ct > 8 && !fn.choice) fn.choice = 'spare';
     if (fn.choice) {
       fn.stage = fn.choice === 'destroy' ? 'exec' : 'end'; fn.et = 0;

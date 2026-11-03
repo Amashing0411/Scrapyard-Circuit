@@ -92,13 +92,15 @@ These rules govern different activity types and are now the shared basis for lat
 | Repair costs | 2–10 fasteners, 1 family material per 25 Condition, re-attach 6 fasteners and 4 weld rods, missing materials at base × 1.2, starter supplies 20/10/10, instant repairs. Re-attach fees cut to head 40 and arms 30 (from 140 and 90) | 2026-11-03 | Provisional; user accepted the first five, and the fee cut is proposed |
 | Offline head | A head knocked to 0 by punches is Broken (Condition 1), not torn off; only a Destroy finisher tears it off, matching the fight code | 2026-11-03 | Fix; applied |
 | Material pricing | Missing materials cost batch × base × 1.2, rounded up once, instead of per item | 2026-11-03 | Fix; stops 1-scrap items costing double |
+| Soft wear | Fight health is Condition as a share of Integrity, so a repaired part starts at full health; stat penalties stay. Stock parts wear 1 per repair, 3 from Broken, 5 on re-attach (workbook: 3, 10, 15); custom parts keep their catalog rate for normal repairs | 2026-11-03 | User chose softer wear; values provisional |
+| Venue wreck risk | Venues tab risk scales CPU Destroy (Low 25%, Medium 50%, High 100%, Very high 150%) and how often a torso kill rolls a Wreck check (25%, 50%, 75%, 100%) | 2026-11-03 | Implements the accepted decision; values provisional |
 | Emergency repair | Free fix of whatever blocks the next fight when the player can't afford it, and a junkyard replacement (Condition 40, Integrity 60) for a worn-out part; Integrity wear still applies | 2026-11-03 | Provisional; proposed, so running out of scrap can't end a career |
 | Salvage XP awards | Win 60, loss 20, extraction 80 (`WORKBOOK_XP_AWARDS`), so rank gates can open; the workbook set no values | 2026-11-03 | Active; provisional |
 | v7 combat reference preserved | Git tag `v7-combat-reference` on `c644bfa`, the 48-bot build | 2026-11-03 | Local tag, not pushed yet |
 | Platform | Stay on HTML/JavaScript | 2026-11-03 | Overrides the Godot pin; the workbook wants fight code shared with the server |
 | Scope | The workbook is the scope contract; Offline 1.0 is the first release | 2026-11-03 | Overrides the Corner Genius MVP scope |
 | Missing workbook values | Propose each one, mark it provisional, tune it in playtests | 2026-11-03 | Replaces "do not invent values" |
-| Early-league wreck risk | Use the Venues tab's Wreck risk so licensed early venues rarely wreck a bot | 2026-11-03 | Not implemented yet; Milestone B or D |
+| Early-league wreck risk | Use the Venues tab's Wreck risk so licensed early venues rarely wreck a bot | 2026-11-03 | Implemented; see Venue wreck risk |
 | Business model | Decide before Milestone G; premium or cosmetics only, never paid power or repairs | 2026-11-03 | Deferred on purpose |
 
 ## Phase 1 handoff

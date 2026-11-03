@@ -14,7 +14,7 @@ function newGame(match) {
   if (schoolBusArrivalHypeBonus) { S.truck.hypeArrivalPending = false; save(); }
   if (match.career && !match.spectate && me && me.id === 'you') me.applyFatigue = true;
   if (match.career && !match.spectate) { match.bout = match.tourney ? null : boutKind(op.id); match.rival = rivalOf(op.id) ? rivalOf(op.id).heat : 0; match.rounds = match.bout ? 5 : 0; }
-  const F = createFight(me, op, seed, { rounds: match.rounds || S.rounds, roundLen: match.len || S.len });
+  const F = createFight(me, op, seed, { rounds: match.rounds || S.rounds, roundLen: match.len || S.len, destroyMul: venueDestroyChance(resolveVenue(match)) });
   if (match.career && !match.spectate) {
     applyCarry(F.f[0]); F.f[0].carried = dmgAvg();
     if (S.mods && S.mods.weldsMinus) F.f[0].welds = Math.max(0, F.f[0].welds - 1);
@@ -1010,6 +1010,7 @@ function issueJunklineLoaner() {
 }
 function applyFightWreck(me, fin) {
   const bot = activeStableBot(); if (!bot || !me || +(me.spec.workbookCombat ? workbookPartItemById(me.spec.workbookCombat.itemIds.torso)?.state?.condition : partStateFor('torso').condition) > 0) return null;
+  if (!fightWreckApplies(curVenue, G.F.rng())) { survivedWreckCheck(); return null; }
   syncActiveBot();
   const frameItem = frameItemById(bot.frameItemId), frame = frameDefFor(frameItem), frameIntegrity = frameItem ? +frameItem.integrity : 100, items = wreckPartItemsForBot(bot);
   const check = calculateWreckCheck({ frameIntegrity, overkillDamage:me.overkillDamage || 0, destroyFinisher:fin === 'destroy', hazardOrExplosion:!!me.wreckExplosionHit, insuredOrGrange:S.sponsor?.id === 'ironsaint' });

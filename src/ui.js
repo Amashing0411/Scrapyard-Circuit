@@ -1112,7 +1112,7 @@ function renderBay() {
   }).join('');
   const idleNote = hasFaults ? 'This fault needs a workshop service that is not available yet.' : beyondRepair ? 'Parts below 25 Integrity need dismantling or replacement.' : 'All installed parts are ready for the next fight.';
   el.innerHTML = `<div class="panel rbay"><h4 class="htitle">Repair bay</h4><div class="rbwrap"><canvas id="baySil" width="88" height="124" aria-label="Persistent part Condition"></canvas><div class="rbsum"><b>${Math.round((1 - dmgAvg()) * 100)}%</b><small>average Condition</small>${repairable ? `<span>${tot} scrap to fix everything</span>` : ''}</div></div><div class="rbrows">${rows}</div>
-    ${repairable ? `<button class="btn ${repairBlocksFight() ? 'primary' : ''}" data-fix="all">${tot ? `Repair all · ${tot} scrap` : 'Repair all'}</button><p class="note">Uses ${esc(usesText)}${buyingText ? ` · buying ${buyingText} you're missing` : ''}. Each repair wears the part a little.</p>${emergencyRepairAvailable() ? '<button class="btn primary" data-emergency-fix>Stuck? Mang Benny gets it running for free</button>' : ''}` : `<p class="note">${idleNote}</p>`}</div>`;
+    ${repairable ? `<button class="btn ${repairBlocksFight() ? 'primary' : ''}" data-fix="all">${tot ? `Repair all · ${tot} scrap` : 'Repair all'}</button><p class="note">Uses ${esc(usesText)}${buyingText ? ` · buying ${buyingText} you're missing` : ''}. Each repair wears the part a little.</p>` : `<p class="note">${idleNote}</p>`}${emergencyRepairAvailable() ? '<button class="btn primary" data-emergency-fix>Stuck? Mang Benny gets it running for free</button>' : ''}</div>`;
   const f = mkFighter(playerSpec(), 0); drawSil($('#baySil'), f, 0, 0);
 }
 function renderBelts() {

@@ -13,7 +13,7 @@ for (let career = 0; career < CAREERS; career++) {
       for (const slot of PART_STATE_SLOTS.filter(canWorkshopRepair)) { const state = repairState(slot); if (state.detached || state.condition < (tryRules.repairBelow ?? 101)) { if (doRepair(slot)) out.repairs++; else out.noRepair++; } }
       if (emergencyRepair()) out.emergencies++;
       if (repairBlocksFight()) { out.stuckAt = fight + 1; break; }
-      const bot = league[fight % league.length], F = simulate(clone(playerSpec()), clone(bot), ${1000 + career * 31} + fight * 7919, { rounds:3, roundLen:45 }), win = F.winner === 0;
+      const bot = league[fight % league.length], F = simulate(clone(playerSpec()), clone(bot), ${1000 + career * 31} + fight * 7919, { rounds:3, roundLen:45, destroyMul:venueDestroyChance(LEAGUE_VENUE[0]) }), win = F.winner === 0;
       storeDamage(F.f[0]); if (win) out.wins++; if (F.winner === 1 && F.finish && F.finish.choice === 'destroy') out.destroyedBy++;
       S.scrap += win ? botPurse(bot) + (F.reason !== 'Decision' ? 50 : 0) : 40 + bot.lg * 15; out.minScrap = Math.min(out.minScrap, S.scrap);
       if (out.wornOutAt === null && PART_STATE_SLOTS.some(slot => repairState(slot).integrity < REPAIR_THRESHOLD)) out.wornOutAt = fight + 1;

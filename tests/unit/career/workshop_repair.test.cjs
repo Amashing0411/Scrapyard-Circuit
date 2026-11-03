@@ -36,7 +36,7 @@ test('repair_with_stock_on_hand_spends_materials_and_only_the_scrap_fee', () => 
   const game = damagedHead({ stock:{ [FASTENERS]:9, [FERROUS]:9 } });
   const fee = game.evaluate(`repairCost('head')`);
   assert.strictEqual(game.evaluate(`doRepair('head')`), true);
-  assert.deepStrictEqual(read(game, `{ scrap:S.scrap, fasteners:S.materials['${FASTENERS}'], ferrous:S.materials['${FERROUS}'], condition:partStateFor('head').condition, integrity:partStateFor('head').integrity }`), { scrap:1000 - fee, fasteners:4, ferrous:7, condition:97, integrity:97 });
+  assert.deepStrictEqual(read(game, `{ scrap:S.scrap, fasteners:S.materials['${FASTENERS}'], ferrous:S.materials['${FERROUS}'], condition:partStateFor('head').condition, integrity:partStateFor('head').integrity }`), { scrap:1000 - fee, fasteners:4, ferrous:7, condition:99, integrity:99 });
 });
 
 test('missing_materials_are_bought_automatically_at_a_markup', () => {
@@ -93,7 +93,7 @@ test('custom_bot_with_a_torn_off_head_can_be_reattached_and_fight_again', () => 
   const game = customBotHead({ condition:0, integrity:80, detached:true });
   assert.strictEqual(game.evaluate('canFight()'), false);
   assert.strictEqual(game.evaluate(`doRepair('head')`), true);
-  assert.deepStrictEqual(read(game, `{ detached:${customHead}.state.detached, condition:${customHead}.state.condition, integrity:${customHead}.state.integrity }`), { detached:false, condition:30, integrity:65 });
+  assert.deepStrictEqual(read(game, `{ detached:${customHead}.state.detached, condition:${customHead}.state.condition, integrity:${customHead}.state.integrity }`), { detached:false, condition:30, integrity:75 });
   assert.strictEqual(game.evaluate('canFight()'), true);
 });
 
@@ -109,7 +109,7 @@ test('broke_player_with_a_blocked_bot_gets_a_free_emergency_repair_and_can_fight
   assert.strictEqual(game.evaluate('canFight()'), false);
   assert.strictEqual(game.evaluate('emergencyRepairAvailable()'), true);
   assert.strictEqual(game.evaluate('emergencyRepair()'), true);
-  assert.deepStrictEqual(read(game, `{ detached:partStateFor('head').detached, condition:partStateFor('head').condition, integrity:partStateFor('head').integrity, scrap:S.scrap }`), { detached:false, condition:30, integrity:65, scrap:0 });
+  assert.deepStrictEqual(read(game, `{ detached:partStateFor('head').detached, condition:partStateFor('head').condition, integrity:partStateFor('head').integrity, scrap:S.scrap }`), { detached:false, condition:30, integrity:75, scrap:0 });
   assert.strictEqual(game.evaluate('canFight()'), true);
 });
 
