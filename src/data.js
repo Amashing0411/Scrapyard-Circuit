@@ -177,6 +177,8 @@ if (!Array.isArray(S.hallOfWrecks)) S.hallOfWrecks = [];
 if (!S.materials || typeof S.materials !== 'object' || Array.isArray(S.materials)) S.materials = {};
 if (!S.consumables || typeof S.consumables !== 'object' || Array.isArray(S.consumables)) S.consumables = {};
 S.consumables.patchKit = Math.max(0, Math.floor(+S.consumables.patchKit || 0));
+S.consumables.reattachKit = Math.max(0, Math.floor(+S.consumables.reattachKit || 0));
+if (!Array.isArray(S.memorials)) S.memorials = [];
 if (!S.workbookProgression || typeof S.workbookProgression !== 'object' || Array.isArray(S.workbookProgression)) S.workbookProgression = { xp:0 };
 S.workbookProgression.xp = Math.max(0, Math.floor(+S.workbookProgression.xp || 0));
 S.workbookCraftOrders = Array.isArray(S.workbookCraftOrders) ? S.workbookCraftOrders.filter(order => order && typeof order === 'object' && WORKBOOK_CRAFTING_RECIPE_DEFS.some(recipe => recipe.id === order.recipeId) && ['working','ready','claimed'].includes(order.status)).map(order => ({ id:String(order.id || ''), recipeId:String(order.recipeId), station:String(order.station || ''), outputMaterial:WORKBOOK_MATERIAL_BY_ID[order.outputMaterial] ? order.outputMaterial : '', startedAt:Math.max(0, Math.floor(+order.startedAt || 0)), readyAt:Math.max(0, Math.floor(+order.readyAt || 0)), status:['working','ready','claimed'].includes(order.status) ? order.status : 'working', claimedAt:Math.max(0, Math.floor(+order.claimedAt || 0)) })) : [];
@@ -211,9 +213,11 @@ function workbookCraftOrderEta(order, now = Date.now()) {
   const remaining = Math.max(0, Math.ceil((Math.max(+order.startedAt || 0, +order.readyAt || 0) - now) / 1000));
   return remaining >= 60 ? `${Math.ceil(remaining / 60)} min` : `${remaining}s`;
 }
+/* Recipes that can be crafted today, with the rank each needs. CR-16's rank stands in for its Mechanic skill until skills exist (Milestone E1). */
+const CRAFTABLE_RECIPE_RANKS = { 'CR-01':2, 'CR-02':2, 'CR-06':1, 'CR-16':2 };
 function workbookCraftRecipeBlocker(recipe) {
-  const minRank = ['CR-01','CR-02'].includes(recipe?.id) ? 2 : recipe?.id === 'CR-06' ? 1 : 0;
-  if (!recipe || !minRank || recipe.skill !== 0) return 'Reference only';
+  const minRank = CRAFTABLE_RECIPE_RANKS[recipe?.id] || 0;
+  if (!recipe || !minRank) return 'Reference only';
   if (!S.sandbox && workbookRankState().rank < minRank) return `Reach Rank ${minRank}`;
   if (!S.sandbox) {
     const missing = recipe.inputs.filter(([id,count]) => workbookMaterialCount(id) < count).map(([id,count]) => `${count - workbookMaterialCount(id)} ${WORKBOOK_MATERIAL_BY_ID[id]?.name || id}`);
@@ -224,7 +228,7 @@ function workbookCraftRecipeBlocker(recipe) {
 }
 function workbookStartCraftOrder(recipeId, now = Date.now()) {
   const recipe = WORKBOOK_CRAFTING_RECIPE_DEFS.find(row => row.id === recipeId);
-  if (!recipe || !['CR-01','CR-02','CR-06'].includes(recipe.id) || recipe.skill !== 0 || (!recipe.outputMaterial && recipe.id !== 'CR-01') || workbookCraftRecipeBlocker(recipe)) return null;
+  if (!recipe || !CRAFTABLE_RECIPE_RANKS[recipe.id] || workbookCraftRecipeBlocker(recipe)) return null;
   workbookReconcileCraftOrders(now);
   if (!S.sandbox && !consumeWorkbookMaterials(recipe.inputs)) return null;
   if (!S.sandbox && recipe.scrapPowerFee) S.scrap = Math.max(0, Math.floor(+S.scrap || 0) - recipe.scrapPowerFee);
@@ -239,6 +243,7 @@ function workbookClaimCraftOrder(orderId) {
   if (!order || !recipe) return false;
   if (recipe.outputMaterial) { if (!addWorkbookMaterial(recipe.outputMaterial, 1)) return false; }
   else if (recipe.id === 'CR-01') S.consumables.patchKit = Math.max(0, +S.consumables.patchKit || 0) + 1;
+  else if (recipe.id === 'CR-16') S.consumables.reattachKit = Math.max(0, +S.consumables.reattachKit || 0) + 1;
   else return false;
   order.status = 'claimed'; order.claimedAt = Date.now(); save(); return true;
 }
@@ -1098,9 +1103,13 @@ function repairMaterialNeed(slot) {
 const repairMaterialPrice = (id, count) => Math.ceil(count * (+WORKBOOK_MATERIAL_BY_ID[id]?.baseValueScrap || 0) * REPAIR_RULES.buyMarkup);
 /** Full price of repairing these slots: scrap fee, materials used, and any shortfall bought automatically. */
 function repairQuote(slots) {
-  const fee = slots.reduce((sum, slot) => sum + repairCost(slot), 0), materials = {};
-  for (const slot of slots) for (const [id, count] of Object.entries(repairMaterialNeed(slot))) materials[id] = (materials[id] || 0) + count;
-  return workshopBill(fee, materials);
+  const kitsOwned = S.sandbox ? 0 : Math.max(0, Math.floor(+S.consumables?.reattachKit || 0)), materials = {}; let fee = 0, kitsUsed = 0;
+  for (const slot of slots) {
+    if (repairState(slot).detached && kitsUsed < kitsOwned) { kitsUsed++; continue; } // a kit covers the fee and materials of one re-attach
+    fee += repairCost(slot);
+    for (const [id, count] of Object.entries(repairMaterialNeed(slot))) materials[id] = (materials[id] || 0) + count;
+  }
+  return { ...workshopBill(fee, materials), kitsUsed };
 }
 /** A workshop job's price: its scrap fee plus anything missing from stock, bought automatically. */
 function workshopBill(fee, materials) {
@@ -1133,7 +1142,7 @@ function doRepair(k) {
   const slots = k === 'all' ? PART_STATE_SLOTS.filter(canWorkshopRepair) : [k].filter(canWorkshopRepair), quote = repairQuote(slots);
   if (!slots.length) return false;
   if (!S.sandbox && S.scrap < quote.total) { toast(`Not enough scrap. That repair costs ${quote.total}.`); return false; }
-  payWorkshopBill(quote);
+  payWorkshopBill(quote); if (quote.kitsUsed) S.consumables.reattachKit -= quote.kitsUsed;
   const repairedFromBroken = slots.some(slot => repairState(slot).condition < 15); for (const slot of slots) workshopRepair(slot); if (repairedFromBroken) evaluateWorkbookAchievements({ type:'repair', fromBroken:true });
   save(); refreshWallet(); return true;
 }
@@ -1209,14 +1218,28 @@ function dismantleYield(item) {
   return Object.fromEntries(Object.entries(partMaterialContent(item)).map(([id, count]) => [id, Math.max(1, Math.floor(count * share))]));
 }
 const partWorkItem = id => (S.items || []).find(item => item && item.itemId === id && (item.kind === 'part' || item.kind === 'workbook-part')) || null;
+const removePartItem = item => { S.items = S.items.filter(row => row !== item); if (item.kind === 'part' && !S.items.some(row => row && row.kind === 'part' && row.defId === item.defId)) S.owned = (S.owned || []).filter(id => id !== item.defId); };
 /** Destroys a spare part in the stash for materials. Fitted parts must come off first. */
 function dismantlePart(itemId) {
   const item = partWorkItem(itemId), info = partWorkInfo(item); if (!info || item.location !== 'stash') return false;
   const returned = dismantleYield(item);
   for (const [id, count] of Object.entries(returned)) addWorkbookMaterial(id, count);
-  S.items = S.items.filter(row => row !== item);
-  if (item.kind === 'part' && !S.items.some(row => row && row.kind === 'part' && row.defId === item.defId)) S.owned = (S.owned || []).filter(id => id !== item.defId);
+  removePartItem(item);
   addWorkbookLedgerEntry({ action:'dismantle', itemId:item.itemId, defId:item.defId, materials:returned, scrap:0 });
+  save(); return true;
+}
+/** Rare and signature parts can become garage trophies instead of being dismantled. */
+function partRarityName(item) {
+  if (item?.kind === 'workbook-part') return WORKBOOK_PART_BY_ID[item.defId]?.rarity || '';
+  const found = item?.kind === 'part' ? partByAny(item.defId) : null; return found ? RARITY[rarityOf(found.q)]?.n || '' : '';
+}
+const MEMORIAL_RARITIES = new Set(['Rare', 'Epic', 'Legendary', 'Iconic', 'Pro', 'Prototype']);
+const canMemorialise = item => !!item && item.location === 'stash' && MEMORIAL_RARITIES.has(partRarityName(item));
+function memorialisePart(itemId) {
+  const item = partWorkItem(itemId), info = partWorkInfo(item); if (!info || !canMemorialise(item)) return false;
+  S.memorials.push({ name:info.name, rarity:partRarityName(item), day:Math.max(1, Math.floor(+S.stableDay || 1)), condition:Math.round(+item.state?.condition || 0), integrity:Math.round(+item.state?.integrity || 0), history:(Array.isArray(item.history) ? item.history : []).slice(-40) });
+  removePartItem(item);
+  addWorkbookLedgerEntry({ action:'memorialise', itemId:item.itemId, defId:item.defId, scrap:0 });
   save(); return true;
 }
 /** Parts the Scrapworks can reach: the active bot's fitted parts and everything in the stash. */

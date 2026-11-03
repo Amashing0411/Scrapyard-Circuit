@@ -49,9 +49,9 @@ Accept the workbook's other recommendations as written: shared hub with instance
 1. [x] Workshop repairs use materials as well as scrap, for stock and custom bots, and missing materials are bought automatically.
 2. [x] Dismantle a spare part for materials (yield 30% + 0.4% × Integrity).
 3. [x] Overhaul (+20 Integrity, max 2 per part, cap 90). Provisional: Rank 2, no blueprint or Mechanic skill until those exist.
-4. [~] Re-attach works at 30% Condition and −15 Integrity, using fasteners and weld rods directly. The craftable kit (CR-16) isn't used yet.
+4. [x] Re-attach at 30% Condition. A craftable kit (CR-16) covers the fee and materials; without one it uses fasteners and weld rods.
 5. [x] Fault services: coolant flush, recalibration, gear rebuild, cell swap, re-bolt.
-6. Memorialise rare parts as trophies.
+6. [x] Memorialise rare parts as trophies on the Stable's Wrecks tab.
 7. [x] A clear damage report after every fight.
 8. [~] Soften wear (accepted 2026-11-03): a repaired part starts each fight at full health, Destroy and Wreck checks follow venue risk, and repair wear is lighter. A stock bot now wins about 5 of 30 in simulation (`node tools/career-sim-report.cjs`), against 12 of 30 with no wear. The target is 8–12; recheck after overhauls and part replacement.
 
