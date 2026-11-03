@@ -9,10 +9,10 @@ const rows = JSON.parse(game.evaluate(`JSON.stringify([0, 1, 2, 3].map(league =>
     reset(); S.materials = clone(stock); for (const id of Object.keys(S.materials)) S.materials[id] = 0;
     const F = simulate(clone(playerSpec()), clone(bot), 1000 + i * 7919, { rounds:3, roundLen:45 }), win = F.winner === 0;
     storeDamage(F.f[0]); const quote = repairQuote(slots.filter(canWorkshopRepair));
-    fights++; bill += quote.total; fee += quote.fee; if (win) { wins++; purse += botPurse(bot); } if (repairBlocksFight()) blocked++;
+    fights++; bill += quote.total; fee += quote.fee; if (win) { wins++; purse += botPurse(bot) + (F.reason !== 'Decision' ? 50 : 0); } else purse += 40 + bot.lg * 15; if (repairBlocksFight()) blocked++;
   }
   reset(); S.materials = stock;
   return { league:LEAGUES[league].name, avgBill:Math.round(bill / fights), avgFee:Math.round(fee / fights), winPct:Math.round(100 * wins / fights), avgIncome:Math.round(purse / fights), repairShare:purse ? Math.round(100 * bill / purse) : null, blockedPct:Math.round(100 * blocked / fights) };
 }))`));
-console.log('One fight, no materials in stock, purse only (no bonuses or sponsors). Target repair share: 30-45% of income');
+console.log('One fight, buying every material. Income is purse, stoppage bonus or show money, without sponsors or salvage. Target repair share: 30-45%');
 console.table(rows);

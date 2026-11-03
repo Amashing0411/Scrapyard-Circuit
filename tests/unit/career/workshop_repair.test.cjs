@@ -42,9 +42,9 @@ test('repair_with_stock_on_hand_spends_materials_and_only_the_scrap_fee', () => 
 test('missing_materials_are_bought_automatically_at_a_markup', () => {
   const game = damagedHead({ stock:{ [FASTENERS]:2 } });
   const quote = read(game, `repairQuote(['head'])`), fee = game.evaluate(`repairCost('head')`);
-  // 3 more fasteners at base 1 and 2 ferrous scrap at base 2, each priced at base × 1.2 rounded up.
+  // 3 more fasteners at base 1 and 2 ferrous scrap at base 2: each batch costs base × 1.2, rounded up once.
   assert.deepStrictEqual(quote.buy, { [FASTENERS]:3, [FERROUS]:2 });
-  assert.strictEqual(quote.buyScrap, 3 * 2 + 2 * 3);
+  assert.strictEqual(quote.buyScrap, Math.ceil(3 * 1.2) + Math.ceil(2 * 2 * 1.2));
   assert.strictEqual(quote.total, fee + quote.buyScrap);
   assert.strictEqual(game.evaluate(`doRepair('head')`), true);
   assert.deepStrictEqual(read(game, `{ scrap:S.scrap, fasteners:S.materials['${FASTENERS}'], ferrous:S.materials['${FERROUS}'] }`), { scrap:1000 - quote.total, fasteners:0, ferrous:0 });
@@ -129,4 +129,49 @@ test('emergency_repair_is_not_offered_when_the_player_can_afford_the_fix', () =>
 test('emergency_repair_is_not_offered_when_nothing_blocks_the_fight', () => {
   const game = damagedHead({ condition:60, scrap:0 });
   assert.strictEqual(game.evaluate('emergencyRepairAvailable()'), false);
+});
+
+/** Runs a fight that ends with the given head state, then stores its damage on the player. */
+const storeHead = (game, ph, lost) => game.evaluate(`(() => { const F = createFight(JSON.parse(JSON.stringify(playerSpec())), JSON.parse(JSON.stringify(ROSTER[0])), 5, { rounds:3, roundLen:45 }), me = F.f[0]; me.ph.head = ${ph}; me.lost.head = ${lost}; storeDamage(me); })()`);
+
+test('head_knocked_offline_by_punches_is_broken_not_torn_off', () => {
+  const game = boot();
+  storeHead(game, 0, false);
+  assert.deepStrictEqual(read(game, `{ detached:partStateFor('head').detached, condition:partStateFor('head').condition, blocked:repairBlocksFight() }`), { detached:false, condition:1, blocked:false });
+});
+
+test('head_ripped_off_by_a_destroy_finisher_is_torn_off', () => {
+  const game = boot();
+  storeHead(game, 0, true);
+  assert.deepStrictEqual(read(game, `{ detached:partStateFor('head').detached, condition:partStateFor('head').condition, blocked:repairBlocksFight() }`), { detached:true, condition:0, blocked:true });
+});
+
+test('custom_bot_head_knocked_offline_is_broken_not_torn_off', () => {
+  const game = customBotHead({ condition:100, integrity:80 });
+  game.evaluate(`(() => { const F = createFight(JSON.parse(JSON.stringify(playerSpec())), JSON.parse(JSON.stringify(ROSTER[0])), 5, { rounds:3, roundLen:45 }), me = F.f[0]; me.ph.head = 0; storeDamage(me); })()`);
+  assert.deepStrictEqual(read(game, `{ detached:${customHead}.state.detached, condition:${customHead}.state.condition, ready:canFight() }`), { detached:false, condition:1, ready:true });
+});
+
+test('bot_with_a_broken_head_can_still_enter_and_finish_a_fight', () => {
+  const game = boot();
+  storeHead(game, 0, false);
+  const phase = game.evaluate(`simulate(JSON.parse(JSON.stringify(playerSpec())), JSON.parse(JSON.stringify(ROSTER[0])), 5, { rounds:3, roundLen:45 }).phase`);
+  assert.strictEqual(phase, 'done');
+});
+
+test('worn_out_part_blocking_the_fight_gets_a_free_junkyard_replacement', () => {
+  const game = damagedHead({ condition:0, integrity:20, scrap:1000 });
+  game.evaluate(`partStateFor('head').detached = true`);
+  assert.strictEqual(game.evaluate('emergencyRepairAvailable()'), true);
+  assert.strictEqual(game.evaluate('emergencyRepair()'), true);
+  assert.deepStrictEqual(read(game, `{ detached:partStateFor('head').detached, condition:partStateFor('head').condition, integrity:partStateFor('head').integrity, scrap:S.scrap }`), { detached:false, condition:40, integrity:60, scrap:1000 });
+  assert.strictEqual(game.evaluate('canFight()'), true);
+});
+
+test('torso_with_no_integrity_left_gets_a_replacement_so_the_bot_can_fight', () => {
+  const game = damagedHead({ condition:60 });
+  game.evaluate(`Object.assign(partStateFor('torso'), { condition:50, integrity:0 })`);
+  assert.strictEqual(game.evaluate('canFight()'), false);
+  assert.strictEqual(game.evaluate('emergencyRepair()'), true);
+  assert.strictEqual(game.evaluate('canFight()'), true);
 });

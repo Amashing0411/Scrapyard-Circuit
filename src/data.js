@@ -1060,7 +1060,7 @@ function migrateFrameItems() {
 /* Provisional repair costs, see production/master-plan.md (Milestone B). */
 const REPAIR_RULES = {
   fasteners: { id:'MT-15', min:2, max:10 }, conditionPerMaterial:25, defaultFamily:'Ferrous', buyMarkup:1.2,
-  reattach: { 'MT-15':6, 'MT-16':4 }, reattachCondition:30, loss: { normal:3, fromBroken:10, reattach:15 },
+  reattach: { 'MT-15':6, 'MT-16':4 }, reattachCondition:30, offlineHeadCondition:1, replacement: { condition:40, integrity:60 }, loss: { normal:3, fromBroken:10, reattach:15 },
   starterSupplies: { 'MT-15':20, 'MT-16':10, 'MT-01':10 }
 };
 const REPAIR_BOT_KEYS = { head:'head', torso:'torsoCore', lead:'leadArm', rear:'rearArm', legs:'legs', back:'back' };
@@ -1095,13 +1095,13 @@ function repairMaterialNeed(slot) {
   need[material.id] = (need[material.id] || 0) + Math.ceil(restored / conditionPerMaterial);
   return need;
 }
-const repairMaterialPrice = id => Math.ceil((+WORKBOOK_MATERIAL_BY_ID[id]?.baseValueScrap || 0) * REPAIR_RULES.buyMarkup);
+const repairMaterialPrice = (id, count) => Math.ceil(count * (+WORKBOOK_MATERIAL_BY_ID[id]?.baseValueScrap || 0) * REPAIR_RULES.buyMarkup);
 /** Full price of repairing these slots: scrap fee, materials used, and any shortfall bought automatically. */
 function repairQuote(slots) {
   const fee = slots.reduce((sum, slot) => sum + repairCost(slot), 0), materials = {}, buy = {}; let buyScrap = 0;
   if (S.sandbox) return { fee:0, materials, buy, buyScrap:0, total:0 };
   for (const slot of slots) for (const [id, count] of Object.entries(repairMaterialNeed(slot))) materials[id] = (materials[id] || 0) + count;
-  for (const [id, count] of Object.entries(materials)) { const missing = Math.max(0, count - workbookMaterialCount(id)); if (missing) { buy[id] = missing; buyScrap += missing * repairMaterialPrice(id); } }
+  for (const [id, count] of Object.entries(materials)) { const missing = Math.max(0, count - workbookMaterialCount(id)); if (missing) { buy[id] = missing; buyScrap += repairMaterialPrice(id, missing); } }
   return { fee, materials, buy, buyScrap, total:fee + buyScrap };
 }
 const repairNeeded = slot => { const s = repairState(slot); return !!(s.detached || s.condition < s.integrity || s.faults.length || s.patched); };
@@ -1131,18 +1131,21 @@ function doRepair(k) {
   const repairedFromBroken = slots.some(slot => repairState(slot).condition < 15); for (const slot of slots) workshopRepair(slot); if (repairedFromBroken) evaluateWorkbookAchievements({ type:'repair', fromBroken:true });
   save(); refreshWallet(); return true;
 }
-/** Slots that must be fixed before the active bot can fight, and can be. */
+/** Slots that must be fixed before the active bot can fight. */
 function repairBlockingSlots() {
   const blockers = ['head', 'lead', 'rear'].filter(slot => repairState(slot).detached);
-  if (repairState('torso').condition < 15) blockers.push('torso');
+  if (repairState('torso').condition < 15 || repairState('torso').integrity <= 0) blockers.push('torso');
   if (['lead', 'rear'].every(slot => { const p = repairState(slot); return p.detached || (p.condition > 0 && p.condition < 15); })) blockers.push('lead', 'rear');
-  return [...new Set(blockers)].filter(canWorkshopRepair);
+  return [...new Set(blockers)].filter(slot => !repairPart(slot).empty);
 }
-/** Mang Benny's free patch-up, so running out of scrap can never end a career. Integrity wear still applies. */
-const emergencyRepairAvailable = () => { const slots = repairBlockingSlots(); return !S.sandbox && !!slots.length && S.scrap < repairQuote(slots).total; };
+/** Mang Benny's free help, so running out of scrap or wearing out a part can never end a career. */
+const emergencyRepairAvailable = () => { const slots = repairBlockingSlots(); if (S.sandbox || !slots.length) return false; const fixable = slots.filter(canWorkshopRepair); return fixable.length < slots.length || S.scrap < repairQuote(fixable).total; };
 function emergencyRepair() {
   if (!emergencyRepairAvailable()) return false;
-  for (const slot of repairBlockingSlots()) workshopRepair(slot);
+  for (const slot of repairBlockingSlots()) {
+    if (canWorkshopRepair(slot)) { workshopRepair(slot); continue; }
+    Object.assign(repairState(slot), { ...REPAIR_RULES.replacement, detached:false, faults:[], patched:false, repairCount:0, overhauls:0 }); // worn out: a junkyard replacement
+  }
   save(); return true;
 }
 /** One-time supplies, so the first repairs don't feel like a tax. Runs for new careers and converted saves. */
@@ -1151,6 +1154,8 @@ function grantRepairSupplies() {
   S.repairSuppliesGranted = true;
   for (const [id, count] of Object.entries(REPAIR_RULES.starterSupplies)) addWorkbookMaterial(id, count);
 }
+/** A head knocked offline by punches is Broken, not gone: only a Destroy finisher tears it off. */
+const storedCondition = (slot, condition, detached) => slot === 'head' && !detached ? Math.max(REPAIR_RULES.offlineHeadCondition, condition) : condition;
 function storeDamage(me) {
   if (me.spec.workbookCombat) {
     const zones = { head: 'head', torso: 'torso', lead: 'lead', rear: 'rear', legs: 'legs' };
@@ -1159,8 +1164,8 @@ function storeDamage(me) {
       const source = me.spec.partWear && me.spec.partWear[slot], state = item.state = cleanPartState(item.state || {}), condition = Math.round(clamp(frac(me, zone) * 100, 0, 100));
       if (source) { state.integrity = Math.min(state.integrity, source.integrity); state.repairCount = Math.max(state.repairCount, source.repairCount); }
       if (slot === 'torso' && me.coreBreached) state.integrity = 0;
-      state.condition = condition;
-      state.detached = ['head', 'lead', 'rear'].includes(slot) && (!!me.lost[slot] || condition <= 0);
+      state.detached = ['head', 'lead', 'rear'].includes(slot) && (!!me.lost[slot] || (condition <= 0 && slot !== 'head'));
+      state.condition = storedCondition(slot, condition, state.detached);
       state.faults = me.cond[slot] && CONDS[me.cond[slot].type] ? [{ type: me.cond[slot].type, severity: clamp(me.cond[slot].sev || 1, 1, 3) }] : [];
       logWorkbookPartHistory(item, 'fight-damaged', { botId: me.spec.workbookCombat.botId, slot, condition, integrity: state.integrity });
     }
@@ -1172,8 +1177,8 @@ function storeDamage(me) {
     const state = partStateFor(slot), source = me.spec.partWear && me.spec.partWear[slot], condition = Math.round(clamp(frac(me, zone) * 100, 0, 100));
     if (source) { state.integrity = Math.min(state.integrity, source.integrity); state.repairCount = Math.max(state.repairCount, source.repairCount); }
     if (slot === 'torso' && me.coreBreached) state.integrity = 0;
-    state.condition = condition;
-    state.detached = ['head', 'lead', 'rear'].includes(slot) && (!!me.lost[slot] || condition <= 0);
+    state.detached = ['head', 'lead', 'rear'].includes(slot) && (!!me.lost[slot] || (condition <= 0 && slot !== 'head'));
+    state.condition = storedCondition(slot, condition, state.detached);
     state.faults = me.cond[slot] && CONDS[me.cond[slot].type] ? [{ type: me.cond[slot].type, severity: clamp(me.cond[slot].sev || 1, 1, 3) }] : [];
     const item = activePartItem(slot, me.spec.build?.[slot]); if (owner && item) recordStablePartHistory(owner, item, 'fight-damaged', { slot, condition, integrity: state.integrity });
   }

@@ -53,7 +53,7 @@ Accept the workbook's other recommendations as written: shared hub with instance
 5. Fault services: coolant flush, recalibration, gear rebuild.
 6. Memorialise rare parts as trophies.
 7. A clear damage report after every fight.
-8. Bring repair costs to the 30–45% income target. Run `node tools/repair-economy-report.cjs`: today a fight's repairs bought from scratch cost more than its purse, mostly because heads are destroyed in about 75% of Scrapyard fights and block the next fight.
+8. Rebalance wear. Repair money is close to target (36–68% when buying every material; `node tools/repair-economy-report.cjs`), but wear collapses careers: a stock bot wins about 1 of 30 fights with wear and 12 of 30 without (`node tools/career-sim-report.cjs`). Needs a decision before more of Milestone B.
 
 **Test:** give 5 testers a part that became unrepairable and ask them why.
 
@@ -182,4 +182,4 @@ These need a value or a ruling. Each gets a proposal when its milestone starts.
 
 ## 7. First steps
 1. Milestone A is closed.
-2. Continue Milestone B: repair economy, then dismantling.
+2. Decide the wear rules, then continue Milestone B with dismantling.
