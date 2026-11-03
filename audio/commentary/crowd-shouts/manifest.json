@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "description": "One-shot crowd calls for six Scrapyard Circuit venues. Calls are short prerecorded audio; no fight crowd voice is synthesized at runtime.",
+  "assets": [
+    { "id": "generic.male-hit-hard", "file": "male-hit-hard.mp3", "venue": "all", "language": "English", "voice": "male crowd voice", "event": ["impact"], "intensity": "high" },
+    { "id": "generic.male-counter", "file": "male-counter.mp3", "venue": "all", "language": "English", "voice": "male crowd voice", "event": ["counter"], "intensity": "medium" },
+    { "id": "generic.male-landed", "file": "male-landed.mp3", "venue": "all", "language": "English", "voice": "male crowd voice", "event": ["comeback"], "intensity": "medium" },
+    { "id": "generic.male-pressure", "file": "male-pressure.mp3", "venue": "all", "language": "English", "voice": "male crowd voice", "event": ["danger", "pressure"], "intensity": "high" },
+    { "id": "generic.female-beautiful-counter", "file": "female-beautiful-counter.mp3", "venue": "all", "language": "English", "voice": "female crowd voice", "event": ["counter"], "intensity": "medium" },
+    { "id": "generic.female-get-up", "file": "female-get-up.mp3", "venue": "all", "language": "English", "voice": "female crowd voice", "event": ["danger"], "intensity": "high" },
+    { "id": "generic.female-landed-clean", "file": "female-landed-clean.mp3", "venue": "all", "language": "English", "voice": "female crowd voice", "event": ["impact"], "intensity": "medium" },
+    { "id": "generic.female-win-for-me", "file": "female-win-for-me.mp3", "venue": "all", "language": "English", "voice": "female crowd voice", "event": ["comeback"], "intensity": "medium" },
+
+    { "id": "lot.en.male.pressure.01", "file": "lot_en_male_pressure_01.mp3", "venue": "lot", "language": "English (US)", "voice": "Adam", "event": ["ambient", "impact", "danger"], "line": "Hit him hard! Get in there!", "intensity": "high" },
+    { "id": "lot.en.female.cheer.01", "file": "lot_en_female_cheer_01.mp3", "venue": "lot", "language": "English (US)", "voice": "Cherry Twinkle", "event": ["ambient", "danger", "comeback"], "line": "Come on! Get back in there!", "intensity": "medium" },
+
+    { "id": "drain.es.female.impact.01", "file": "drain_es_female_impact_01.mp3", "venue": "drain", "language": "Spanish", "voice": "Hellen", "event": ["impact"], "line": "¡Sí! ¡Ese golpe entró limpio!", "intensity": "high" },
+    { "id": "drain.es.female.counter.01", "file": "drain_es_female_counter_01.mp3", "venue": "drain", "language": "Spanish", "voice": "Hellen", "event": ["ambient", "counter", "comeback"], "line": "¡Qué contra! ¡Sigue así!", "intensity": "medium" },
+    { "id": "drain.es.male.danger.01", "file": "drain_es_male_danger_01.mp3", "venue": "drain", "language": "Spanish", "voice": "Lázaro", "event": ["danger"], "line": "¡Levántate, carajo!", "intensity": "high" },
+    { "id": "drain.es.male.pressure.01", "file": "drain_es_male_pressure_01.mp3", "venue": "drain", "language": "Spanish", "voice": "Lázaro", "event": ["ambient", "pressure", "comeback"], "line": "¡Dale fuerte! ¡Ahora!", "intensity": "high" },
+
+    { "id": "harbor.pt.male.pressure.01", "file": "harbor_pt_male_pressure_01.mp3", "venue": "harbor", "language": "Portuguese (Brazil)", "voice": "Nassif", "event": ["ambient", "impact", "danger"], "line": "Vai! Mete pressão! Não deixa respirar!", "intensity": "high" },
+    { "id": "harbor.pt.female.counter.01", "file": "harbor_pt_female_counter_01.mp3", "venue": "harbor", "language": "Portuguese (Brazil)", "voice": "Fabi", "event": ["ambient", "counter", "comeback"], "line": "Acerta! Não deixa ele escapar!", "intensity": "medium" },
+
+    { "id": "foundry.de.female.danger.01", "file": "foundry_de_female_danger_01.mp3", "venue": "foundry", "language": "German", "voice": "Ellen", "event": ["ambient", "danger"], "line": "Steh auf! Hau ihn um!", "intensity": "high" },
+    { "id": "foundry.de.male.counter.01", "file": "foundry_de_male_counter_01.mp3", "venue": "foundry", "language": "German", "voice": "Helmut Stieglbauer", "event": ["ambient", "impact", "counter", "comeback"], "line": "Konter! Drück ihn zurück!", "intensity": "high" },
+
+    { "id": "arena.it.male.impact.01", "file": "arena_it_male_impact_01.mp3", "venue": "arena", "language": "Italian", "voice": "Marcello", "event": ["ambient", "impact", "counter"], "line": "Bel colpo! Dagli addosso!", "intensity": "high" },
+    { "id": "arena.it.female.cheer.01", "file": "arena_it_female_cheer_01.mp3", "venue": "arena", "language": "Italian", "voice": "Morgaine", "event": ["ambient", "danger", "counter", "comeback"], "line": "Forza! Non mollare adesso!", "intensity": "medium" },
+
+    { "id": "dome.ja.male.danger.01", "file": "dome_ja_male_danger_01.mp3", "venue": "dome", "language": "Japanese", "voice": "Koki - Calm Japanese Male Narrator", "event": ["ambient", "danger"], "line": "立て！まだ終わってないぞ！", "intensity": "high" },
+    { "id": "dome.ja.female.pressure.01", "file": "dome_ja_female_pressure_01.mp3", "venue": "dome", "language": "Japanese", "voice": "Akari - Bright & Natural Japanese Female", "event": ["ambient", "impact", "counter", "comeback"], "line": "いける！押し切れ！", "intensity": "high" }
+  ]
+}
