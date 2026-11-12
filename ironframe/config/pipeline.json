@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "characterId": "atom",
+  "simulationHz": 60,
+  "sourceFps": 30,
+  "render": {
+    "width": 2048,
+    "height": 2048,
+    "transparent": true,
+    "cameras": {
+      "left": "CAM_FACING_LEFT",
+      "right": "CAM_FACING_RIGHT"
+    }
+  },
+  "source": {
+    "rig": "ATOM_RIG",
+    "origin": "SPRITE_ORIGIN",
+    "ground": "GROUND_ANCHOR",
+    "forearmSocket": "SOCKET_FOREARM_R"
+  },
+  "atlas": {
+    "maxWidth": 4096,
+    "maxHeight": 4096,
+    "padding": 2,
+    "alphaThreshold": 2
+  },
+  "actions": [
+    {
+      "id": "idle",
+      "blenderAction": "ATOM_IDLE",
+      "frames": 36,
+      "loop": true,
+      "events": []
+    },
+    {
+      "id": "forward_move",
+      "blenderAction": "ATOM_FORWARD_MOVE",
+      "frames": 18,
+      "loop": true,
+      "events": []
+    },
+    {
+      "id": "right_cross",
+      "blenderAction": "ATOM_RIGHT_CROSS",
+      "frames": 21,
+      "loop": false,
+      "events": []
+    },
+    {
+      "id": "heavy_head_impact",
+      "blenderAction": "ATOM_HEAVY_HEAD_IMPACT",
+      "frames": 18,
+      "loop": false,
+      "events": []
+    }
+  ],
+  "passes": [
+    {
+      "state": "intact",
+      "actions": [
+        "idle",
+        "forward_move",
+        "right_cross",
+        "heavy_head_impact"
+      ],
+      "layers": [
+        {
+          "id": "body",
+          "viewLayer": "BODY"
+        },
+        {
+          "id": "forearm_r",
+          "viewLayer": "FOREARM_R"
+        }
+      ]
+    },
+    {
+      "state": "detached",
+      "actions": [
+        "heavy_head_impact"
+      ],
+      "layers": [
+        {
+          "id": "body",
+          "viewLayer": "BODY_DETACHED"
+        },
+        {
+          "id": "debris_forearm_r",
+          "viewLayer": "DEBRIS_FOREARM_R"
+        }
+      ]
+    }
+  ]
+}
