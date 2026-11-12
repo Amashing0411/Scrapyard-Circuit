@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IRONFRAME — Production Sprite Review</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#10151c;color:#e3eaf0}
+*{box-sizing:border-box}body{margin:0;padding:24px;max-width:1500px;margin-inline:auto}
+h1{margin:0;font-size:clamp(24px,4vw,38px);letter-spacing:.03em}p{color:#adbaca;line-height:1.5}
+header{margin-bottom:20px}.tag{font:12px monospace;color:#f4c35b}
+.panel{background:#19212c;border:1px solid #324152;border-radius:10px;padding:14px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+label{display:flex;align-items:center;gap:6px;font:13px monospace}
+select,button,input{background:#111923;color:#eef2f6;border:1px solid #52677c;border-radius:5px;padding:8px}
+button{cursor:pointer}button:hover{border-color:#f4c35b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px}
+canvas{width:100%;aspect-ratio:6/5;display:block;background:linear-gradient(45deg,#283443 25%,transparent 25%,transparent 75%,#283443 75%),linear-gradient(45deg,#283443 25%,#18222e 25%,#18222e 75%,#283443 75%);background-position:0 0,14px 14px;background-size:28px 28px;border-radius:8px}
+.viewer{position:relative}.empty{position:absolute;inset:14% 10%;display:grid;place-items:center;text-align:center;background:#111925ee;color:#f4c35b;padding:20px;border:1px dashed #9b7938;border-radius:8px;pointer-events:none}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#d7e2ed;font-size:12px}
+#scrub{width:100%;margin:12px 0}.hidden{display:none!important}
+</style></head>
+<body>
+<header><div class="tag">IRONFRAME / ART PIPELINE / NOT GAMEPLAY</div><h1>ATOM — Real Sprite Production Preview</h1>
+<p>Only displays PNGs produced by the approved Blender source. No procedural robot or placeholder graphics. The fighting engine remains untouched.</p></header>
+<section class="panel">
+<div class="controls"><label>Action <select id="action"></select></label><label>Facing <select id="facing"><option>left</option><option selected>right</option></select></label>
+<label>State <select id="state"><option>intact</option><option>detached</option></select></label>
+<label>Speed <select id="speed"><option value=".5">0.5×</option><option selected value="1">1×</option><option value="2">2×</option></select></label>
+<button id="play">Play</button><button id="prev">← Frame/tick</button><button id="next">Frame/tick →</button><button id="restart">Restart</button><button id="reload">Reload manifest</button>
+<label><input id="guides" type="checkbox" checked>Pivot + ground</label><label><input id="layers" type="checkbox" checked>Forearm layers</label><label><input id="compare" type="checkbox">Compare both facings</label></div>
+<input id="scrub" type="range" min="0" max="0" value="0" step="1"><div class="tag" id="tick">Tick — / —</div>
+<div class="grid"><div class="viewer"><canvas width="620" height="520" id="stage"></canvas><div id="empty" class="empty">No rendered ATOM sprites found.</div></div>
+<div class="viewer hidden" id="otherWrap"><canvas width="620" height="520" id="other"></canvas><div id="otherEmpty" class="empty">No opposite-facing sprites.</div></div></div>
+<pre id="details"></pre><p class="tag" id="status"></p></section>
+<script type="module" src="app.js"></script>
+</body></html>
